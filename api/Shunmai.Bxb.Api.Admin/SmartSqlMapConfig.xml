@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SmartSqlMapConfig xmlns="http://SmartSql.net/schemas/SmartSqlMapConfig.xsd">
+  <Settings
+     IsWatchConfigFile="true"
+     IgnoreParameterCase="true"
+  />
+  <Database>
+    <!--ParameterPrefix:[SqlServer:@ | MySQL:? |Oracle::] -->
+    <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
+    <Write Name="WriteDB" ConnectionString="server=39.107.75.109;port=8706;database=bxb;uid=root;pwd=sa;Allow Zero DateTime=true; Allow User Variables=true;"/>
+  </Database>
+  <SmartSqlMaps>
+    <SmartSqlMap Path="Mappers" Type="Directory"></SmartSqlMap>
+  </SmartSqlMaps>
+  <TypeHandlers>
+    <TypeHandler Name="Json" Type="SmartSql.TypeHandler.JsonTypeHandler,SmartSql.TypeHandler"/>
+    <TypeHandler Name="Xml" Type="SmartSql.TypeHandler.XmlTypeHandler,SmartSql.TypeHandler"/>
+    <TypeHandler Name="DateTime" Type="Shunmai.Bxb.Repositories.Handlers.DateTimeHandler,Shunmai.Bxb.Repositories"/>
+  </TypeHandlers>
+</SmartSqlMapConfig>

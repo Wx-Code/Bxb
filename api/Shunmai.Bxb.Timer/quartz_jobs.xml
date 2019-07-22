@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+
+  <!-- 定时任务： -->
+  <!--<schedule>
+    <job>
+      <name>UnpackGroupTimeWatchJob</name>
+      <group>UnpackGroupTimeWatchJob</group>
+      <description>UnpackGroupTimeWatchJob: UnpackGroupTimeWatchJob Quartz.Net Timer Job</description>
+      <job-type>Shunmai.Bxb.Timer.Jobs.UnpackGroupTimeWatchJob,Shunmai.Bxb.Timer</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+    <trigger>
+      <cron>
+        <name>UnpackGroupTimeWatchJobTrigger</name>
+        <group>UnpackGroupTimeWatchJob</group>
+        <job-name>UnpackGroupTimeWatchJob</job-name>
+        <job-group>UnpackGroupTimeWatchJob</job-group>
+        <misfire-instruction>DoNothing</misfire-instruction>
+        --><!-- 每 15 秒执行一次 --><!--
+        <cron-expression>*/15 * * * * ?</cron-expression>
+      </cron>
+    </trigger>
+  </schedule>-->
+  
+</job-scheduling-data>

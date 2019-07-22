@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<cacheConfiguration>
+  <database>
+    <dataSource name="CacheRedis" connectionString="localhost:6379" connectionStringForWrite="localhost:6379" />
+  </database>
+</cacheConfiguration>

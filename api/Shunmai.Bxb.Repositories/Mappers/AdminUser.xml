@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+*******************************
+ Create By Ahoo Wang 
+ Date 2018-07-20 21:43
+*******************************
+-->
+<SmartSqlMap Scope="AdminUser"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="AdminUserCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+  
+  <Statements>
+
+    <Statement Id="SelectFields">
+      `AdminUserId`,
+      `Username`,
+      `Password`,
+      `Contact`,
+      `Salt`,
+      `State`,
+      `CreatedTime`,
+      `CreatedBy`
+    </Statement>
+    
+    <!--新增-->
+    <Statement Id="Insert">
+      INSERT INTO `adminuser`
+          (Username
+          ,Password
+          ,Salt
+          <IsNotEmpty Prepend="," Property="Contact">
+            `Contact`
+          </IsNotEmpty>
+          ,State
+          ,CreatedTime
+          <IsNotEmpty Prepend="," Property="CreatedBy">
+            `CreatedBy`
+          </IsNotEmpty>
+          )
+      VALUES
+          (?Username
+          ,?Password
+          ,?Salt
+          <IsNotEmpty Prepend="," Property="Contact">
+            ?Contact
+          </IsNotEmpty>
+          ,?State
+          ,?CreatedTime
+          <IsNotEmpty Prepend="," Property="CreatedBy">
+           ?CreatedBy
+          </IsNotEmpty>
+          )
+      ;SELECT Last_Insert_Id();
+    </Statement>
+
+    <!--更新-->
+    <Statement Id="Update">
+      UPDATE `adminuser`
+      <Set>
+        <IsNotEmpty Prepend="," Property="Username">
+          `Username` = ?Username
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Password">
+          `Password` = ?Password
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Salt">
+          `Salt` = ?Salt
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Contact">
+          `Contact` = ?Contact
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="State">
+          `State` = ?State
+        </IsNotEmpty>
+      </Set>
+      WHERE AdminUserId=?AdminUserId;
+    </Statement>
+    
+    <!-- 是否存在 -->
+    <Statement Id="Exists">
+      SELECT 
+        Count(*) 
+      FROM 
+        `adminuser`
+      WHERE
+        `Deleted` = 0 
+        AND Username = ?username
+        <IsGreaterThan CompareValue="0" Prepend="AND" Property="excludedUserId">
+          <![CDATA[`AdminUserId` <> ?excludedUserId]]>
+        </IsGreaterThan>
+      ;
+    </Statement>
+
+    <!-- 查询单条数据 -->
+    <Statement Id="QuerySingle">
+      SELECT
+        <Include RefId="SelectFields"></Include>
+      FROM
+        `adminuser`
+      <Where>
+        `Deleted`=0
+        <IsNotEmpty Prepend="AND" Property="Username">
+          `Username`=?Username
+        </IsNotEmpty>
+        <IsProperty Prepend="AND" Property="AdminUserId">
+          `AdminUserId`=?AdminUserId
+        </IsProperty>
+        <IsProperty Prepend="AND" Property="State">
+          `State`=?State
+        </IsProperty>
+      </Where>
+      LIMIT 1;
+    </Statement>
+
+    <!-- 查询参数 -->
+    <Statement Id="QueryParams">
+      <Where>
+        `Deleted`=0
+        <IsNotEmpty Prepend="AND" Property="AdminUserId">
+          `AdminUserId`=?AdminUserId
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="Username">
+          `Username` LIKE Concat('%',$Username,'%')
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="State">
+          `State`=?State
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="StartTime">
+          `CreatedTime` > ?StartTime
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="EndTime">
+          <![CDATA[`CreatedTime` < ?EndTime]]>
+        </IsNotEmpty>
+      </Where>
+    </Statement>
+
+    <!-- 数据数据条数 -->
+    <Statement Id="Count">
+      SELECT COUNT(*) FROM AdminUser
+      <Include RefId="QueryParams"></Include>
+    </Statement>
+    
+    <!-- 查询列表 -->
+    <Statement Id="QueryList">
+      SELECT
+        <Include RefId="SelectFields"></Include>
+      FROM
+        `adminuser` T
+      <Include RefId="QueryParams"></Include>
+      <Switch Prepend="ORDER BY" Property="OrderBy">
+        <Default>
+          T.CreatedTime DESC
+        </Default>
+      </Switch>
+      <IsNotEmpty Prepend="LIMIT" Property="Page">
+        ?Offset, ?Size
+      </IsNotEmpty>
+    </Statement>
+
+  </Statements>
+</SmartSqlMap>

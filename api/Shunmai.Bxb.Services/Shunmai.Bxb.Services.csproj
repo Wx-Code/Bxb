@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.7.9" />
+    <PackageReference Include="Senparc.Weixin.Open" Version="4.5.7" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.4.2.1" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.4.8" />
+    <PackageReference Include="SmartSql.AOP" Version="4.0.42" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shunmai.Bxb.Abstractions\Shunmai.Bxb.Abstractions.csproj" />
+    <ProjectReference Include="..\Shunmai.Bxb.Common\Shunmai.Bxb.Common.csproj" />
+    <ProjectReference Include="..\Shunmai.Bxb.Entities\Shunmai.Bxb.Entities.csproj" />
+    <ProjectReference Include="..\Shunmai.Bxb.Repositories\Shunmai.Bxb.Repositories.csproj" />
+    <ProjectReference Include="..\Shunmai.Bxb.Utilities\Shunmai.Bxb.Utilities.csproj" />
+  </ItemGroup>
+
+</Project>
