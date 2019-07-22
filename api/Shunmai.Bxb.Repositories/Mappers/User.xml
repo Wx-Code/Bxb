@@ -97,7 +97,7 @@
       ;
     </Statement>
 
-    <!-- 查询单条数据 -->
+    <!-- 查询 单条数据 -->
     <Statement Id="QuerySingle">
       SELECT
       <Include RefId="Fields"></Include>
