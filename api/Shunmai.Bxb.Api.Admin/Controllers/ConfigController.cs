@@ -22,12 +22,12 @@ namespace Shunmai.Bxb.Api.Admin.Controllers
             _systemConfigService = systemConfigService;
         }
 
-        [HttpGet("GetPlatWalletConfig")]
-        public IActionResult GetPlatWalletConfig()
-        {
-            var config = _systemConfigService.GetPlatWalletAddrConfigList();
-            return Success(config);
-        }
+        //[HttpGet("GetPlatWalletConfig")]
+        //public IActionResult GetPlatWalletConfig()
+        //{
+        //    var config = _systemConfigService.GetPlatWalletAddrConfigList();
+        //    return Success(config);
+        //}
 
 
 

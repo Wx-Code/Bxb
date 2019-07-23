@@ -39,5 +39,7 @@ namespace Shunmai.Bxb.Services
             config.CreateTime = DateTime.Now;
             return _systemConfigRepository.Insert(config);
         }
+
+         
     }
 }
