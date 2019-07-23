@@ -5,8 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SmartSql.DyRepository" Version="4.0.44" />
-    <PackageReference Include="SmartSql.TypeHandler" Version="4.0.42" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="SmartSql.DIExtension" Version="4.0.86" />
+    <PackageReference Include="SmartSql.DyRepository" Version="4.0.86" />
+    <PackageReference Include="SmartSql.TypeHandler" Version="4.0.86" />
   </ItemGroup>
 
   <ItemGroup>

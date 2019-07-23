@@ -11,8 +11,10 @@ using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.App.Cache;
 using Shunmai.Bxb.Api.App.Filters;
 using Shunmai.Bxb.Common.Constants;
+using Shunmai.Bxb.Common.Dto;
 using Shunmai.Bxb.Common.Filters;
 using Shunmai.Bxb.Common.Middleware;
+using Shunmai.Bxb.Repositories.DIExtenssions;
 using System;
 using System.Threading;
 
@@ -21,20 +23,13 @@ namespace Shunmai.Bxb.Api.App
     public class Startup
     {
         const string CORS_NAME = "AllowAllOrigin";
+        const string ALI_OSS_CONFIG_NAME = "AliOssConfig";
+        const string JSON_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+        const string NLOG_CONFIG_FILE_NAME = "NLog.config";
 
         private void AddServices(IServiceCollection services)
         {
 
-        }
-
-        private void AddSmartSqlRepositories(IServiceCollection services)
-        {
-            services
-                .AddSmartSql()
-                .AddRepositoryFromAssembly((options) =>
-                {
-                    options.AssemblyString = Names.REPOSITORY_ASSEMBLY_NAME;
-                });
         }
 
         public Startup(IConfiguration configuration)
@@ -55,6 +50,7 @@ namespace Shunmai.Bxb.Api.App
                     CORS_NAME,
                     builder => builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials())
                 )
+                .Configure<AliOssServiceConfig>(Configuration.GetSection(ALI_OSS_CONFIG_NAME))
                 .AddMvc(options =>
                 {
                     options.Filters.Add<UnhandledExceptionFilter>();
@@ -62,12 +58,12 @@ namespace Shunmai.Bxb.Api.App
                 })
                 .AddJsonOptions(json =>
                 {
-                    json.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                    json.SerializerSettings.DateFormatString = JSON_TIME_FORMAT;
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // SmartSql
-            AddSmartSqlRepositories(services);
+            services.AddSmartSqlRepositories();
             AddServices(services);
 
             return services.BuildAspectInjectorProvider();
@@ -87,7 +83,7 @@ namespace Shunmai.Bxb.Api.App
             }
 
             loggerFactory.AddNLog();
-            env.ConfigureNLog("NLog.config");
+            env.ConfigureNLog(NLOG_CONFIG_FILE_NAME);
 
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseCors(CORS_NAME);
