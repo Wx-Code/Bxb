@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Shunmai.Bxb.Common.Constants;
-using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Repositories.Interfaces;
-using Shunmai.Bxb.Services.Models;
+using Shunmai.Bxb.Services.Constans;
 using Shunmai.Bxb.Utilities.Validation;
+using Shunmai.Bxb.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Shunmai.Bxb.Services
 {
@@ -14,34 +11,14 @@ namespace Shunmai.Bxb.Services
     {
         private readonly ISystemConfigRepository _systemConfigRepository;
 
-        public SystemConfigService(ISystemConfigRepository systemconfigRepository)
+        public SystemConfigService(
+            ISystemConfigRepository systemConfigRepository
+            )
         {
-            _systemConfigRepository = systemconfigRepository;
+            _systemConfigRepository = systemConfigRepository;
         }
 
-        public bool AddOrUpdateConfig(SystemConfig systemconfig)
-        {
-            Check.Null(systemconfig, nameof(systemconfig));
-
-            var exists = _systemConfigRepository.QuerySingle(systemconfig.ConfigName) != null;
-            if (exists)
-            {
-                return _systemConfigRepository.Update(systemconfig);
-            }
-
-            systemconfig.CreateTime = DateTime.Now;
-            var query = _systemConfigRepository.Insert(systemconfig);
-
-            return query;
-        }
-
-        /// <summary>
-        /// 读取配置
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="configName">配置名称</param>
-        /// <returns></returns>
-        private T GetConfig<T>(string configName)
+        public T GetConfig<T>(string configName)
         {
             var config = _systemConfigRepository.QuerySingle(configName);
             if (config == null || string.IsNullOrEmpty(config.ConfigValue))
@@ -51,14 +28,16 @@ namespace Shunmai.Bxb.Services
             return JsonConvert.DeserializeObject<T>(config.ConfigValue);
         }
 
-        /// <summary>
-        /// 获取平台钱包地址配置信息
-        /// </summary>
-        /// <returns></returns>
-        public List<PlatWalletAddrConfigModel> GetPlatWalletAddrConfigList()
+        public bool AddOrUpdateConfig(SystemConfig config)
         {
-            return GetConfig<List<PlatWalletAddrConfigModel>>("PlatWalletAddrConfig");
+            Check.Null(config, nameof(config));
+            var exists = _systemConfigRepository.QuerySingle(config.ConfigName) != null;
+            if (exists)
+            {
+                return _systemConfigRepository.Update(config);
+            }
+            config.CreateTime = DateTime.Now;
+            return _systemConfigRepository.Insert(config);
         }
-
     }
 }

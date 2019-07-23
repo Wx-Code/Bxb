@@ -11,10 +11,11 @@ using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.App.Cache;
 using Shunmai.Bxb.Api.App.Filters;
 using Shunmai.Bxb.Common.Constants;
-using Shunmai.Bxb.Common.Dto;
+using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Common.Filters;
 using Shunmai.Bxb.Common.Middleware;
 using Shunmai.Bxb.Repositories.DIExtenssions;
+using Shunmai.Bxb.Services;
 using System;
 using System.Threading;
 
@@ -29,7 +30,7 @@ namespace Shunmai.Bxb.Api.App
 
         private void AddServices(IServiceCollection services)
         {
-
+            services.AddSingleton<UserService>();
         }
 
         public Startup(IConfiguration configuration)

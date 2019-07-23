@@ -1,91 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <SmartSqlMap Scope="SystemConfig"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
   <Caches>
     <Cache Id="SystemConfigCache" Type="Lru">
       <FlushInterval Hours="1"/>
     </Cache>
   </Caches>
-
-
-  <ParameterMaps>
-    <ParameterMap Id="DateTimeParameterHandlers">
-      <Parameter Property="CreateTime" TypeHandler="DateTime"/>
-    </ParameterMap>
-  </ParameterMaps>
-
-
+  
   <Statements>
-    <Statement Id="SelectFields">
-      `ConfigName`,
-      `ConfigValue`,
-      `Remark`,
-      `CreateTime`,
-      `CreateUser`
+
+    <!-- 字段 -->
+    <Statement Id="Fields">
+      `ConfigName`, `ConfigValue`, `Remark`, `CreateTime`, `CreateUser`
     </Statement>
-
-
-
-    <!--新增-->
-    <Statement Id="Insert" ParameterMap="DateTimeParameterHandlers">
-      INSERT INTO `systemconfig`
-      (
-      ConfigName
-      ,ConfigValue
-      ,Remark
-      ,CreateTime
-      ,CreateUser
-      )
+    
+    <!-- 新增 -->
+    <Statement Id="Insert">
+      INSERT INTO
+        `SystemConfig`
+        (
+          `ConfigName`, `ConfigValue`, `Remark`, `CreateTime`, `CreateUser`
+        )
       VALUES
-      (?ConfigName
-      ,?ConfigValue
-      ,?Remark
-      ,?CreateTime
-      ,?CreateUser
-      );
-    </Statement>
-
-    <!--更新-->
-    <Statement Id="Update">
-      UPDATE `systemconfig`
-      <Set>
-        <IsNotEmpty Prepend="," Property="ConfigName">
-          `ConfigName` = ?ConfigName
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="ConfigValue">
-          `ConfigValue` = ?ConfigValue
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="Remark">
-          `Remark` = ?Remark
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="CreateUser">
-          `CreateUser` = ?CreateUser
-        </IsNotEmpty>
-      </Set>
-      WHERE ConfigName=?ConfigName;
-    </Statement>
-
-    <!-- 是否存在 -->
-    <Statement Id="Exists">
-      SELECT
-      Count(*)
-      FROM
-      `systemconfig`
-      WHERE
-      ConfigName = ?ConfigName
+        (
+          ?ConfigName, ?ConfigValue, ?Remark, ?CreateTime, ?CreateUser
+        )
       ;
     </Statement>
-
+    
+    <!-- 更新 -->
+    <Statement Id="Update">
+      UPDATE
+        `SystemConfig`
+      SET
+        `ConfigValue`=?ConfigValue
+        <IsEmpty Prepend="," Property="Remark">
+          `Remark`=?Remark
+        </IsEmpty>
+      WHERE
+        `ConfigName`=?ConfigName
+      ;
+    </Statement>
+    
     <!-- 查询单条数据 -->
     <Statement Id="QuerySingle">
       SELECT
-      <Include RefId="SelectFields"></Include>
+        <Include RefId="Fields"></Include>
       FROM
-      `systemconfig`
+        `SystemConfig`
       WHERE
-      ConfigName=?ConfigName
-      LIMIT 1;
+        `ConfigName`=?configName
+      ;
     </Statement>
-
+    
   </Statements>
 </SmartSqlMap>
+
+

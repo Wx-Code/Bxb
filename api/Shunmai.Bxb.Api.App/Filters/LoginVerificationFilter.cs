@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.App.Constants;
 using Shunmai.Bxb.Common.Attributes;
-using Shunmai.Bxb.Common.Dto;
+using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Utilities.Extenssions;

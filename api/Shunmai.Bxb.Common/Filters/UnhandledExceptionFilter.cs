@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using Shunmai.Bxb.Common.Dto;
+using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Utilities.Extenssions;
 using System;
 using System.Text;
