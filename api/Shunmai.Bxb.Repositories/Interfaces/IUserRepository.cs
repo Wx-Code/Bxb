@@ -7,7 +7,6 @@ namespace Shunmai.Bxb.Repositories.Interfaces
     {
         int Insert(User user);
         bool Update(User user);
-        bool Exists(User user);
         [Statement(Id = "QuerySingle")]
         User FindById(int userId);
         [Statement(Id = "QuerySingle")]

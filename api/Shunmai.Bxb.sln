@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shunmai.Bxb.Services.UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shunmai.Bxb.Timer", "Shunmai.Bxb.Timer\Shunmai.Bxb.Timer.csproj", "{C9CFC65E-6AD6-49DB-AFFD-B24A5DC17791}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shunmai.Bxb.Api.App.IntegrationTests", "Shunmai.Bxb.Api.App.IntegrationTests\Shunmai.Bxb.Api.App.IntegrationTests.csproj", "{4DBDB4D2-755B-4199-B574-47B16DB08EBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{C9CFC65E-6AD6-49DB-AFFD-B24A5DC17791}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9CFC65E-6AD6-49DB-AFFD-B24A5DC17791}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9CFC65E-6AD6-49DB-AFFD-B24A5DC17791}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DBDB4D2-755B-4199-B574-47B16DB08EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DBDB4D2-755B-4199-B574-47B16DB08EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DBDB4D2-755B-4199-B574-47B16DB08EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DBDB4D2-755B-4199-B574-47B16DB08EBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +115,7 @@ Global
 		{7A658ACA-EF90-46C3-824B-2872232C3D84} = {69BB8A18-BC2A-4B2D-A694-4F40B4DAF198}
 		{3B4CF893-0AF3-422A-AFBE-1991502E8990} = {69BB8A18-BC2A-4B2D-A694-4F40B4DAF198}
 		{C9CFC65E-6AD6-49DB-AFFD-B24A5DC17791} = {340A854D-5263-40D7-9163-64A54FF519F7}
+		{4DBDB4D2-755B-4199-B574-47B16DB08EBC} = {69BB8A18-BC2A-4B2D-A694-4F40B4DAF198}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A228C1CA-162E-43CD-B930-5A245D3ECACF}
