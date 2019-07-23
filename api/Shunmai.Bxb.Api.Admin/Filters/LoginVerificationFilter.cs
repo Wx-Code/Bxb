@@ -6,7 +6,7 @@ using Shunmai.Bxb.Api.Admin.Constants;
 using Shunmai.Bxb.Api.Admin.Models;
 using Shunmai.Bxb.Common.Attributes;
 using Shunmai.Bxb.Common.Constants;
-using Shunmai.Bxb.Common.Dto;
+using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Common.Exceptions;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;

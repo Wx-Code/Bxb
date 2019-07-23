@@ -7,7 +7,7 @@
 
 using Shunmai.Bxb.Entities.Enums;
 using System;
-namespace SmartSql.Starter.Entity
+namespace Shunmai.Bxb.Entities
 {
 
     ///<summary>

@@ -1,6 +1,6 @@
 ﻿// TODO: 创建 ErrorInfo 对象缓存池，避免重复创建大量对象
 
-namespace Shunmai.Bxb.Common.Dto
+namespace Shunmai.Bxb.Common.Models
 {
     public class ErrorInfo
     {

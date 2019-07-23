@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
-using Shunmai.Bxb.Common.Dto;
+using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Utilities.Helpers;
 using System;
 using System.Collections.Generic;

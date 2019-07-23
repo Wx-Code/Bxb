@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Shunmai.Bxb.Api.Admin.Constants;
 using Shunmai.Bxb.Api.Admin.Models;
 using Shunmai.Bxb.Common.Attributes;
-using Shunmai.Bxb.Common.Dto;
+using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
 using Shunmai.Bxb.Services;

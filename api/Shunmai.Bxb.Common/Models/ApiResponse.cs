@@ -1,4 +1,4 @@
-﻿namespace Shunmai.Bxb.Common.Dto
+﻿namespace Shunmai.Bxb.Common.Models
 {
     public class ApiResponse
     {

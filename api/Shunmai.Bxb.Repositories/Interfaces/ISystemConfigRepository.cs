@@ -1,5 +1,5 @@
 ﻿
-using SmartSql.Starter.Entity;
+using Shunmai.Bxb.Entities;
 
 namespace Shunmai.Bxb.Repositories.Interfaces
 {

@@ -3,7 +3,7 @@ using System;
 
 namespace Shunmai.Bxb.Utilities.Sms
 {
-    public class DefaultSms : ISms
+    public class DefaultSms : ISmsProvider
     {
         public string Api { get; set; } = "http://222.73.117.138:7891/mt?un=N13661252777&pw=792765&da={1}&sm={0}&dc=15&rd=1";
 

@@ -1,6 +1,6 @@
 ﻿namespace Shunmai.Bxb.Utilities.Sms
 {
-    public interface ISms
+    public interface ISmsProvider
     {
         string Api { get; set; }
 

@@ -2,7 +2,7 @@
 using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Services.Constans;
 using Shunmai.Bxb.Utilities.Validation;
-using SmartSql.Starter.Entity;
+using Shunmai.Bxb.Entities;
 using System;
 
 namespace Shunmai.Bxb.Services

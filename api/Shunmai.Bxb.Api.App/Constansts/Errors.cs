@@ -1,4 +1,4 @@
-﻿using Shunmai.Bxb.Common.Dto;
+﻿using Shunmai.Bxb.Common.Models;
 
 namespace Shunmai.Bxb.Api.App.Constansts
 {
