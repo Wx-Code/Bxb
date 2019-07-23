@@ -19,6 +19,9 @@
     <None Update="Mappers\AdminUser.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mappers\SystemConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Mappers\User.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
