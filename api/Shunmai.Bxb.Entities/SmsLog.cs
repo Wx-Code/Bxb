@@ -38,7 +38,7 @@ namespace Shunmai.Bxb.Entities
         ///<summary>
         /// 发送状态（0：失败；1：成功）
         ///</summary>
-        public virtual SmsState State { get; set; }
+        public virtual SmsSendState State { get; set; }
         ///<summary>
         /// 第三方给运营商的时间
         ///</summary>

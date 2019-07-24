@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SmartSqlMap Scope="SmsVerificationCode"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="SmsVerificationCodeCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+  
+  <Statements>
+
+    <!-- 字段 -->
+    <Statement Id="Fields">
+      `VcId`, `Phone`, `VerificationCode` , `State`, `CreateTime`
+    </Statement>
+    
+    <!-- 新增 -->
+    <Statement Id="Insert">
+      INSERT INTO
+        `SmsVerificationCode`
+        (
+          `Phone`, `VerificationCode`
+        )
+      VALUES
+        (
+          ?Phone, ?VerificationCode
+        )
+      ;
+      SELECT LAST_INSERT_ID();
+    </Statement>
+    
+    <!-- 查询单条数据 -->
+    <Statement Id="QuerySingle">
+      SELECT
+        <Include RefId="Fields"></Include>
+      FROM
+        `SmsVerificationCode`
+      <Where>
+        `Phone`=?phone
+        <IsNotEmpty Prepend="AND" Property="code">
+          `VerificationCode`=?code
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="expires">
+          <![CDATA[DATE_ADD(`CreateTime`, INTERVAL ?expires SECOND)<CURRENT_TIMESTAMP]]>
+        </IsNotEmpty>
+      </Where>
+      ;
+    </Statement>
+    
+  </Statements>
+</SmartSqlMap>
+
+

@@ -49,5 +49,14 @@ namespace Shunmai.Bxb.Utilities.Sms
             return null;
         }
 
+        public ResponseEntity SendCode(string phoneNo, string code)
+        {
+            Content = string.Format(Content, code);
+            var result = Send(phoneNo, Content);
+            if (result == null) return result;
+            result.Code = code;
+            return result;
+        }
+
     }
 }
