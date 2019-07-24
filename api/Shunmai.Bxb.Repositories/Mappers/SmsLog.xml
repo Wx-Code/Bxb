@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SmartSqlMap Scope="SmsLog"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="SmsLogCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+  
+  <Statements>
+
+    <!-- 字段 -->
+    <Statement Id="Fields">
+      `LogId`, `Phone`, `Type`, `Content`, `Sign`, `State`, `SendTime`, `RequestPlat`, `Provider`
+    </Statement>
+    
+    <!-- 新增 -->
+    <Statement Id="Insert">
+      INSERT INTO
+        `SmsLog`
+        (
+          `Phone`, `Type`, `Content`, `Sign`, `State`, `SendTime`, `RequestPlat`, `Provider`
+        )
+      VALUES
+        (
+          ?Phone, ?Type, ?Content, ?Sign, ?State, ?SendTime, ?RequestPlat, ?Provider
+        )
+      ;
+      SELECT LAST_INSERT_ID();
+    </Statement>
+    
+  </Statements>
+</SmartSqlMap>
+
+

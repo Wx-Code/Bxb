@@ -18,5 +18,11 @@ namespace Shunmai.Bxb.Entities.Enums
         /// </summary>
         [Description("已验证")]
         Verified = 1,
+
+        /// <summary>
+        /// 已过期
+        /// </summary>
+        [Description("已过期")]
+        Expired = -1,
     }
 }

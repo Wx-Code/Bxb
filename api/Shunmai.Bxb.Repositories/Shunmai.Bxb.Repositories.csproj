@@ -19,6 +19,12 @@
     <None Update="Mappers\AdminUser.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mappers\SmsLog.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappers\SmsVerificationCode.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Mappers\SystemConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

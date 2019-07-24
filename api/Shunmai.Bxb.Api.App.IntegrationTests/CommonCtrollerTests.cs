@@ -38,12 +38,20 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
-                var res = JsonConvert.DeserializeObject<ApiResponse>(json);
+                var res = JsonConvert.DeserializeObject<JsonResponse>(json);
                 Assert.NotNull(res);
-                Assert.NotNull(res.Data);
-                var url = res.Data.ToString();
+                Assert.NotNull(res.data);
+                var url = res.data.ToString();
                 Assert.NotEmpty(url);
             }
+        }
+
+        [Fact]
+        public async Task SendSmsCode_Should_WorkWell()
+        {
+            var json = new { phone = "13521942500" };
+            var result = await TestSuite.PostAsync<JsonResponse>(_factory, "/common/sms/code", json);
+            Assert.True(result.success);
         }
     }
 }

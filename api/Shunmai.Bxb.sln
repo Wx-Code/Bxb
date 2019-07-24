@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shunmai.Bxb.Services.UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shunmai.Bxb.Timer", "Shunmai.Bxb.Timer\Shunmai.Bxb.Timer.csproj", "{C9CFC65E-6AD6-49DB-AFFD-B24A5DC17791}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shunmai.Bxb.Api.App.IntegrationTests", "Shunmai.Bxb.Api.App.IntegrationTests\Shunmai.Bxb.Api.App.IntegrationTests.csproj", "{4DBDB4D2-755B-4199-B574-47B16DB08EBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shunmai.Bxb.Api.App.IntegrationTests", "Shunmai.Bxb.Api.App.IntegrationTests\Shunmai.Bxb.Api.App.IntegrationTests.csproj", "{4DBDB4D2-755B-4199-B574-47B16DB08EBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

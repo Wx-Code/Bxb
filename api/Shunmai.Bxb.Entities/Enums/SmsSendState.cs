@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Shunmai.Bxb.Entities.Enums
 {
-    public enum SmsState
+    public enum SmsSendState
     {
         /// <summary>
         /// 发送失败
