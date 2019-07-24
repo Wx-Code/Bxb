@@ -12,6 +12,8 @@ using System.Linq;
 using Shunmai.Bxb.Api.App.Models.Request;
 using System;
 using Shunmai.Bxb.Entities.Enums;
+using Shunmai.Bxb.Services.Models.IET;
+using System.Threading.Tasks;
 
 namespace Shunmai.Bxb.Api.App.Controllers
 {
@@ -63,6 +65,29 @@ namespace Shunmai.Bxb.Api.App.Controllers
             var config = smsConfig.Value;
             var success = smsService.SendSmsCode(request.Phone, config.VerificationCodeLength, ApplicationType.WeixinMiniProgram, config.ExpiresMinutes * 60);
             return success ? Success() : Failed();
+        }
+
+        [SkipLoginVerification]
+        [HttpGet("iet/test")]
+        public async Task<IActionResult> TestIETApi()
+        {
+            var config = new IETConfig
+            {
+                Cookie = "WEBID=db0d02b8-b81e-4c53-ab80-958f833e263e",
+                Password = "Jp2d\\/9Wb6YNGCxnJAWInpA==",
+                Phone = "15041113056",
+                ServiceFeeRate = 0.05m,
+                ServiceFeeReceiveAddr = "jn2P895ePPzQXSwaXn7y7hUuT9YSJ5fb1w",
+                WalletId = "6da2540dadbe46d5b8eb6ad7d6c6944b"
+            };
+            var service = new IETService(config);
+            var payRes = await service.PayAsync("jn2P895ePPzQXSwaXn7y7hUuT9YSJ5fb1w", 0.001m, "测试 linux 环境转账");
+            var queryRes = await service.QueryTradeRecordsAsync();
+            return Success(new
+            {
+                payRes,
+                queryRes,
+            });
         }
     }
 }

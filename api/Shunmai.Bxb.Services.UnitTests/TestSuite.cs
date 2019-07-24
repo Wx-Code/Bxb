@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using Shunmai.Bxb.Services.Models.IET;
 using System;
 using System.Reflection;
 
@@ -27,12 +28,27 @@ namespace Shunmai.Bxb.Services.UnitTests
                 });
         }
 
+        public const string TEST_WALLET_ADDRESS = "jn2P895ePPzQXSwaXn7y7hUuT9YSJ5fb1w";
+
         /// <summary>
         /// 注入Service
         /// </summary>
         /// <param name="services"></param>
         private static void RegisterService(IServiceCollection services)
         {
+            services.AddSingleton(sp =>
+            {
+                var config = new IETConfig
+                {
+                    Cookie = "WEBID=db0d02b8-b81e-4c53-ab80-958f833e263e",
+                    Password = "Jp2d\\/9Wb6YNGCxnJAWInpA==",
+                    Phone = "15041113056",
+                    ServiceFeeRate = 0.05m,
+                    ServiceFeeReceiveAddr = TEST_WALLET_ADDRESS,
+                    WalletId = "6da2540dadbe46d5b8eb6ad7d6c6944b"
+                };
+                return new IETService(config);
+            });
         }
 
         private static IServiceProvider _serviceProvider;
