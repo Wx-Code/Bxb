@@ -61,6 +61,41 @@ export const constantRouterMap = [
     ]
   },
 
+  // 配置管理
+  {
+    path: '/config',
+    name: 'SystemConfig',
+    redirect: '/config/platwalletaddr',
+    meta: { title: '配置管理', icon: 'settings' },
+    component: Layout,
+    children: [
+      {
+        path: 'platwalletaddr',
+        name: 'PlatWalletAddr',
+        meta: { title: '平台钱包地址配置', icon: 'fieid' },
+        component: () => import('@/views/config/platwalletaddr')
+      },
+      {
+        path: 'ordertime',
+        name: 'OrderTime',
+        meta: { title: '订单时间配置', icon: 'fieid' },
+        component: () => import('@/views/config/ordertime')
+      },
+      {
+        path: 'tradefee',
+        name: 'TradeFee',
+        meta: { title: '手续费配置', icon: 'fieid' },
+        component: () => import('@/views/config/tradefee')
+      },
+      {
+        path: 'traderules',
+        name: 'TradeRules',
+        meta: { title: '交易规则配置', icon: 'fieid' },
+        component: () => import('@/views/config/traderules')
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

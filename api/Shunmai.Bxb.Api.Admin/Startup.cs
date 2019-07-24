@@ -65,6 +65,8 @@ namespace Shunmai.Bxb.Api.Admin
         private void AddServices(IServiceCollection services)
         {
             services.AddSingleton<AdminUserService>();
+            services.AddSingleton<SystemConfigService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
