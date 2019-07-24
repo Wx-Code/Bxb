@@ -18,6 +18,7 @@ using Shunmai.Bxb.Repositories.DIExtenssions;
 using Shunmai.Bxb.Services;
 using System;
 using System.Threading;
+using Shunmai.Bxb.Utilities.Sms;
 
 namespace Shunmai.Bxb.Api.App
 {
@@ -25,12 +26,19 @@ namespace Shunmai.Bxb.Api.App
     {
         const string CORS_NAME = "AllowAllOrigin";
         const string ALI_OSS_CONFIG_NAME = "AliOssConfig";
+        const string SMS_CONFIG_NAME = "SmsConfig";
         const string JSON_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
         const string NLOG_CONFIG_FILE_NAME = "NLog.config";
 
         private void AddServices(IServiceCollection services)
         {
             services.AddSingleton<UserService>();
+            services.AddSingleton(sp =>
+            {
+                var smsConfig = Configuration.GetSection(SMS_CONFIG_NAME).Get<SmsConfig>();
+                return SmsProviderFactory.Create(smsConfig.SmsProvider);
+            });
+            services.AddSingleton<SmsService>();
         }
 
         public Startup(IConfiguration configuration)
@@ -52,6 +60,7 @@ namespace Shunmai.Bxb.Api.App
                     builder => builder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials())
                 )
                 .Configure<AliOssServiceConfig>(Configuration.GetSection(ALI_OSS_CONFIG_NAME))
+                .Configure<SmsConfig>(Configuration.GetSection(SMS_CONFIG_NAME))
                 .AddMvc(options =>
                 {
                     options.Filters.Add<UnhandledExceptionFilter>();

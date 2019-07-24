@@ -11,6 +11,9 @@ using Shunmai.Bxb.Services.Constans;
 using Shunmai.Bxb.Utilities.Extenssions;
 using Shunmai.Bxb.Utils.Helpers;
 using System.Linq;
+using Shunmai.Bxb.Api.App.Models.Request;
+using System;
+using Shunmai.Bxb.Entities.Enums;
 using System.Reflection;
 using Shunmai.Bxb.Utilities.Helpers;
 
@@ -57,6 +60,15 @@ namespace Shunmai.Bxb.Api.App.Controllers
         {
             var rules = configService.GetConfig<string>(SystemConfigNames.TRADE_RULES);
             return Success(rules);
+        }
+
+        [SkipLoginVerification]
+        [HttpPost("sms/code")]
+        public IActionResult SendVerificationCode([FromBody]SmsCodeRequest request, [FromServices]IOptions<SmsConfig> smsConfig, [FromServices]SmsService smsService)
+        {
+            var config = smsConfig.Value;
+            var success = smsService.SendSmsCode(request.Phone, config.VerificationCodeLength, ApplicationType.WeixinMiniProgram, config.ExpiresMinutes * 60);
+            return success ? Success() : Failed();
         }
 
         [SkipLoginVerification]
