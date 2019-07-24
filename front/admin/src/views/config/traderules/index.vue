@@ -7,7 +7,7 @@
     <br>
     <br>
     <el-form :model="model" label-width="300px" class="formpadding">
-      <el-form-item  label="交易规则配置：">
+      <el-form-item  label="交易规则：">
         <el-input class="input-txt" autosize type="textarea" v-model="model.transactionRules" placeholder="请输入交易规则">
         </el-input>
       </el-form-item>
