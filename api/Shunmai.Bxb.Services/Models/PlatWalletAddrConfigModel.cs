@@ -10,6 +10,8 @@ namespace Shunmai.Bxb.Services.Models
     /// </summary>
     public class PlatWalletAddrConfigModel
     {
+        public string PlatWalletAddrId { get; set; }
+
         /// <summary>
         /// 平台钱包地址地址名称
         /// </summary>

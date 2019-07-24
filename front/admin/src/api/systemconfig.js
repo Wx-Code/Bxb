@@ -1,10 +1,18 @@
 import request from '@/utils/request'
 
 export default {
-  getList() {
+  get(configName) {
     return request({
-      method: 'get',
-      url: '/config/getplatwalletconfig'
+      url: `/config/${configName}`,
+      method: 'GET'
+    })
+  },
+
+  addOrUpdate(config) {
+    return request({
+      url: '/config',
+      method: 'POST',
+      data: config
     })
   }
 }
