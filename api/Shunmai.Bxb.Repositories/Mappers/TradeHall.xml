@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMap Scope="TradeHall"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="TradeHallCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+
+  <Statements>
+    <!-- APP 发布交易 -->
+    <Statement Id="InsertTradeHallEntity">
+      INSERT INTO `TradeHall`(
+        `TradeType`,
+        `ReleaseUserId`,
+        `ReleaseName`,
+        `BType`,
+        `TotalAmount`,
+        `Amount`,
+        `Price`,
+        `ReleaseTime`,
+        `State`,
+        `Status`,
+        `TradeCode`
+      ) VALUES (
+        ?TradeType,
+        ?ReleaseUserId,
+        ?ReleaseName,
+        ?BType,
+        ?TotalAmount,
+        ?Amount,
+        ?Price,
+        ?ReleaseTime,
+        ?State,
+        ?Status,
+        ?TradeCode
+      );
+
+      SELECT LAST_INSERT_ID();
+    </Statement>
+
+    <!-- APP 编辑交易 -->
+    <Statement Id="UpdateTradeHallEntity">
+      UPDATE `TradeHall`
+      SET `BType`       = ?BType,
+          `TotalAmount` = ?TotalAmount,
+          `Amount`      = ?Amount,
+          `Price`       = ?Price,
+          `State`       = ?State
+      WHERE `TradeId`   = ?TradeId;
+    </Statement>
+
+    <!-- APP / Admin 下架交易信息 -->
+    <Statement Id="UpdateTradeHallStatus">
+      UPDATE `TradeHall`
+      SET `Status`    = ?status
+      WHERE `TradeId` = ?tradeId
+    </Statement>
+
+    <!-- APP 获取交易大厅数据 -->
+    <Statement Id="GetAppTradeHallEntities">
+      SELECT t.`TradeId`,
+             t.`Amount`,
+             t.`Price`,
+             t.`BType`,
+             t.`ReleaseTime`,
+             u.`Nickname`,
+             u.`Avatar`
+      FROM `TradeHall` AS t
+      INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
+      WHERE t.`State` = 0
+      AND t.`Status`  = 1
+      ORDER BY t.`ReleaseTime` DESC
+      LIMIT ?Offset, ?Size
+    </Statement>
+  </Statements>
+</SmartSqlMap>
