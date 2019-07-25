@@ -1,43 +1,41 @@
-//*******************************
-// Create By Ahoo Wang
-// Date 2019-07-23 15:46
-// Code Generate By SmartCode
-// Code Generate Github : https://github.com/Ahoo-Wang/SmartCode
-//*******************************
-
 using System;
+
 namespace Shunmai.Bxb.Entities
 {
-
     ///<summary>
-    /// Table, tradehalllog
+    /// 交易日志
     ///</summary>
     public class TradeHallLog
     {
         ///<summary>
-        /// LogId, bigint
+        /// 主键
         ///</summary>
-        public virtual long LogId { get; set; }
+        public long LogId { get; set; }
+
         ///<summary>
-        /// TradeHallId, int
+        /// 交易大厅ID
         ///</summary>
-        public virtual int TradeHallId { get; set; }
+        public int TradeHallId { get; set; }
+
         ///<summary>
-        /// OperateId, int
+        /// 操作人
         ///</summary>
-        public virtual int OperateId { get; set; }
+        public int OperateId { get; set; }
+
         ///<summary>
-        /// OperateName, varchar
+        /// 操作人名称
         ///</summary>
-        public virtual string OperateName { get; set; }
+        public string OperateName { get; set; }
+
         ///<summary>
-        /// OperateLog, varchar
+        /// 操作内容
         ///</summary>
-        public virtual string OperateLog { get; set; }
+        public string OperateLog { get; set; }
+
         ///<summary>
-        /// CreateTime, datetime
+        /// 操作时间
         ///</summary>
-        public virtual DateTime CreateTime { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }
 

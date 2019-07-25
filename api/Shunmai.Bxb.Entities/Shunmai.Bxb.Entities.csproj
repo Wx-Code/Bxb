@@ -8,8 +8,4 @@
     <Compile Remove="ShakeWechatConfig.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
-
 </Project>

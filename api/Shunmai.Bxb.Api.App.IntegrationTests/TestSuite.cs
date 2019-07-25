@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -14,7 +12,11 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
         public static string BuildQueryString(object data)
         {
             if (data == null) return string.Empty;
-            return data.GetType().GetProperties().Select(p => $"{p.Name}={p.GetValue(data)}").Join("&");
+            return data.GetType()
+                       .GetProperties()
+                       .Where(p => p.CanRead)
+                       .Select(p => $"{p.Name}={p.GetValue(data)}")
+                       .Join("&");
         }
 
         public static async Task<T> PostAsync<T>(WebApplicationFactory<Startup> factory, string url, object json)

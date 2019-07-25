@@ -10,7 +10,6 @@ using NLog.Web;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.Admin.Cache;
 using Shunmai.Bxb.Api.Admin.Filters;
-using Shunmai.Bxb.Common.Constants;
 using Shunmai.Bxb.Common.Filters;
 using Shunmai.Bxb.Common.Middleware;
 using Shunmai.Bxb.Common.ModelBinder;

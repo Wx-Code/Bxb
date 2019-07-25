@@ -28,6 +28,12 @@
     <None Update="Mappers\SystemConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mappers\TradeHall.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappers\TradeHallLog.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Mappers\User.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

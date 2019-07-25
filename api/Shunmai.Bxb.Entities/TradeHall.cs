@@ -1,68 +1,72 @@
-//*******************************
-// Create By Ahoo Wang
-// Date 2019-07-23 15:46
-// Code Generate By SmartCode
-// Code Generate Github : https://github.com/Ahoo-Wang/SmartCode
-//*******************************
-
 using Shunmai.Bxb.Entities.Enums;
 using System;
+
 namespace Shunmai.Bxb.Entities
 {
-
     ///<summary>
-    /// Table, tradehall
+    ///交易大厅
     ///</summary>
     public class TradeHall
     {
         ///<summary>
-        /// TradeId, int
+        /// 主键
         ///</summary>
-        public virtual int TradeId { get; set; }
+        public int TradeId { get; set; }
+
         ///<summary>
         /// 交易类型
         ///</summary>
-        public virtual TradeType TradeType { get; set; }
+        public TradeType TradeType { get; set; }
+
         ///<summary>
-        /// ReleaseUserId, int
+        /// 发布者ID
         ///</summary>
-        public virtual int ReleaseUserId { get; set; }
+        public int ReleaseUserId { get; set; }
+
         ///<summary>
-        /// ReleaseName, varchar
+        /// 发布者昵称
         ///</summary>
-        public virtual string ReleaseName { get; set; }
+        public string ReleaseName { get; set; }
+
         ///<summary>
         /// 货币类型
         ///</summary>
-        public virtual CurrencyType BType { get; set; }
+        public CurrencyType BType { get; set; }
+
         ///<summary>
-        /// TotalAmount, decimal
+        /// 总数量
         ///</summary>
-        public virtual decimal TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
+
         ///<summary>
-        /// Amount, decimal
+        /// 可交易数量
         ///</summary>
-        public virtual decimal Amount { get; set; }
+        public decimal Amount { get; set; }
+
         ///<summary>
-        /// Price, decimal
+        /// 单价
         ///</summary>
-        public virtual decimal Price { get; set; }
+        public decimal Price { get; set; }
+
         ///<summary>
-        /// ReleaseTime, datetime
+        /// 发布时间
         ///</summary>
-        public virtual DateTime ReleaseTime { get; set; }
+        public DateTime ReleaseTime { get; set; }
+
         ///<summary>
         /// 交易状态
         ///</summary>
-        public virtual TradeHallState State { get; set; }
+        public TradeHallState State { get; set; }
+
         ///<summary>
         /// 数据状态
         ///</summary>
-        public virtual TradeHallShelfStatus Status { get; set; }
+        public TradeHallShelfStatus Status { get; set; }
+
         ///<summary>
-        /// TradeCode, varchar
+        /// 交易码
         ///</summary>
-        public virtual string TradeCode { get; set; }
+        public string TradeCode { get; set; }
     }
 }
 

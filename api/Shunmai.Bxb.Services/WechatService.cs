@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Senparc.Weixin;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.MP.AdvancedAPIs;
@@ -11,14 +10,11 @@ using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.Helpers;
 using Senparc.Weixin.Open.QRConnect;
 using Senparc.Weixin.TenPay.V3;
-using Senparc.Weixin.WxOpen.AdvancedAPIs.WxApp;
 using Shunmai.Bxb.Services.Models.Wechat;
-using Shunmai.Bxb.Utilities;
 using Shunmai.Bxb.Utilities.Extenssions;
 using Shunmai.Bxb.Utilities.Validation;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Shunmai.Bxb.Services

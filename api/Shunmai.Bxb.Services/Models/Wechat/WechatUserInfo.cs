@@ -1,6 +1,4 @@
-﻿using Shunmai.Bxb.Entities.Enums;
-
-namespace Shunmai.Bxb.Services.Models.Wechat
+﻿namespace Shunmai.Bxb.Services.Models.Wechat
 {
     public class WechatUserInfo
     {
