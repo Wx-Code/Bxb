@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
 using Shunmai.Bxb.Entities.Views;
@@ -57,13 +56,22 @@ namespace Shunmai.Bxb.Services
             return rowCount != 1 ? (500, "修改交易信息失败") : (200, "修改成功");
         }
 
-        public (int num, List<TradeHallAppResponse> result) PagedGetAppTradeHalls(Pager query, int? userId)
+        public (int, string) UpdateTradeHallStatus(int tradeId, TradeHallShelfStatus status)
         {
-            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppTradeHalls(query.Offset, query.Size, userId);
+            Check.EnsureGreaterThanZero(tradeId, nameof(tradeId));
 
-            long count = _tradeHallRepository.GetAppTradeHallsCount();
+            int rowCount = _tradeHallRepository.UpdateTradeHallStatus(status, tradeId);
 
-            int num = count % query.Size == 0 ? Convert.ToInt32(count / query.Size) : Convert.ToInt32(count / query.Size + 1);
+            return rowCount != 1 ? (500, "修改交易信息失败") : (200, "修改成功");
+        }
+
+        public (int num, List<TradeHallAppResponse> result) PagedGetAppTradeHalls(Pager query)
+        {
+            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppTradeHalls(query.Offset, query.Size);
+
+            int count = _tradeHallRepository.GetAppTradeHallsCount();
+
+            int num = count % query.Size == 0 ? count / query.Size : count / query.Size + 1;
 
             return (num, result);
         }
@@ -78,6 +86,17 @@ namespace Shunmai.Bxb.Services
             Check.EnsureGreaterThanZero(tradeId, nameof(tradeId));
 
             return _tradeHallRepository.GetSingleTradeHallEntity(tradeId);
+        }
+
+        public (int num, List<TradeHallAppResponse> result) PagedGetAppUserPublishTradeHalls(Pager query, int userId)
+        {
+            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppUserPublishTradeHalls(query.Offset, query.Size, userId);
+
+            int count = _tradeHallRepository.GetAppUserPublishTradeHallsCount(userId);
+
+            int num = count % query.Size == 0 ? count / query.Size : count / query.Size + 1;
+
+            return (num, result);
         }
     }
 }
