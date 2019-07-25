@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Shunmai.Bxb.Api.App.Constansts;
+using Shunmai.Bxb.Api.App.Models;
+using Shunmai.Bxb.Common.Attributes;
 using Shunmai.Bxb.Entities;
+using Shunmai.Bxb.Entities.Views;
 using Shunmai.Bxb.Services;
+using Shunmai.Bxb.Services.Models;
 
 namespace Shunmai.Bxb.Api.App.Controllers
 {
@@ -20,7 +25,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         /// <summary>
         /// 发布交易信息
         /// </summary>
-        [HttpPost("message")]
+        [HttpPost("user/message")]
         public JsonResult PostMessage(TradeHall model)
         {
             if (string.IsNullOrWhiteSpace(CurrentUser.Phone))
@@ -43,10 +48,13 @@ namespace Shunmai.Bxb.Api.App.Controllers
         /// <summary>
         /// 编辑交易信息
         /// </summary>
-        [HttpPut("message")]
+        [HttpPut("user/message")]
         public JsonResult PutMessage(TradeHall model)
         {
-            //todo：zhu 校验信息的发布人和当前人是否一样
+            TradeHall entity = _tradeHallService.GetSingleTradeHallEntity(model.TradeId);
+
+            if (entity == null || entity.ReleaseUserId != CurrentUser.UserId)
+                return Failed();
 
             (int code, string message) = _tradeHallService.UpdateTradeHallEntity(model);
 
@@ -56,6 +64,65 @@ namespace Shunmai.Bxb.Api.App.Controllers
             return Failed("编辑交易信息失败");
         }
 
+        /// <summary>
+        /// 分页获取交易大厅中的所有交易信息
+        /// </summary>
+        [HttpGet("message")]
+        [SkipLoginVerification]
+        public JsonResult GetMessage(Pager query)
+        {
+            (int num, List<TradeHallAppResponse> data) = _tradeHallService.PagedGetAppTradeHalls(query, null);
 
+            foreach (TradeHallAppResponse item in data)
+            {
+                item.TradeCode = string.Empty;
+                item.WxCodePhoto = string.Empty;
+            }
+
+            ListResponse<TradeHallAppResponse> result = new ListResponse<TradeHallAppResponse>
+            {
+                Total = num,
+                List = data
+            };
+            return Success(result);
+        }
+
+        /// <summary>
+        /// 获取单条交易记录
+        /// </summary>
+        [HttpGet("message")]
+        [SkipLoginVerification]
+        public JsonResult GetMessage(int id)
+        {
+            if (id <= 0) return Failed();
+
+            TradeHallAppResponse result = _tradeHallService.GetAppTradeHallDetail(id);
+
+            if (result == null) return Failed();
+            return Success(result);
+        }
+
+        /// <summary>
+        /// 获取我发布的信息
+        /// </summary>
+        [HttpGet("user/message")]
+        public JsonResult GetUserMessage(Pager query)
+        {
+            (int num, List<TradeHallAppResponse> data) = _tradeHallService.PagedGetAppTradeHalls(query, CurrentUser.UserId);
+
+            foreach (TradeHallAppResponse item in data)
+            {
+                item.Nickname = string.Empty;
+                item.Avatar = string.Empty;
+                item.WxCodePhoto = string.Empty;
+            }
+
+            ListResponse<TradeHallAppResponse> result = new ListResponse<TradeHallAppResponse>
+            {
+                Total = num,
+                List = data
+            };
+            return Success(result);
+        }
     }
 }

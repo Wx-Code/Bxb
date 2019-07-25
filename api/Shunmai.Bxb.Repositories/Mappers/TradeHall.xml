@@ -58,20 +58,67 @@
     </Statement>
 
     <!-- APP 获取交易大厅数据 -->
-    <Statement Id="GetAppTradeHallEntities">
+    <Statement Id="PagedGetAppTradeHalls">
+      SELECT t.`TradeId`,
+             t.`Amount`,
+             t.`Price`,
+             t.`BType`,
+             t.`ReleaseTime`,
+             t.`TradeCode`
+             u.`Nickname`,
+             u.`Avatar`,
+             u.`WxCodePhoto`
+      FROM `TradeHall` AS t
+      INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
+      <Include RefId="TradeNormalStatusParams"></Include>
+      <IsNotNull Property="userId" Prepend="AND">
+        t.`ReleaseUserId` = ?userId
+      </IsNotNull>
+      ORDER BY t.`ReleaseTime` DESC
+      LIMIT ?Offset, ?Size
+    </Statement>
+
+    <!-- APP 获取交易大厅总记录数 -->
+    <Statement Id="GetAppTradeHallsCount">
+      SELECT COUNT(1)
+      FROM `TradeHall` AS t
+      INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
+      <Include RefId="TradeNormalStatusParams"></Include>
+    </Statement>
+
+    <!--APP 正常状态下的交易信息 查询参数-->
+    <Statement Id="TradeNormalStatusParams">
+      WHERE t.`State` = 0
+      AND t.`Status`  = 1
+    </Statement>
+
+    <!--APP 获取交易详情-->
+    <Statement Id="GetAppTradeHallDetail">
       SELECT t.`TradeId`,
              t.`Amount`,
              t.`Price`,
              t.`BType`,
              t.`ReleaseTime`,
              u.`Nickname`,
-             u.`Avatar`
+             u.`WxCodePhoto`
       FROM `TradeHall` AS t
       INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
-      WHERE t.`State` = 0
-      AND t.`Status`  = 1
-      ORDER BY t.`ReleaseTime` DESC
-      LIMIT ?Offset, ?Size
+      <Include RefId="TradeNormalStatusParams"></Include>
+      AND t.`TradeId` = ?tradeId
     </Statement>
+
+    <!-- 获取单条交易信息数据 -->
+    <Statement Id="GetSingleTradeHallEntity">
+      SELECT t.`TradeId`,
+             t.`ReleaseUserId`,
+             t.`BType`,
+             t.`Amount`,
+             t.`Price`,
+             t.`TradeCode`
+      FROM `TradeHall` AS t
+      <Include RefId="TradeNormalStatusParams"></Include>
+      AND t.`TradeId` = ?tradeId
+    </Statement>
+
   </Statements>
 </SmartSqlMap>

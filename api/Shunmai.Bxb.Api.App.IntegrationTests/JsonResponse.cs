@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Shunmai.Bxb.Api.App.IntegrationTests
+﻿namespace Shunmai.Bxb.Api.App.IntegrationTests
 {
     public class JsonResponse
     {

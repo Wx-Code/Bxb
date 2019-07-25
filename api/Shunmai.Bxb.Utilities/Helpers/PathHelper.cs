@@ -1,7 +1,5 @@
 ﻿using Shunmai.Bxb.Utilities.Validation;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Shunmai.Bxb.Utilities.Helpers
 {

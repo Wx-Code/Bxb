@@ -10,7 +10,6 @@ using NLog.Web;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.App.Cache;
 using Shunmai.Bxb.Api.App.Filters;
-using Shunmai.Bxb.Common.Constants;
 using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Common.Filters;
 using Shunmai.Bxb.Common.Middleware;
@@ -39,6 +38,7 @@ namespace Shunmai.Bxb.Api.App
                 return SmsProviderFactory.Create(smsConfig.SmsProvider);
             });
             services.AddSingleton<SmsService>();
+            services.AddSingleton<TradeHallService>();
         }
 
         public Startup(IConfiguration configuration)

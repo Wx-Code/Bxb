@@ -1,8 +1,13 @@
-﻿using Shunmai.Bxb.Entities;
+﻿using System;
+using System.Collections.Generic;
+using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
+using Shunmai.Bxb.Entities.Views;
 using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Services.Attributes;
+using Shunmai.Bxb.Services.Models;
 using Shunmai.Bxb.Services.Utils;
+using Shunmai.Bxb.Utilities.Validation;
 
 namespace Shunmai.Bxb.Services
 {
@@ -44,10 +49,35 @@ namespace Shunmai.Bxb.Services
 
         public (int, string) UpdateTradeHallEntity(TradeHall entity)
         {
+            Check.EnsureGreaterThanZero(entity.TradeId, nameof(entity.TradeId));
+
             entity.State = TradeHallState.Working;
             int rowCount = _tradeHallRepository.UpdateTradeHallEntity(entity);
 
             return rowCount != 1 ? (500, "修改交易信息失败") : (200, "修改成功");
+        }
+
+        public (int num, List<TradeHallAppResponse> result) PagedGetAppTradeHalls(Pager query, int? userId)
+        {
+            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppTradeHalls(query.Offset, query.Size, userId);
+
+            long count = _tradeHallRepository.GetAppTradeHallsCount();
+
+            int num = count % query.Size == 0 ? Convert.ToInt32(count / query.Size) : Convert.ToInt32(count / query.Size + 1);
+
+            return (num, result);
+        }
+
+        public TradeHallAppResponse GetAppTradeHallDetail(int tradeId)
+        {
+            return _tradeHallRepository.GetAppTradeHallDetail(tradeId);
+        }
+
+        public TradeHall GetSingleTradeHallEntity(int tradeId)
+        {
+            Check.EnsureGreaterThanZero(tradeId, nameof(tradeId));
+
+            return _tradeHallRepository.GetSingleTradeHallEntity(tradeId);
         }
     }
 }
