@@ -54,6 +54,16 @@ namespace Shunmai.Bxb.Entities.Views
         /// 货币类型显示名称
         /// </summary>
         public string BTypeText => BType.ToString();
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public TradeHallShelfStatus Status { get; set; }
+
+        /// <summary>
+        /// 状态显示文本
+        /// </summary>
+        public string StatusText { get; set; }
     }
 
 }

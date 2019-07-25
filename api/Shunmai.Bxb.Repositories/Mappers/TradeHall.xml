@@ -64,18 +64,13 @@
              t.`Price`,
              t.`BType`,
              t.`ReleaseTime`,
-             t.`TradeCode`
              u.`Nickname`,
-             u.`Avatar`,
-             u.`WxCodePhoto`
+             u.`Avatar`
       FROM `TradeHall` AS t
       INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
       <Include RefId="TradeNormalStatusParams"></Include>
-      <IsNotNull Property="userId" Prepend="AND">
-        t.`ReleaseUserId` = ?userId
-      </IsNotNull>
       ORDER BY t.`ReleaseTime` DESC
-      LIMIT ?Offset, ?Size
+      LIMIT ?offset, ?size
     </Statement>
 
     <!-- APP 获取交易大厅总记录数 -->
@@ -120,5 +115,25 @@
       AND t.`TradeId` = ?tradeId
     </Statement>
 
+    <!-- 获取我发布的交易信息 -->
+    <Statement Id="PagedGetAppUserPublishTradeHalls">
+      SELECT t.`TradeId`,
+             t.`Amount`,
+             t.`Price`,
+             t.`BType`,
+             t.`ReleaseTime`,
+             t.`Status`
+      FROM `TradeHall` AS t
+      WHERE t.`ReleaseUserId` = ?userId
+      ORDER BY t.`ReleaseTime` DESC
+      LIMIT ?offset, ?size
+    </Statement>
+
+    <!-- 获取我发布的交易信息 总条数-->
+    <Statement Id="GetAppUserPublishTradeHallsCount">
+      SELECT COUNT(1)
+      FROM `TradeHall` AS t
+      WHERE t.`ReleaseUserId` = ?userId
+    </Statement>
   </Statements>
 </SmartSqlMap>

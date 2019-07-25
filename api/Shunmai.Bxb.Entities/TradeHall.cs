@@ -59,7 +59,7 @@ namespace Shunmai.Bxb.Entities
         public TradeHallState State { get; set; }
 
         ///<summary>
-        /// 数据状态
+        /// 状态
         ///</summary>
         public TradeHallShelfStatus Status { get; set; }
 

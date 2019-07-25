@@ -6,18 +6,18 @@
 
         public int Page
         {
-            get => _page;
+            get => _page <= 0 ? 1 : _page;
 
-            set => _page = value <= 0 ? 1 : value;
+            set => _page = value;
         }
 
         private int _size;
 
         public int Size
         {
-            get => _size;
+            get => _size <= 0 ? 10 : _size;
 
-            set => _size = value <= 0 ? 10 : value;
+            set => _size = value;
         }
 
         public int Offset => (Page - 1) * Size;
