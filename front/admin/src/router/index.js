@@ -61,12 +61,36 @@ export const constantRouterMap = [
     ]
   },
 
+  // 用户管理
+  {
+    path: '/user',
+    name: 'User',
+    redirect: '/user/usermanage',
+    meta: { title: '用户管理', icon: 'user' },
+    component: Layout,
+    children: [
+      {
+        path: 'usermanage',
+        name: 'UserManage',
+        meta: { title: '用户管理', icon: 'user' },
+        component: () => import('@/views/user/usermanage/index')
+      },
+      {
+        path: 'datadetails',
+        name: 'Datadetails',
+        meta: { title: '用户详情', icon: 'user' },
+        hidden: true,
+        component: () => import('@/views/user/userdetail/index')
+      }
+    ]
+  },
+
   // 配置管理
   {
     path: '/config',
     name: 'SystemConfig',
     redirect: '/config/platwalletaddr',
-    meta: { title: '配置管理', icon: 'settings' },
+    meta: { title: '配置管理', icon: 'cash' },
     component: Layout,
     children: [
       {

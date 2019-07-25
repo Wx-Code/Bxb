@@ -16,6 +16,9 @@
         <el-input class="input-txt" type="number" v-model="model.sigleServiceFee" placeholder="请输入单笔转币服务费">
           <template slot="append">%</template>
         </el-input>
+        <br>
+        <span class="tips">（允许填写的范围为:0-100）</span>
+        <br>
       </el-form-item>
       <el-form-item>
         <el-button class="baocun-btn" type="primary" @click="onSubmit()">保存</el-button>

@@ -2,7 +2,9 @@
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Services.Models.Wechat;
+using Shunmai.Bxb.Utilities.Validation;
 using System;
+using System.Collections.Generic;
 
 namespace Shunmai.Bxb.Services
 {
@@ -37,6 +39,31 @@ namespace Shunmai.Bxb.Services
         public bool UpdateWalletAddress(object condition)
         {
             return _userRepository.UpdateWalletAddress(condition);
+        }
+
+        public List<User> QueryList(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            return _userRepository.QueryList(condition);
+        }
+
+        public int Count(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            return _userRepository.Count(condition);
+        }
+
+        public (int Total, List<User> List) QueryPage(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            var count = Count(condition);
+            var list = QueryList(condition);
+            return (count, list);
+        }
+
+        public User QueryUserDetail(int userId)
+        {
+            return _userRepository.QueryUserDetail(userId);
         }
     }
 }

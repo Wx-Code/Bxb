@@ -100,7 +100,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         public IActionResult UpdateUserWalletAddr([FromBody] UpdateUserWalletAddrRequest request)
         {
             string message = string.Empty;
-            if(request!=null&&request.UserId>0&&request.WalletAddress!=null)
+            if(request!=null&&request.UserId>0&&!request.WalletAddress.IsNullOrEmpty())
             {
                 bool query = _userService.UpdateWalletAddress(request);
                 return Success(query);
