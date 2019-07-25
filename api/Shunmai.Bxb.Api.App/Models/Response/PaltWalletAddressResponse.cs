@@ -1,14 +1,12 @@
 ﻿using Shunmai.Bxb.Entities.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Shunmai.Bxb.Services.Models
+namespace Shunmai.Bxb.Api.App.Models.Response
 {
-    /// <summary>
-    ///  ConfigValue -->  平台钱包地址   【转币、 手续费】
-    /// </summary>
-    public class PlatWalletAddrConfigModel
+    public class PaltWalletAddressResponse
     {
         public string PlatWalletAddrId { get; set; }
 
@@ -36,9 +34,5 @@ namespace Shunmai.Bxb.Services.Models
         /// 用途  1、  转币    2、 手续费
         /// </summary>
         public PurposeType Purpost { get; set; }
-
-
-
-
     }
 }

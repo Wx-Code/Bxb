@@ -39,6 +39,8 @@ namespace Shunmai.Bxb.Api.App
                 return SmsProviderFactory.Create(smsConfig.SmsProvider);
             });
             services.AddSingleton<SmsService>();
+            services.AddSingleton<SystemConfigService>();
+
         }
 
         public Startup(IConfiguration configuration)

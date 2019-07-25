@@ -94,5 +94,25 @@ namespace Shunmai.Bxb.Api.App.Controllers
                 expires = Constants.Defaults.TOKEN_EXPIRES.TotalMilliseconds
             });
         }
+
+        [SkipLoginVerification]
+        [HttpPost("updatewalletaddr")]
+        public IActionResult UpdateUserWalletAddr([FromBody] UpdateUserWalletAddrRequest request)
+        {
+            string message = string.Empty;
+            if(request!=null&&request.UserId>0&&request.WalletAddress!=null)
+            {
+                bool query = _userService.UpdateWalletAddress(request);
+                return Success(query);
+                
+            }
+            else
+            {
+                message = "请求参数不能为空值";
+                return Failed(message);
+            }
+
+
+        }
     }
 }

@@ -11,5 +11,7 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         User FindById(int userId);
         [Statement(Id = "QuerySingle")]
         User FindByOpenId(string openId);
+
+        bool UpdateWalletAddress(object condition);
     }
 }

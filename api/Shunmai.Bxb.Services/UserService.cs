@@ -33,5 +33,10 @@ namespace Shunmai.Bxb.Services
         {
             throw new NotImplementedException();
         }
+
+        public bool UpdateWalletAddress(object condition)
+        {
+            return _userRepository.UpdateWalletAddress(condition);
+        }
     }
 }

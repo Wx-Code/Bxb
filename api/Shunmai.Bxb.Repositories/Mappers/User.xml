@@ -42,54 +42,33 @@
         <IsNotEmpty Prepend="," Property="Avatar">
           Avatar=?Avatar
         </IsNotEmpty>
-        <IsGreaterThan CompareValue="0" Prepend="," Property="UserType">
-          UserType=?UserType
-        </IsGreaterThan>
+        <IsNotEmpty Prepend="," Property="WxCodePhoto">
+          WxCodePhoto=?WxCodePhoto
+        </IsNotEmpty>
         <IsNotEmpty Prepend="," Property="Realname">
           Realname=?Realname
-        </IsNotEmpty>
-        <IsGreaterThan CompareValue="0" Prepend="," Property="ShareId">
-          ShareId=?ShareId
-        </IsGreaterThan>
-        <IsNotEmpty Prepend="," Property="ShareNickname">
-          ShareNickname=?ShareNickname
         </IsNotEmpty>
         <IsNotEmpty Prepend="," Property="WxUnionId">
           WxUnionId=?WxUnionId
         </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="ShakeWxOpenId">
-          ShakeWxOpenId=?ShakeWxOpenId
-        </IsNotEmpty>
         <IsNotEmpty Prepend="," Property="WxOpenId">
           WxOpenId=?WxOpenId
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="Subscribed">
-          Subscribed=?Subscribed
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="IdCard">
-          IdCard=?IdCard
         </IsNotEmpty>
         <IsNotEmpty Prepend="," Property="Phone">
           Phone=?Phone
         </IsNotEmpty>
-        <IsTrue Prepend="," Property="Authenticated">
-          Authenticated=?Authenticated
-        </IsTrue>
-        <IsNotEmpty Prepend="," Property="BankAccountName">
-          BankAccountName=?BankAccountName
+        <IsNotEmpty Prepend="," Property="WalletAddress">
+          WalletAddress=?WalletAddress
         </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="BankAccountNumber">
-          BankAccountNumber=?BankAccountNumber
+        <IsNotEmpty Prepend="," Property="OutTotalAmount">
+          OutTotalAmount=?OutTotalAmount
         </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="BankName">
-          BankName=?BankName
-        </IsNotEmpty> 
-        <IsNotEmpty Prepend="," Property="BankCode">
-          BankCode=?BankCode
+        <IsNotEmpty Prepend="," Property="InTotalAmount">
+          InTotalAmount=?InTotalAmount
         </IsNotEmpty>
-        <IsTrue Prepend="," Property="BankInfoFilled">
-          BankInfoFilled=?BankInfoFilled
-        </IsTrue>
+        <IsNotEmpty Prepend="," Property="Deleted">
+          Deleted=?Deleted
+        </IsNotEmpty>
       </Set>
       <Where>
         `UserId`=?UserId
@@ -116,6 +95,19 @@
         AND `Deleted`=0
       </Where>
       LIMIT 1
+      ;
+    </Statement>
+
+
+    <Statement Id="UpdateWalletAddress">
+      UPDATE
+      `User`
+      <Set>
+          WalletAddress=?WalletAddress
+      </Set>
+      <Where>
+        `UserId`=?UserId
+      </Where>
       ;
     </Statement>
    
