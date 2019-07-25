@@ -92,6 +92,12 @@ export const constantRouterMap = [
         name: 'TradeRules',
         meta: { title: '交易规则配置', icon: 'fieid' },
         component: () => import('@/views/config/traderules')
+      },
+      {
+        path: 'customerservice',
+        name: 'CustomerService',
+        meta: { title: '客服信息配置', icon: 'fieid' },
+        component: () => import('@/views/config/customerservice')
       }
     ]
   },

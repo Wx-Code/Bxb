@@ -39,6 +39,8 @@ namespace Shunmai.Bxb.Api.App
             });
             services.AddSingleton<SmsService>();
             services.AddSingleton<TradeHallService>();
+            services.AddSingleton<SystemConfigService>();
+
         }
 
         public Startup(IConfiguration configuration)

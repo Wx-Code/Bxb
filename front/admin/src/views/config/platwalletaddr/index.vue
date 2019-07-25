@@ -88,8 +88,10 @@ export default {
         purpost:null,
         token:null
       },
-
+      editData:[],
+      platData:[],
       itemCount:0,
+      strMsg:null
     }
     
   },    
@@ -122,6 +124,7 @@ export default {
         this.PlatWalletData.token=null
     },
 
+
     handleEditPlatWalletAddr(row)
     {
       this.PlatWalletInfoFormVisible=true
@@ -133,8 +136,50 @@ export default {
       this.PlatWalletData.token=row.token
     },
 
+    //停用| 启用
+    handleEditState(row)
+    {
+      this.$log("row" ,row) 
+      this.platData=this.list;
+      this.$log("this list is", this.platData)
+      this.$confirm('是否确定执行该操作？','提示',{
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+      }).then(()=>{
+
+         if(row.state==1)
+          {
+            //需要启用
+            this.$set(this.platData[row.platWalletAddrId-1],'state',0)
+          }
+          else
+          {
+            //需要停用
+            this.$set(this.platData[row.platWalletAddrId-1],'state',1)
+          }
+          this.query.configValue = JSON.stringify(this.platData);    
+
+          configApi.addOrUpdate(this.query).then(res=>{
+              if(res.success=true)
+              {
+                  this.$message({
+                      type: 'success',
+                      message: '操作成功!'
+                  });
+                  this.loadPlatWalletAddrConfig()
+              }
+              else
+              {
+                  this.$error(res.message);
+              }
+          })
+      }).catch(() => {})
+    },
+
     handleSubmit()
     {
+        this.editData=this.list
         if(this.PlatWalletData.platWalletAddrName==null)
         {
           this.$error("钱包名称不能为空值， 请重新输入")
@@ -164,27 +209,22 @@ export default {
         if(this.PlatWalletData.platWalletAddrId==null||this.PlatWalletData.platWalletAddrId==""||this.PlatWalletData.platWalletAddrId==undefined)
         {
            this.PlatWalletData.platWalletAddrId=this.itemCount+1
-           this.list.push(this.PlatWalletData)
+           this.editData.push(this.PlatWalletData)
         }
         else
         {
           this.PlatWalletData.platWalletAddrId=this.PlatWalletData.platWalletAddrId
-          this.list.forEach(v => {
-            if(this.PlatWalletData.platWalletAddrId==v.platWalletAddrId)
-            {
-              this.list.splice(this.PlatWalletData.platWalletAddrId-1,0,this.PlatWalletData)
-            }
-          });
-          
+          this.$set(this.editData,this.PlatWalletData.platWalletAddrId-1,this.PlatWalletData)
         }
 
-        this.$log("postdata",this.list)
-        this.query.configValue = JSON.stringify(this.list);
+        this.$log("postdata",this.PlatWalletData.platWalletAddrId-1)
+        this.query.configValue = JSON.stringify(this.editData);
         this.$log("this query is:",this.query)
         configApi.addOrUpdate(this.query).then(res => {
           this.$log("AddOrUpdate Result Is： ",res)
           if (res.success) {
-            this.$success("操作成功");
+            this.loadPlatWalletAddrConfig()
+            this.$success("操作成功")
             this.PlatWalletInfoFormVisible=false
           } else {
             this.$error("操作失败，请联系管理员");
