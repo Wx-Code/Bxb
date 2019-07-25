@@ -47,7 +47,7 @@ namespace Shunmai.Bxb.Services
         }
 
         public async Task<IETResponse<string>> PayAsync(string destAddress, decimal amount, string remark)
-        {
+         {
             var postData = new PaymentData
             {
                 Amount = amount,
@@ -62,7 +62,13 @@ namespace Shunmai.Bxb.Services
 
         public async Task<IETResponse<QueryResponse>> QueryTradeRecordsAsync()
         {
-            var query = new QueryRequest { WalletId = _config.WalletId };
+            return await QueryTradeRecordsAsync(null, null);
+        }
+
+        public async Task<IETResponse<QueryResponse>> QueryTradeRecordsAsync(long? ledger, int? seq)
+        {
+            var marker = (ledger == null || seq == null) ? null : new Marker(ledger.Value, seq.Value);
+            var query = new QueryRequest(_config.WalletId, marker);
             return await Post<IETResponse<QueryResponse>>(QUERY_API_URL, Serialize(query), _config.Cookie);
         }
     }

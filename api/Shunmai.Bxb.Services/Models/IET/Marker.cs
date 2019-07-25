@@ -11,5 +11,11 @@ namespace Shunmai.Bxb.Services.Models.IET
         public long Ledger { get; set; }
         [JsonProperty("seq")]
         public int Seq { get; set; }
+
+        public Marker(long ledger, int seq)
+        {
+            Ledger = ledger;
+            Seq = seq;
+        }
     }
 }

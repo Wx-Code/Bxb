@@ -73,7 +73,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         {
             var config = new IETConfig
             {
-                Cookie = "WEBID=db0d02b8-b81e-4c53-ab80-958f833e263e",
+                Cookie = "WEBID=7c476f81-7d54-4ab8-94d8-3978218e9c11",
                 Password = "Jp2d\\/9Wb6YNGCxnJAWInpA==",
                 Phone = "15041113056",
                 ServiceFeeRate = 0.05m,
