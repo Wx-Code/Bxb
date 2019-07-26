@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Test.Common.Models;
 using Shunmai.Bxb.Utilities.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -38,9 +40,10 @@ namespace Shunmai.Bxb.Test.Common
             optionsBuilder.UseMySql(_connStr);
         }
 
-        public void Truncate(string table)
+        public void Truncate(params string[] tables)
         {
-            Database.ExecuteSqlCommand("TRUNCATE TABLE `" + table + "`;");
+            var sql = tables.Select(t => "TRUNCATE TABLE `" + t + "`;").Join("");
+            _ = Database.ExecuteSqlCommand(sql);
         }
 
         public virtual DbSet<UserExt> User { get; set; }

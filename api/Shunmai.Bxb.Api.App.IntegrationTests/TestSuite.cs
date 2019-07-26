@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Models.Wechat;
 using Shunmai.Bxb.Test.Common;
+using Shunmai.Bxb.Test.Common.Models;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -61,6 +62,20 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
         public static Mock<WechatService> GetMockWechatService()
         {
             return new Mock<WechatService>(MockBehavior.Strict, new object[] { Mock.Of<ILogger<WechatService>>(), Mock.Of<WechatConfig>() });
+        }
+
+        public static UserExt CreateTestUser()
+        {
+            return new UserExt
+            {
+                Avatar = "test_avatar",
+                Nickname = "test_nickname",
+                WxOpenId = "test_openId",
+                WxUnionId = "test_unionId",
+                WxCodePhoto = "test_qrcode",
+                Phone = "13521942500",
+                Realname = "test_realname",
+            };
         }
     }
 }

@@ -29,11 +29,6 @@ namespace Shunmai.Bxb.Services
             return _userRepository.FindById(userId);
         }
 
-        public User FindByOpenId(string openId)
-        {
-            return _userRepository.FindByOpenId(openId);
-        }
-
         [SmartSqlTransaction]
         public virtual bool AddUser(User user, out string message)
         {
@@ -75,6 +70,36 @@ namespace Shunmai.Bxb.Services
             }
 
             message = "注册成功";
+            return true;
+        }
+
+        [SmartSqlTransaction]
+        public virtual bool Login(string phone, out User user, out string message)
+        {
+            user = _userRepository.FindByPhone(phone);
+            if (user == null)
+            {
+                message = "用户不存在";
+                return false;
+            }
+
+            var userLog = new UserLog
+            {
+                LogContent = "用户登录",
+                LogContentFront = "用户登录",
+                LogType = UserLogType.Login,
+                Operator = user.UserId.ToString(),
+                UserId = user.UserId,
+            };
+            var logId = _userLogRepository.Insert(userLog);
+            if (logId <= 0)
+            {
+                _logger.LogError($"Add user log failed.");
+                message = "登录失败";
+                return false;
+            }
+
+            message = "登录成功";
             return true;
         }
 

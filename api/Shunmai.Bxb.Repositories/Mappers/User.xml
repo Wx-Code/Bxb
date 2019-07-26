@@ -46,10 +46,10 @@
           `UserId`=?userId
         </IsGreaterThan>
         <IsNotEmpty Prepend="AND" Property="openId">
-          `WxOpenId`=?openId OR `ShakeWxOpenId`=?openId OR `ShakeH5WxOpenId`=?openId
+          `WxOpenId`=?openId
         </IsNotEmpty>
-        <IsNotEmpty Prepend="AND" Property="unionId">
-          `WxUnionId`=?unionId
+        <IsNotEmpty Prepend="AND" Property="phone">
+          `Phone`=?phone
         </IsNotEmpty>
         AND `Deleted`=0
       </Where>

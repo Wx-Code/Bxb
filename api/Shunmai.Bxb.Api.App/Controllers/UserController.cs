@@ -42,8 +42,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         private IActionResult CacheUser(User user)
         {
             var token = GenerateToken(user);
-            var key = token;
-            var success = _cache.Set(key, user.UserId, Constants.Defaults.TOKEN_EXPIRES);
+            var success = _cache.Set(token, user.UserId, Constants.Defaults.TOKEN_EXPIRES);
             if (success == false)
             {
                 _logger.LogError("Cache token failed");
@@ -91,6 +90,28 @@ namespace Shunmai.Bxb.Api.App.Controllers
             };
             var success = _userService.AddUser(user, out var message);
             return success ? Success(message) : Failed(message);
+        }
+
+        [SkipLoginVerification]
+        [HttpPost("login")]
+        public IActionResult Login(
+            [FromBody]LoginRequest request
+            , [FromServices]IOptions<SmsConfig> options
+            , [FromServices]SmsService smsService
+        )
+        {
+            var valid = smsService.Validate(request.Phone, request.SmsCode, options.Value.ExpiresMinutes * 60);
+            if (valid == false)
+            {
+                return Failed("短信验证码有误");
+            }
+
+            var success = _userService.Login(request.Phone, out var user, out var message);
+            if (success)
+            {
+                return CacheUser(user);
+            }
+            return Failed(message);
         }
 
         [SkipLoginVerification]

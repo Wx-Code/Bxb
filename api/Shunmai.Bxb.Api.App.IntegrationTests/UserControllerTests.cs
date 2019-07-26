@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using Newtonsoft.Json.Linq;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.App.Controllers;
 using Shunmai.Bxb.Api.App.Models.Request;
@@ -85,9 +86,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
             var phone = "13521942500";
             var code = "123456";
             var dbContext = TestSuite.GetDbContext();
-            dbContext.Truncate(nameof(SmsVerificationCode));
-            dbContext.Truncate(nameof(User));
-            dbContext.Truncate(nameof(UserLog));
+            dbContext.Truncate(nameof(SmsVerificationCode), nameof(User), nameof(UserLog));
 
             var smsCode = dbContext.SmsVerificationCode.Add(new SmsCode { Phone = phone, State = SmsCodeState.Default, VerificationCode = code }).Entity;
             dbContext.SaveChanges(); 
@@ -117,6 +116,31 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
             _dbContext.SmsVerificationCode.Remove(smsCode);
             _dbContext.User.Remove(user);
             _dbContext.UserLog.Remove(userLog);
+            _dbContext.SaveChanges();
+        }
+
+        [Fact]
+        public async Task Login_Should_ExecuteSuccessfully_While_UserExists()
+        {
+            _dbContext.Truncate(nameof(User), nameof(SmsVerificationCode));
+            var user = _dbContext.User.Add(TestSuite.CreateTestUser()).Entity;
+            var code = _dbContext.SmsVerificationCode.Add(new SmsCode { Phone = user.Phone, VerificationCode = "123456" }).Entity;
+            _dbContext.SaveChanges();
+
+            var result = await TestSuite.PostAsync<JsonResponse>(_client, "/user/login", new LoginRequest { Phone = user.Phone, SmsCode = code.VerificationCode });
+            Assert.NotNull(result);
+            Assert.True(result.success);
+            Assert.NotNull(result.data);
+            var data = result.data as JToken;
+            var token = data.Value<string>("token");
+            Assert.NotNull(token);
+            var cache = _fixture.Server.GetService<ICache>();
+            var userId = cache.Get<int>(token);
+            Assert.Equal(user.UserId, userId);
+
+            cache.Remove(token);
+            _dbContext.User.Remove(user);
+            _dbContext.SmsVerificationCode.Remove(code);
             _dbContext.SaveChanges();
         }
     }
