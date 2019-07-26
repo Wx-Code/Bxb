@@ -81,6 +81,12 @@ export const constantRouterMap = [
         meta: { title: '用户详情', icon: 'user' },
         hidden: true,
         component: () => import('@/views/user/userdetail/index')
+      },
+      {
+        path: 'tradehall',
+        name: 'tradehall',
+        meta: { title: '消息管理', icon: 'message' },
+        component: () => import('@/views/user/tradehall')
       }
     ]
   },

@@ -102,9 +102,11 @@ namespace Shunmai.Bxb.Api.App.Controllers
         /// 获取我发布的信息
         /// </summary>
         [HttpGet("user/message")]
-        public JsonResult GetUserMessage([FromQuery]Pager query)
+        public JsonResult GetUserMessage([FromQuery]TradeHallQuery query)
         {
-            (int num, List<TradeHallAppResponse> data) = _tradeHallService.PagedGetAppUserPublishTradeHalls(query, CurrentUser.UserId);
+            query.UserId = CurrentUser.UserId;
+
+            (int count, List<TradeHallAppResponse> data) = _tradeHallService.PageGetAdminTradeHalls(query);
 
             foreach (TradeHallAppResponse item in data)
             {
@@ -113,7 +115,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
 
             ListResponse<TradeHallAppResponse> result = new ListResponse<TradeHallAppResponse>
             {
-                Total = num,
+                Total = count % query.Size == 0 ? count / query.Size : count / query.Size + 1,
                 List = data
             };
             return Success(result);

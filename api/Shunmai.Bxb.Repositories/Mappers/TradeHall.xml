@@ -115,25 +115,48 @@
       AND t.`TradeId` = ?tradeId
     </Statement>
 
-    <!-- 获取我发布的交易信息 -->
-    <Statement Id="PagedGetAppUserPublishTradeHalls">
-      SELECT t.`TradeId`,
-             t.`Amount`,
-             t.`Price`,
-             t.`BType`,
-             t.`ReleaseTime`,
-             t.`Status`
-      FROM `TradeHall` AS t
-      WHERE t.`ReleaseUserId` = ?userId
-      ORDER BY t.`ReleaseTime` DESC
+    <!-- 后台交易信息列表 -->
+    <Statement Id="PageGetAdminTradeHalls">
+      SELECT `TradeId`,
+             `ReleaseUserId`,
+             `BType`,
+             `Amount`,
+             `Price`,
+             `ReleaseTime`,
+             `Status`
+      FROM `TradeHall`
+      <Include RefId="PageGetAdminTradeHallsParams"></Include>
+      ORDER BY `ReleaseTime` DESC
       LIMIT ?offset, ?size
     </Statement>
 
-    <!-- 获取我发布的交易信息 总条数-->
-    <Statement Id="GetAppUserPublishTradeHallsCount">
+    <!-- 后台交易信息列表总条数 -->
+    <Statement Id="GetAdminTradeHallsCount">
       SELECT COUNT(1)
-      FROM `TradeHall` AS t
-      WHERE t.`ReleaseUserId` = ?userId
+      FROM `TradeHall` 
+      <Include RefId="PageGetAdminTradeHallsParams"></Include>
+    </Statement>
+
+    <!-- 后台交易查询列表查询参数 -->
+    <Statement Id="PageGetAdminTradeHallsParams">
+      <Where>
+        <IsNotNull Prepend="AND" Property="userId">
+          `ReleaseUserId` = ?userId
+        </IsNotNull>
+        <IsNotNull Prepend="AND" Property="bType">
+          `BType` = ?bType
+        </IsNotNull>
+        <IsNotNull Prepend="AND" Property="status">
+          `Status` = ?status
+        </IsNotNull>
+        <IsNotEmpty Prepend="AND" Property="startTime">
+          <![CDATA[ `ReleaseTime` >= ?startTime ]]>
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="endTime">
+          <![CDATA[ `ReleaseTime` <= ?endTime ]]>
+        </IsNotEmpty>
+      </Where>
     </Statement>
   </Statements>
+  
 </SmartSqlMap>

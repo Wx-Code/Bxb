@@ -64,6 +64,11 @@ namespace Shunmai.Bxb.Entities.Views
         /// 状态显示文本
         /// </summary>
         public string StatusText { get; set; }
+
+        /// <summary>
+        /// 发布人ID
+        /// </summary>
+        public int ReleaseUserId { get; set; }
     }
 
 }
