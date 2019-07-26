@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<SmartSqlMap Scope="TradeHall"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="TradeHallCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+
+  <Statements>
+    <!-- APP 发布交易 -->
+    <Statement Id="InsertTradeHallEntity">
+      INSERT INTO `TradeHall`(
+        `TradeType`,
+        `ReleaseUserId`,
+        `ReleaseName`,
+        `BType`,
+        `TotalAmount`,
+        `Amount`,
+        `Price`,
+        `ReleaseTime`,
+        `State`,
+        `Status`,
+        `TradeCode`
+      ) VALUES (
+        ?TradeType,
+        ?ReleaseUserId,
+        ?ReleaseName,
+        ?BType,
+        ?TotalAmount,
+        ?Amount,
+        ?Price,
+        ?ReleaseTime,
+        ?State,
+        ?Status,
+        ?TradeCode
+      );
+
+      SELECT LAST_INSERT_ID();
+    </Statement>
+
+    <!-- APP 编辑交易 -->
+    <Statement Id="UpdateTradeHallEntity">
+      UPDATE `TradeHall`
+      SET `BType`       = ?BType,
+          `TotalAmount` = ?TotalAmount,
+          `Amount`      = ?Amount,
+          `Price`       = ?Price,
+          `State`       = ?State
+      WHERE `TradeId`   = ?TradeId;
+    </Statement>
+
+    <!-- APP / Admin 下架交易信息 -->
+    <Statement Id="UpdateTradeHallStatus">
+      UPDATE `TradeHall`
+      SET `Status`    = ?status
+      WHERE `TradeId` = ?tradeId
+    </Statement>
+
+    <!-- APP 获取交易大厅数据 -->
+    <Statement Id="PagedGetAppTradeHalls">
+      SELECT t.`TradeId`,
+             t.`Amount`,
+             t.`Price`,
+             t.`BType`,
+             t.`ReleaseTime`,
+             u.`Nickname`,
+             u.`Avatar`
+      FROM `TradeHall` AS t
+      INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
+      <Include RefId="TradeNormalStatusParams"></Include>
+      ORDER BY t.`ReleaseTime` DESC
+      LIMIT ?offset, ?size
+    </Statement>
+
+    <!-- APP 获取交易大厅总记录数 -->
+    <Statement Id="GetAppTradeHallsCount">
+      SELECT COUNT(1)
+      FROM `TradeHall` AS t
+      INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
+      <Include RefId="TradeNormalStatusParams"></Include>
+    </Statement>
+
+    <!--APP 正常状态下的交易信息 查询参数-->
+    <Statement Id="TradeNormalStatusParams">
+      WHERE t.`State` = 0
+      AND t.`Status`  = 1
+    </Statement>
+
+    <!--APP 获取交易详情-->
+    <Statement Id="GetAppTradeHallDetail">
+      SELECT t.`TradeId`,
+             t.`Amount`,
+             t.`Price`,
+             t.`BType`,
+             t.`ReleaseTime`,
+             u.`Nickname`,
+             u.`WxCodePhoto`
+      FROM `TradeHall` AS t
+      INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
+      <Include RefId="TradeNormalStatusParams"></Include>
+      AND t.`TradeId` = ?tradeId
+    </Statement>
+
+    <!-- 获取单条交易信息数据 -->
+    <Statement Id="GetSingleTradeHallEntity">
+      SELECT t.`TradeId`,
+             t.`ReleaseUserId`,
+             t.`BType`,
+             t.`Amount`,
+             t.`Price`,
+             t.`TradeCode`
+      FROM `TradeHall` AS t
+      <Include RefId="TradeNormalStatusParams"></Include>
+      AND t.`TradeId` = ?tradeId
+    </Statement>
+
+    <!-- 获取我发布的交易信息 -->
+    <Statement Id="PagedGetAppUserPublishTradeHalls">
+      SELECT t.`TradeId`,
+             t.`Amount`,
+             t.`Price`,
+             t.`BType`,
+             t.`ReleaseTime`,
+             t.`Status`
+      FROM `TradeHall` AS t
+      WHERE t.`ReleaseUserId` = ?userId
+      ORDER BY t.`ReleaseTime` DESC
+      LIMIT ?offset, ?size
+    </Statement>
+
+    <!-- 获取我发布的交易信息 总条数-->
+    <Statement Id="GetAppUserPublishTradeHallsCount">
+      SELECT COUNT(1)
+      FROM `TradeHall` AS t
+      WHERE t.`ReleaseUserId` = ?userId
+    </Statement>
+  </Statements>
+</SmartSqlMap>

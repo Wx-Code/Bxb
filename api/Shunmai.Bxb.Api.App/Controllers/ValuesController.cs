@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Shunmai.Bxb.Common.Attributes;
 using System.Collections.Generic;
 

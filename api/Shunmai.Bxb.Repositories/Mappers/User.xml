@@ -34,6 +34,77 @@
       SELECT LAST_INSERT_ID();
     </Statement>
 
+    
+    <!-- 查询 单条数据 -->
+    <Statement Id="QuerySingle">
+      SELECT
+      <Include RefId="Fields"></Include>
+      FROM
+      `User`
+      <Where>
+        <IsGreaterThan CompareValue="0" Prepend="AND" Property="userId">
+          `UserId`=?userId
+        </IsGreaterThan>
+        <IsNotEmpty Prepend="AND" Property="openId">
+          `WxOpenId`=?openId OR `ShakeWxOpenId`=?openId OR `ShakeH5WxOpenId`=?openId
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="unionId">
+          `WxUnionId`=?unionId
+        </IsNotEmpty>
+        AND `Deleted`=0
+      </Where>
+      LIMIT 1
+      ;
+    </Statement>
+
+    <!-- 查询参数 -->
+    <Statement Id="QueryParams">
+      <Where>
+        `Deleted`=0
+        <IsNotEmpty Prepend="AND" Property="UserId">
+          `UserId`=?UserId
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="Nickname">
+          `Nickname` LIKE Concat('%',$Nickname,'%')
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="Phone">
+          `Phone` LIKE Concat('%',$Phone,'%')
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="WalletAddress">
+          `WalletAddress`=?WalletAddress
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="StartTime">
+          `CreatedTime` > ?StartTime
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="EndTime">
+          <![CDATA[`CreatedTime` < ?EndTime]]>
+        </IsNotEmpty>
+      </Where>
+    </Statement>
+
+    <!-- 数据数据条数 -->
+    <Statement Id="Count">
+      SELECT COUNT(*) FROM `User`
+      <Include RefId="QueryParams"></Include>
+    </Statement>
+
+    <!-- 查询列表 -->
+    <Statement Id="QueryList">
+      SELECT
+      <Include RefId="SelectFields"></Include>
+      FROM
+      `User` T
+      <Include RefId="QueryParams"></Include>
+      <Switch Prepend="ORDER BY" Property="OrderBy">
+        <Default>
+          T.CreatedTime DESC
+        </Default>
+      </Switch>
+      <IsNotEmpty Prepend="LIMIT" Property="Page">
+        ?Offset, ?Size
+      </IsNotEmpty>
+    </Statement>
+
     <!-- 更新 -->
     <Statement Id="Update">
       UPDATE
@@ -53,9 +124,23 @@
       </Where>
       ;
     </Statement>
+
+
+    <!--更新用户钱包地址-->
+    <Statement Id="UpdateWalletAddress">
+      UPDATE
+      `User`
+      <Set>
+        WalletAddress=?WalletAddress
+      </Set>
+      <Where>
+        `UserId`=?UserId
+      </Where>
+      ;
+    </Statement>
     
     <!-- 查询 单条数据 -->
-    <Statement Id="QuerySingle">
+    <Statement Id="QueryUserDetail">
       SELECT
         <Include RefId="Fields"></Include>
       FROM

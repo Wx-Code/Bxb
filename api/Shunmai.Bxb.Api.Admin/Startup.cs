@@ -10,7 +10,6 @@ using NLog.Web;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.Admin.Cache;
 using Shunmai.Bxb.Api.Admin.Filters;
-using Shunmai.Bxb.Common.Constants;
 using Shunmai.Bxb.Common.Filters;
 using Shunmai.Bxb.Common.Middleware;
 using Shunmai.Bxb.Common.ModelBinder;
@@ -66,7 +65,7 @@ namespace Shunmai.Bxb.Api.Admin
         {
             services.AddSingleton<AdminUserService>();
             services.AddSingleton<SystemConfigService>();
-
+            services.AddSingleton<UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -5,11 +5,9 @@ using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Test.Common;
 using Shunmai.Bxb.Utilities.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shunmai.Bxb.Api.App.Constants;
-using Shunmai.Bxb.Api.App.Utils;
 using Shunmai.Bxb.Common;
 using Shunmai.Bxb.Entities;
 

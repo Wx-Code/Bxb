@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Shunmai.Bxb.Common.Models
+﻿namespace Shunmai.Bxb.Common.Models
 {
     public class AliOssServiceConfig
     {

@@ -10,7 +10,6 @@ using NLog.Web;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.App.Cache;
 using Shunmai.Bxb.Api.App.Filters;
-using Shunmai.Bxb.Common.Constants;
 using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Common.Filters;
 using Shunmai.Bxb.Common.Middleware;
@@ -48,6 +47,9 @@ namespace Shunmai.Bxb.Api.App
                 var factory = sp.GetRequiredService<ILoggerFactory>();
                 return new WechatService(factory.CreateLogger<WechatService>(), config);
             });
+            services.AddSingleton<TradeHallService>();
+            services.AddSingleton<SystemConfigService>();
+
         }
 
         public Startup(IConfiguration configuration)
