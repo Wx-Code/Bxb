@@ -1,7 +1,6 @@
 import request from '@/utils/request'
 
 export default {
-
   login(code,activityId,groupId) { //通过code获取用户信息
     return request({
       method: 'POST',
@@ -14,13 +13,15 @@ export default {
     })
 
   },
-  getUserInfo() {//通过token获取用户信息
+  register(data) {
     return request({
-      method: 'GET',
-      url: '/user',
-      params: null
+      method: 'POST',
+      url: '/user/register',
+      data: data
     })
 
-  },
+  }
+
+
 
 }

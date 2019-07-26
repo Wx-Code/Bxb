@@ -40,7 +40,10 @@ const trimEnd = (source, target) => {
 }
 
 const whiteList = [
+  '/',
   '/login',
+  '/register',
+  '/myCenter',
 ].map(p => addPrefix(p))
 
 router.beforeEach(async (to, from, next) => {
@@ -51,11 +54,10 @@ router.beforeEach(async (to, from, next) => {
     next()
     return
   }
-
   const token = store.getToken()
   if (!!token) {
     next()
   } else {
-    next({ name: 'Login', query: to.query })
+    next({ path: '/', query: to.query })
   }
 })
