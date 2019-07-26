@@ -48,5 +48,13 @@ export default {
       url: '/admin/userinfo/userdetail',
       params: { userId: userId }
     })
+  },
+
+  getUserLogList(query) {
+    return request({
+      method: 'get',
+      url: '/admin/userinfo/GetUserLogList',
+      params: query
+    })
   }
 }

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SmartSqlMap Scope="UserLog"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="UserLogCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+
+  <Statements>
+
+    <!-- 字段 -->
+    <Statement Id="SelectFields">
+      `UserLogId`,`UserId`, `LogType`, `LogContent`, `LogContentFront`, `Operator`,`CreatedTime`,`Deleted`
+    </Statement>
+
+    <!-- 新增 -->
+    <Statement Id="Insert">
+      INSERT INTO
+      `UserLog`
+      (
+      UserId, LogType, LogContent, LogContentFront, Operator,CreatedTime,Deleted
+      )
+      VALUES
+      (
+      ?UserId, ?LogType, ?LogContent, ?LogContentFront,?Operator, ?CreatedTime, ?Deleted
+      )
+      ;
+      SELECT LAST_INSERT_ID();
+    </Statement>
+
+    <!-- 查询参数 -->
+    <Statement Id="QueryParams">
+      <Where>
+        `Deleted`=0
+        <IsNotEmpty Prepend="AND" Property="UserId">
+          `UserId`=?UserId
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="LogType">
+          `LogType`=?LogType
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="StartTime">
+          `CreatedTime` > ?StartTime
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="EndTime">
+          <![CDATA[`CreatedTime` < ?EndTime]]>
+        </IsNotEmpty>
+      </Where>
+    </Statement>
+
+    <!-- 数据数据条数 -->
+    <Statement Id="Count">
+      SELECT COUNT(*) FROM `UserLog`
+      <Include RefId="QueryParams"></Include>
+    </Statement>
+
+    <!-- 查询列表 -->
+    <Statement Id="QueryList">
+      SELECT
+      <Include RefId="SelectFields"></Include>
+      FROM
+      `UserLog` T
+      <Include RefId="QueryParams"></Include>
+      <Switch Prepend="ORDER BY" Property="OrderBy">
+        <Default>
+          T.CreatedTime DESC
+        </Default>
+      </Switch>
+      <IsNotEmpty Prepend="LIMIT" Property="Page">
+        ?Offset, ?Size
+      </IsNotEmpty>
+    </Statement>
+
+
+
+    <!-- 查询 单条数据 -->
+    <Statement Id="QuerySigle">
+      SELECT
+      <Include RefId="SelectFields"></Include>
+      FROM
+      `UserLog`
+      <Include RefId="QueryParams"></Include>
+      LIMIT 1
+      ;
+    </Statement>
+
+  </Statements>
+</SmartSqlMap>

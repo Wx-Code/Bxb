@@ -12,13 +12,16 @@ namespace Shunmai.Bxb.Services
     {
         private readonly ILogger _logger;
         private readonly IUserRepository _userRepository;
+        private readonly IUserLogRepository _userLogRepository;
 
         public UserService(ILogger<UserService> logger
             , IUserRepository userRepository
+            ,IUserLogRepository userLogRepository
         )
         {
             _logger = logger;
             _userRepository = userRepository;
+            _userLogRepository = userLogRepository;
         }
 
         public User FindById(int userId)
@@ -65,5 +68,39 @@ namespace Shunmai.Bxb.Services
         {
             return _userRepository.QueryUserDetail(userId);
         }
+
+
+
+
+        public int InsertUserLog(UserLog userlog)
+        {
+            return _userLogRepository.Insert(userlog);
+        }
+
+        public List<UserLog> QueryUserLogList(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            return _userLogRepository.QueryList(condition);
+        }
+
+        public int GetUserLogCount(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            return _userLogRepository.Count(condition);
+        }
+
+        public (int Total, List<UserLog> List) QueryUserLogPage(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            var count = GetUserLogCount(condition);
+            var list = QueryUserLogList(condition);
+            return (count, list);
+        }
+
+        public UserLog QueryUserLogSigle(int userId)
+        {
+            return _userLogRepository.QuerySigle(userId);
+        }
+
     }
 }

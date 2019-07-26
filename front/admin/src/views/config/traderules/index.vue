@@ -6,9 +6,9 @@
     <hr>
     <br>
     <br>
-    <el-form :model="model" label-width="300px" class="formpadding">
+    <el-form :model="transactionRules" label-width="300px" class="formpadding">
       <el-form-item  label="交易规则：">
-        <el-input class="input-txt" autosize type="textarea" v-model="model.transactionRules" placeholder="请输入交易规则">
+        <el-input class="input-txt" autosize type="textarea" v-model="transactionRules" placeholder="请输入交易规则">
         </el-input>
       </el-form-item>
 
@@ -24,9 +24,7 @@ import configApi from "@/api/systemconfig"; //用户相关
 export default {
   data() {
     return {
-      model: {
-        transactionRules: null
-      },
+      transactionRules:null,
       query: {
         configName: "TradeRules",
         configValue: "",
@@ -39,7 +37,7 @@ export default {
       configApi.get(this.query.configName).then(res => {
         this.$log("LoadConfig Response Result is :", res);
         if (res.success == true) {
-          this.model = JSON.parse(res.data.configValue);
+          this.transactionRules = res.data.configValue;
         } else {
           this.$error(res.message);
         }
@@ -48,16 +46,13 @@ export default {
 
     onSubmit() {
 
-      if(this.model.transactionRules==null||this.model.transactionRules==''||this.model.transactionRules==undefined)
+      if(this.transactionRules==null||this.transactionRules==''||this.transactionRules==undefined)
       {
         this.$error("请输入交易规则")
         return false
       }
 
-      const postData = Object.assign({}, this.model);
-
-
-      this.query.configValue = JSON.stringify(postData);
+      this.query.configValue = this.transactionRules
       this.$log("this query is:",this.query)
       configApi.addOrUpdate(this.query).then(res => {
         this.$log("AddOrUpdate Result Is： ",res)

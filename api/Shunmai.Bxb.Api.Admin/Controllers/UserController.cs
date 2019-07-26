@@ -27,7 +27,6 @@ namespace Shunmai.Bxb.Api.Admin.Controllers
             _userService = userService;
         }
 
-        [SkipLoginVerification]
         [HttpGet("GetUserList")]
         public IActionResult GetUserList([FromQuery] UserQuery query)
         {
@@ -50,6 +49,18 @@ namespace Shunmai.Bxb.Api.Admin.Controllers
                 return Failed();
             }
             return Success(res);
+        }
+
+        [HttpGet("GetUserLogList")]
+        public IActionResult GetUserLogList([FromQuery]UserLogQuery query)
+        {
+            var (total, list) = _userService.QueryUserLogPage(query);
+            var data = new Models.ListResponse<UserLog>
+            {
+                List = list.MapToList<UserLog>(),
+                Total = total
+            };
+            return Success(data);
         }
 
     }

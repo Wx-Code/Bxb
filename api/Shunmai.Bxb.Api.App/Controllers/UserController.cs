@@ -5,6 +5,7 @@ using Shunmai.Bxb.Api.App.Models.Request;
 using Shunmai.Bxb.Api.App.Models.Response;
 using Shunmai.Bxb.Common.Attributes;
 using Shunmai.Bxb.Entities;
+using Shunmai.Bxb.Entities.Enums;
 using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Models.Wechat;
 using Shunmai.Bxb.Utilities.Extenssions;
@@ -95,14 +96,39 @@ namespace Shunmai.Bxb.Api.App.Controllers
             });
         }
 
-        [SkipLoginVerification]
         [HttpPost("updatewalletaddr")]
         public IActionResult UpdateUserWalletAddr([FromBody] UpdateUserWalletAddrRequest request)
         {
             string message = string.Empty;
             if(request!=null&&request.UserId>0&&!request.WalletAddress.IsNullOrEmpty())
             {
+                var userDetail = _userService.QueryUserDetail(request.UserId);
+
                 bool query = _userService.UpdateWalletAddress(request);
+                message = $"更新钱包地址为：{request.WalletAddress}";
+                if (query)
+                {
+                    //增加操作日志
+                    UserLog log = new UserLog()
+                    {
+                        UserId = request.UserId,
+                        LogContent =message,
+                        LogContentFront=message,
+                        Operator=$"{userDetail.Realname}",
+                        CreatedTime=DateTime.Now,
+                        LogType= UserLogType.UpdateWalletAddress,
+                        Deleted=false
+                    };
+                    try
+                    {
+                        _userService.InsertUserLog(log);
+
+                    }
+                    catch(Exception ex)
+                    {
+                        _logger.LogError($"用户修改钱包地址记录日志异常，内容：{log.JsonSerialize()}");
+                    }
+                }
                 return Success(query);
                 
             }
@@ -114,5 +140,6 @@ namespace Shunmai.Bxb.Api.App.Controllers
 
 
         }
+
     }
 }
