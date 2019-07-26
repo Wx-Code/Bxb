@@ -11,6 +11,12 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         User FindById(int userId);
         [Statement(Id = "QuerySingle")]
         User FindByOpenId(string openId);
+        [Statement(Id = "QuerySingle")]
+        User FindByPhone(string phone);
+        [Statement(Id = "Exists")]
+        bool ExistsByPhone(string phone);
+        [Statement(Id = "Exists")]
+        bool ExistsByOpenId(string openId);
 
         bool UpdateWalletAddress(object condition);
         int Count(object condition);

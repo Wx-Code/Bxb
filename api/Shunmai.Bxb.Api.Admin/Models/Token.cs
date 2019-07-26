@@ -1,5 +1,5 @@
 ﻿using Shunmai.Bxb.Common.Exceptions;
-using Shunmai.Bxb.Utilities.Validation;
+using Shunmai.Bxb.Utilities.Check;
 using System;
 
 namespace Shunmai.Bxb.Api.Admin.Models

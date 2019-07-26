@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Shunmai.Bxb.Abstractions;
+using Shunmai.Bxb.Cache.Exceptions;
+using Shunmai.Bxb.Utilities.Check;
+using Shunmai.Bxb.Utilities.Extenssions;
+using Shunmai.Bxb.Utilities.Helpers;
+using StackExchange.Redis;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
-using Newtonsoft.Json;
-using Shunmai.Bxb.Abstractions;
-using Shunmai.Bxb.Cache.Exceptions;
-using Shunmai.Bxb.Utilities.Extenssions;
-using Shunmai.Bxb.Utilities.Helpers;
-using Shunmai.Bxb.Utilities.Validation;
-using StackExchange.Redis;
 
 namespace Shunmai.Bxb.Cache
 {

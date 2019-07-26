@@ -1,5 +1,4 @@
-﻿using Shunmai.Bxb.Utilities.Validation;
-using System;
+﻿using System;
 
 namespace Shunmai.Bxb.Utilities.Helpers
 {
@@ -7,7 +6,7 @@ namespace Shunmai.Bxb.Utilities.Helpers
     {
         public static string MapPath(string relativePath)
         {
-            Check.Empty(relativePath, nameof(relativePath));
+            Check.Check.Empty(relativePath, nameof(relativePath));
 
             var seperators = new[] { '\\', '/' };
             var dir = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(seperators);

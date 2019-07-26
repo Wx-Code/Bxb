@@ -7,7 +7,7 @@ namespace Shunmai.Bxb.Repositories.Interfaces
 {
     public interface IUserLogRepository
     {
-        int Insert(UserLog user);
+        int Insert(UserLog userlog);
 
         int Count(object condition);
         List<UserLog> QueryList(object condition);

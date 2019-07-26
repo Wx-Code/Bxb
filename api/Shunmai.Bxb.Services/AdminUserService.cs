@@ -1,7 +1,7 @@
 ﻿using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Utilities.Helpers;
-using Shunmai.Bxb.Utilities.Validation;
+using Shunmai.Bxb.Utilities.Check;
 using System;
 using System.Collections.Generic;
 
@@ -75,7 +75,7 @@ namespace Shunmai.Bxb.Services
         /// <returns>修改成功返回<c>true</c>，否则返回<c>false</c></returns>
         public bool UpdatePassword(int userId, string newPwd, string oldPwd = null)
         {
-            Check.EnsureGreaterThanZero(userId, nameof(userId));
+            Check.EnsureMoreThanZero(userId, nameof(userId));
             Check.Empty(newPwd, nameof(newPwd));
 
             var user = QuerySingle(userId);

@@ -1,4 +1,5 @@
 ﻿using Aliyun.OSS;
+using Shunmai.Bxb.Utilities.Check;
 using System;
 using System.IO;
 
@@ -37,14 +38,14 @@ namespace Shunmai.Bxb.Utils.Helpers
             , string bucketName
         )
         {
-            Check.Check.Empty(filename, nameof(filename));
-            Check.Check.Null(fileStream, nameof(fileStream));
-            Check.Check.Empty(dirName, nameof(dirName));
-            Check.Check.Empty(website, nameof(website));
-            Check.Check.Empty(accessKeyId, nameof(accessKeyId));
-            Check.Check.Empty(accessKeySecret, nameof(accessKeySecret));
-            Check.Check.Empty(endpoint, nameof(endpoint));
-            Check.Check.Empty(bucketName, nameof(bucketName));
+            Check.Empty(filename, nameof(filename));
+            Check.Null(fileStream, nameof(fileStream));
+            Check.Empty(dirName, nameof(dirName));
+            Check.Empty(website, nameof(website));
+            Check.Empty(accessKeyId, nameof(accessKeyId));
+            Check.Empty(accessKeySecret, nameof(accessKeySecret));
+            Check.Empty(endpoint, nameof(endpoint));
+            Check.Empty(bucketName, nameof(bucketName));
 
             var client = new OssClient(endpoint, accessKeyId, accessKeySecret);
             var guid = Guid.NewGuid().ToString("N");

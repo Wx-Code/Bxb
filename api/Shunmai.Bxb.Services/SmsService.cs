@@ -5,7 +5,7 @@ using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Services.Attributes;
 using Shunmai.Bxb.Utilities.Extenssions;
 using Shunmai.Bxb.Utilities.Sms;
-using Shunmai.Bxb.Utilities.Validation;
+using Shunmai.Bxb.Utilities.Check;
 using System;
 
 namespace Shunmai.Bxb.Services
@@ -35,6 +35,11 @@ namespace Shunmai.Bxb.Services
             return _verificationCodeRepository.QueryNonExpired(phone, expireSeconds);
         }
 
+        private bool IsValid(SmsVerificationCode code)
+        {
+            return code.State == SmsCodeState.Default;
+        }
+
         /// <summary>
         /// 向给定手机号码发送短信验证码，采用以下策略：
         /// 若数据库中存在未过期且未验证过的验证码，则发送此码
@@ -48,11 +53,11 @@ namespace Shunmai.Bxb.Services
         public virtual bool SendSmsCode(string phone, int length, ApplicationType appType, int expireSeconds = 10 * 60)
         {
             Check.Empty(phone, nameof(phone));
-            Check.EnsureGreaterThanZero(length, nameof(length));
-            Check.EnsureGreaterThanZero(expireSeconds, nameof(expireSeconds));
+            Check.EnsureMoreThanZero(length, nameof(length));
+            Check.EnsureMoreThanZero(expireSeconds, nameof(expireSeconds));
 
             var nonExpired = QueryNonExpired(phone, expireSeconds);
-            if (nonExpired != null && nonExpired.State == SmsCodeState.Default)
+            if (nonExpired != null && IsValid(nonExpired))
             {
                 if (_smsProvider.SendCode(phone, nonExpired.VerificationCode) != null)
                 {
@@ -99,6 +104,30 @@ namespace Shunmai.Bxb.Services
                 return false;
             }
 
+            return true;
+        }
+
+        [SmartSqlTransaction]
+        public virtual bool Validate(string phone, string code, int expireSeconds)
+        {
+            Check.Empty(phone, nameof(phone));
+            Check.Empty(code, nameof(code));
+            Check.EnsureMoreThanZero(expireSeconds, nameof(expireSeconds));
+
+            var nonExpired = QueryNonExpired(phone, expireSeconds);
+            if (nonExpired == null 
+                || nonExpired.VerificationCode != code 
+                || IsValid(nonExpired) == false)
+            {
+                return false;
+            }
+
+            var success = _verificationCodeRepository.UpdateState(nonExpired.VcId, SmsCodeState.Verified);
+            if (success == false)
+            {
+                _logger.LogError("Failed to change the code state to verified.");
+                return false;
+            }
             return true;
         }
     }

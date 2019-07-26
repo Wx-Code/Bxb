@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -17,6 +20,38 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
         public static string Join(this IEnumerable<string> strs, string seperator)
         {
             return string.Join(seperator, strs.ToArray());
+        }
+
+        public static T GetService<T>(this WebApplicationFactory<Startup> factory) where T: class
+        {
+            return factory.Server.Host.Services.GetService(typeof(T)) as T;
+        }
+
+        public static T GetService<T>(this TestServer server) where T : class
+        {
+            return server.Host.Services.GetService(typeof(T)) as T;
+        }
+
+        public static void AddHeaders(this HttpClient client, IDictionary<string, string> headers)
+        {
+            if (headers != null)
+            {
+                foreach (var key in headers.Keys)
+                {
+                    client.DefaultRequestHeaders.Add(key, headers[key]);
+                }
+            }
+        }
+
+        public static void RemoveHeaders(this HttpClient client, IDictionary<string, string> headers)
+        {
+            if (headers != null)
+            {
+                foreach (var key in headers.Keys)
+                {
+                    client.DefaultRequestHeaders.Remove(key);
+                }
+            }
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using Shunmai.Bxb.Entities;
+﻿using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
 using Shunmai.Bxb.Entities.Views;
 using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Services.Attributes;
 using Shunmai.Bxb.Services.Models;
 using Shunmai.Bxb.Services.Utils;
-using Shunmai.Bxb.Utilities.Validation;
+using Shunmai.Bxb.Utilities.Check;
+using System.Collections.Generic;
 
 namespace Shunmai.Bxb.Services
 {
@@ -48,7 +48,7 @@ namespace Shunmai.Bxb.Services
 
         public (int, string) UpdateTradeHallEntity(TradeHall entity)
         {
-            Check.EnsureGreaterThanZero(entity.TradeId, nameof(entity.TradeId));
+            Check.EnsureMoreThanZero(entity.TradeId, nameof(entity.TradeId));
 
             entity.State = TradeHallState.Working;
             int rowCount = _tradeHallRepository.UpdateTradeHallEntity(entity);
@@ -58,7 +58,7 @@ namespace Shunmai.Bxb.Services
 
         public (int, string) UpdateTradeHallStatus(int tradeId, TradeHallShelfStatus status)
         {
-            Check.EnsureGreaterThanZero(tradeId, nameof(tradeId));
+            Check.EnsureMoreThanZero(tradeId, nameof(tradeId));
 
             int rowCount = _tradeHallRepository.UpdateTradeHallStatus(status, tradeId);
 
@@ -83,20 +83,18 @@ namespace Shunmai.Bxb.Services
 
         public TradeHall GetSingleTradeHallEntity(int tradeId)
         {
-            Check.EnsureGreaterThanZero(tradeId, nameof(tradeId));
+            Check.EnsureMoreThanZero(tradeId, nameof(tradeId));
 
             return _tradeHallRepository.GetSingleTradeHallEntity(tradeId);
         }
 
-        public (int num, List<TradeHallAppResponse> result) PagedGetAppUserPublishTradeHalls(Pager query, int userId)
+        public (int count, List<TradeHallAppResponse> result) PageGetAdminTradeHalls(TradeHallQuery query)
         {
-            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppUserPublishTradeHalls(query.Offset, query.Size, userId);
+            List<TradeHallAppResponse> result = _tradeHallRepository.PageGetAdminTradeHalls(query.Offset, query.Size, query.UserId, query.BType, query.Status, query.StartTime, query.EndTime);
 
-            int count = _tradeHallRepository.GetAppUserPublishTradeHallsCount(userId);
+            int count = _tradeHallRepository.GetAdminTradeHallsCount(query.UserId, query.BType, query.Status, query.StartTime, query.EndTime);
 
-            int num = count % query.Size == 0 ? count / query.Size : count / query.Size + 1;
-
-            return (num, result);
+            return (count, result);
         }
     }
 }
