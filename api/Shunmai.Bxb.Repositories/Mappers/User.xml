@@ -91,7 +91,7 @@
     <!-- 查询列表 -->
     <Statement Id="QueryList">
       SELECT
-      <Include RefId="SelectFields"></Include>
+      <Include RefId="Fields"></Include>
       FROM
       `User` T
       <Include RefId="QueryParams"></Include>
