@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SmartSqlMap Scope="UserLog"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="UserLogCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+  <Statements>
+
+    <!-- 查询字段 -->
+    <Statement Id="Fields">
+      `UserLogId`,`UserId`,`LogType`,`LogContent`,`LogContentFront`,`Operator`,`CreatedTime`
+    </Statement>
+    
+    <!-- 新增 -->
+    <Statement Id="Insert">
+      INSERT INTO
+        `UserLog`
+        (
+          `UserId`,`LogType`,`LogContent`,`LogContentFront`,`Operator`
+        )
+      VALUES
+        (
+          ?UserId,?LogType,?LogContent,?LogContentFront,?Operator
+        )
+      ;
+      SELECT LAST_INSERT_ID();
+    </Statement>
+    
+  </Statements>
+</SmartSqlMap>
+

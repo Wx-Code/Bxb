@@ -43,6 +43,20 @@
           <![CDATA[DATE_ADD(`CreateTime`, INTERVAL ?expires SECOND)<CURRENT_TIMESTAMP]]>
         </IsNotEmpty>
       </Where>
+      ORDER BY
+        `VcId` DESC
+      LIMIT 1
+      ;
+    </Statement>
+
+    <!-- 修改状态 -->
+    <Statement Id="UpdateState">
+      UPDATE
+        `SmsVerificationCode`
+      SET
+        `State`=?state
+      WHERE
+        `VcId`=?id
       ;
     </Statement>
     

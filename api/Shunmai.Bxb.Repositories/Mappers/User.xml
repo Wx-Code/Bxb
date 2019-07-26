@@ -10,7 +10,7 @@
 
     <!-- 字段 -->
     <Statement Id="Fields">
-      `UserId`, `Nickname`, `Avatar`, `UserType`, `Realname`, `ShareId`, `ShareNickname`, `WxUnionId`,`ShakeWxOpenId`, `WxOpenId`, `IdCard`, `Phone`, `IdCardFrontPhoto`, `IdCardBackPhoto`, `Authenticated`, `BankAccountName`, `BankAccountNumber`, `BankName`, `BankCode`, `BankInfoFilled`, `CreatedTime`, `Deleted`, `Subscribed`, `IsNewUser`
+      `UserId`,`Nickname`,`Avatar`,`WxCodePhoto`,`Realname`,`WxUnionId`,`WxOpenId`,`Phone`,`WalletAddress`,`OutTotalAmount`,`InTotalAmount`,`CreatedTime`,`Deleted`
     </Statement>
 
     <!-- 新增 -->
@@ -18,14 +18,17 @@
       INSERT INTO
       `User`
       (
-      Nickname, Avatar, ShareId, ShareNickname, SourceType
-      <IsNotEmpty Prepend="," Property="WxUnionId"> WxUnionId </IsNotEmpty>
-      <IsNotEmpty Prepend="," Property="WxOpenId"> WxOpenId </IsNotEmpty>
-      <IsNotEmpty Prepend="," Property="ShakeWxOpenId"> ShakeWxOpenId </IsNotEmpty> ,UserType, Subscribed,ShakeH5WxOpenId
+        `Nickname`, `Avatar`, `WxCodePhoto`, `WxOpenId`, `Phone`, `OutTotalAmount`, `InTotalAmount`
+        <IsNotEmpty Prepend="," Property="WalletAddress">`WalletAddress`</IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="WxUnionId">`WxUnionId`</IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Realname">`Realname`</IsNotEmpty>
       )
       VALUES
       (
-      ?Nickname, ?Avatar, ?ShareId, ?ShareNickname,?SourceType, ?WxUnionId <IsNotEmpty Prepend="," Property="WxOpenId">?WxOpenId </IsNotEmpty><IsNotEmpty Prepend="," Property="ShakeWxOpenId"> ?ShakeWxOpenId </IsNotEmpty> ,?UserType, ?Subscribed,?ShakeH5WxOpenId
+        ?Nickname, ?Avatar, ?WxCodePhoto, ?WxOpenId, ?Phone, ?OutTotalAmount, ?InTotalAmount
+        <IsNotEmpty Prepend="," Property="WalletAddress">?WalletAddress</IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="WxUnionId">?WxUnionId</IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Realname">?Realname</IsNotEmpty>
       )
       ;
       SELECT LAST_INSERT_ID();
@@ -34,88 +37,66 @@
     <!-- 更新 -->
     <Statement Id="Update">
       UPDATE
-      `User`
+        `User`
       <Set>
-        <IsNotEmpty Prepend="," Property="Nickname">
-          Nickname=?Nickname
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="Avatar">
-          Avatar=?Avatar
-        </IsNotEmpty>
-        <IsGreaterThan CompareValue="0" Prepend="," Property="UserType">
-          UserType=?UserType
-        </IsGreaterThan>
-        <IsNotEmpty Prepend="," Property="Realname">
-          Realname=?Realname
-        </IsNotEmpty>
-        <IsGreaterThan CompareValue="0" Prepend="," Property="ShareId">
-          ShareId=?ShareId
-        </IsGreaterThan>
-        <IsNotEmpty Prepend="," Property="ShareNickname">
-          ShareNickname=?ShareNickname
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="WxUnionId">
-          WxUnionId=?WxUnionId
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="ShakeWxOpenId">
-          ShakeWxOpenId=?ShakeWxOpenId
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="WxOpenId">
-          WxOpenId=?WxOpenId
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="Subscribed">
-          Subscribed=?Subscribed
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="IdCard">
-          IdCard=?IdCard
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="Phone">
-          Phone=?Phone
-        </IsNotEmpty>
-        <IsTrue Prepend="," Property="Authenticated">
-          Authenticated=?Authenticated
-        </IsTrue>
-        <IsNotEmpty Prepend="," Property="BankAccountName">
-          BankAccountName=?BankAccountName
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="BankAccountNumber">
-          BankAccountNumber=?BankAccountNumber
-        </IsNotEmpty>
-        <IsNotEmpty Prepend="," Property="BankName">
-          BankName=?BankName
-        </IsNotEmpty> 
-        <IsNotEmpty Prepend="," Property="BankCode">
-          BankCode=?BankCode
-        </IsNotEmpty>
-        <IsTrue Prepend="," Property="BankInfoFilled">
-          BankInfoFilled=?BankInfoFilled
-        </IsTrue>
+        <IsNotEmpty Prepend="," Property="Nickname"> `Nickname`=?Nickname </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Avatar"> `Avatar`=?Avatar </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="WxCodePhoto"> `WxCodePhoto`=?WxCodePhoto </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Realname"> `Realname`=?Realname </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="WxUnionId"> `WxUnionId`=?WxUnionId </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="WxOpenId"> `WxOpenId`=?WxOpenId </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="Phone"> `Phone`=?Phone </IsNotEmpty>
+        <IsNotEmpty Prepend="," Property="WalletAddress"> `WalletAddress`=?WalletAddress </IsNotEmpty>
       </Set>
       <Where>
         `UserId`=?UserId
       </Where>
       ;
     </Statement>
-
+    
     <!-- 查询 单条数据 -->
     <Statement Id="QuerySingle">
       SELECT
-      <Include RefId="Fields"></Include>
+        <Include RefId="Fields"></Include>
       FROM
-      `User`
+        `User`
       <Where>
+        `Deleted`=0
         <IsGreaterThan CompareValue="0" Prepend="AND" Property="userId">
           `UserId`=?userId
         </IsGreaterThan>
+        <IsNotEmpty Prepend="AND" Property="phone">
+          `Phone`=?phone
+        </IsNotEmpty>
         <IsNotEmpty Prepend="AND" Property="openId">
-          `WxOpenId`=?openId OR `ShakeWxOpenId`=?openId OR `ShakeH5WxOpenId`=?openId
+          `WxOpenId`=?openId
         </IsNotEmpty>
         <IsNotEmpty Prepend="AND" Property="unionId">
           `WxUnionId`=?unionId
         </IsNotEmpty>
-        AND `Deleted`=0
       </Where>
       LIMIT 1
+      ;
+    </Statement>
+
+    <!-- 查询是否存在 -->
+    <Statement Id="Exists">
+      SELECT
+        COUNT(*)
+      FROM
+        `User`
+      <Where>
+        `Deleted`=0
+        <IsNotEmpty Prepend="AND" Property="phone">
+          `Phone`=?phone
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="openId">
+          `WxOpenId`=?openId
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="unionId">
+          `WxUnionId`=?unionId
+        </IsNotEmpty>
+      </Where>
       ;
     </Statement>
    
