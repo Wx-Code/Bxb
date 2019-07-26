@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Shunmai.Bxb.Abstractions;
+using Shunmai.Bxb.Api.App.Constants;
 using Shunmai.Bxb.Api.App.Controllers;
 using Shunmai.Bxb.Api.App.Models.Request;
 using Shunmai.Bxb.Common.Models;
@@ -14,12 +15,14 @@ using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Models.Wechat;
 using Shunmai.Bxb.Test.Common;
 using Shunmai.Bxb.Test.Common.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Shunmai.Bxb.Api.App.IntegrationTests
+namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
 {
     public class UserControllerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
@@ -60,7 +63,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
                 smsCode = code,
                 qrCodeUrl = "test_qr_code_url",
             };
-            var result = await TestSuite.PostAsync<JsonResponse>(_client, "/user/register", data);
+            var result = await TestSuite.PostAsync<JsonResponse<string>>(_client, "/user/register", data);
             Assert.False(result.success);
             Assert.Equal(ErrorInfo.OfRequestFailed().Code, result.errorCode);
         }
@@ -127,11 +130,11 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
             var code = _dbContext.SmsVerificationCode.Add(new SmsCode { Phone = user.Phone, VerificationCode = "123456" }).Entity;
             _dbContext.SaveChanges();
 
-            var result = await TestSuite.PostAsync<JsonResponse>(_client, "/user/login", new LoginRequest { Phone = user.Phone, SmsCode = code.VerificationCode });
+            var result = await TestSuite.PostAsync<JsonResponse<JToken>>(_client, "/user/login", new LoginRequest { Phone = user.Phone, SmsCode = code.VerificationCode });
             Assert.NotNull(result);
             Assert.True(result.success);
             Assert.NotNull(result.data);
-            var data = result.data as JToken;
+            var data = result.data;
             var token = data.Value<string>("token");
             Assert.NotNull(token);
             var cache = _fixture.Server.GetService<ICache>();
@@ -141,6 +144,27 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
             cache.Remove(token);
             _dbContext.User.Remove(user);
             _dbContext.SmsVerificationCode.Remove(code);
+            _dbContext.SaveChanges();
+        }
+
+        [Fact]
+        public async Task GetInfo_Should_ReturnUserInfo_While_UserHasLogin()
+        {
+            _dbContext.Truncate(nameof(User), nameof(SmsVerificationCode));
+            var user = _dbContext.User.Add(TestSuite.CreateTestUser()).Entity;
+            _dbContext.SaveChanges();
+            var token = Guid.NewGuid().ToString("N");
+            var cache = _fixture.Server.GetService<ICache>();
+            cache.Set(token, user.UserId, null);
+
+            var result = await TestSuite.GetAsync<JsonResponse<UserExt>>(_client, "/user", null, new Dictionary<string, string> { { Headers.TOKEN, token } });
+            Assert.NotNull(result);
+            Assert.True(result.success);
+            Assert.NotNull(result.data);
+            Assert.Equal(user.UserId, result.data.UserId);
+
+            cache.Remove(token);
+            _dbContext.Remove(user);
             _dbContext.SaveChanges();
         }
     }

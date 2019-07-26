@@ -8,6 +8,7 @@ using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Models.Wechat;
 using Shunmai.Bxb.Test.Common;
 using Shunmai.Bxb.Test.Common.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -38,22 +39,27 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
                        .Join("&");
         }
 
-        public static async Task<T> PostAsync<T>(HttpClient client, string url, object json)
+        public static async Task<T> PostAsync<T>(HttpClient client, string url, object data, Dictionary<string, string> headers = null)
         {
-            using (var content = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json"))
+            var json = data == null ? string.Empty : JsonConvert.SerializeObject(data);
+            client.AddHeaders(headers);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
             using (var response = await client.PostAsync(url, content))
             {
+                client.RemoveHeaders(headers);
                 response.EnsureSuccessStatusCode();
                 return await response.GetResult<T>();
             }
         }
 
-        public static async Task<T> GetAsync<T>(HttpClient client, string url, object json)
+        public static async Task<T> GetAsync<T>(HttpClient client, string url, object data = null, Dictionary<string, string> headers = null)
         {
-            var query = BuildQueryString(json);
+            var query = BuildQueryString(data);
             url = $"{url}?{query}";
+            client.AddHeaders(headers);
             using (var response = await client.GetAsync(url))
             {
+                client.RemoveHeaders(headers);
                 response.EnsureSuccessStatusCode();
                 return await response.GetResult<T>();
             }

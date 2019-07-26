@@ -1,5 +1,6 @@
 <template>
   <section class="app-container">
+    <div v-if="componentsUserLogTableVisible==false">
       <div class="tool-bar mb10">
         <el-form ref="queryForm" :model="query" inline>
           <el-form-item prop="nickname">
@@ -50,6 +51,7 @@
               size="small"
               @click="handleQueryDataDetailsClick(scope.row)"
             >用户详情</el-button>
+            <el-button type="text" size="small" @click="handleQueryUserLogClick(scope.row)">操作日志</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,6 +67,12 @@
         layout="total, sizes, prev, pager, next"
       ></el-pagination>
 
+    </div>
+
+    <!-- 用户日志组件管理 -->
+    <div v-if="componentsUserLogTableVisible">
+      <userLog :puserId="selectedUserId" @close="componentsUserLogTableVisible = false"></userLog>
+    </div>
   </section>
 </template>
 
@@ -72,7 +80,10 @@
 import commonApi from "@/api/common";
 import userApi from "@/api/user";
 import { mapGetters } from "vuex";
+import userLog from "../components/userlog";
+
 export default {
+  components: { userLog },
   data() {
     return {
       list: [],
@@ -86,7 +97,8 @@ export default {
         phone: null,
         startTime:null,
         endTime:null
-      }
+      },
+      componentsUserLogTableVisible:false
     };
   },
   methods: {
@@ -120,9 +132,10 @@ export default {
         }
       });
     },
-    onRefresList() {
-      this.loadUsers();
-      this.componentsMoneyTableVisible = false;
+
+    handleQueryUserLogClick(row) {
+      this.selectedUserId = row.userId;
+      this.componentsUserLogTableVisible = true;
     }
   },
   async mounted() {

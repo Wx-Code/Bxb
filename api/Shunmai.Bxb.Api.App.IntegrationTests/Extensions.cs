@@ -31,5 +31,27 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
         {
             return server.Host.Services.GetService(typeof(T)) as T;
         }
+
+        public static void AddHeaders(this HttpClient client, IDictionary<string, string> headers)
+        {
+            if (headers != null)
+            {
+                foreach (var key in headers.Keys)
+                {
+                    client.DefaultRequestHeaders.Add(key, headers[key]);
+                }
+            }
+        }
+
+        public static void RemoveHeaders(this HttpClient client, IDictionary<string, string> headers)
+        {
+            if (headers != null)
+            {
+                foreach (var key in headers.Keys)
+                {
+                    client.DefaultRequestHeaders.Remove(key);
+                }
+            }
+        }
     }
 }

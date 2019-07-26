@@ -39,5 +39,11 @@ namespace Shunmai.Bxb.Entities.Enums
         /// </summary>
         [Description("填写银行卡信息")]
         FillBankInfo = 10,
+
+        /// <summary>
+        /// 更新钱包的地址
+        /// </summary>
+        [Description("更新钱包地址")]
+        UpdateWalletAddress=11,
     }
 }

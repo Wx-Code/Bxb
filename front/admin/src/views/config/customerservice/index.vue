@@ -8,9 +8,12 @@
     <br>
     <el-form :model="model" label-width="300px" class="formpadding">
       <el-form-item label="微信客服号：">
-        <el-radio-group  v-model="radioNum">
-          <el-radio :label="item.wxCustomerId" :key="item.wxCustomerId"  v-for="item in model.weixinCustomerList">{{item.wxCustomerNumber}}</el-radio>
+        <el-radio-group  v-model="radioNum" >
+            <div style="width:50px">
+                <el-radio style="margin-left:10px; margin-top:10px; margin-bottom:10px" :label="item.wxCustomerId" :key="item.wxCustomerId"  v-for="item in model.weixinCustomerList">{{item.wxCustomerNumber}} </el-radio>
+            </div>
         </el-radio-group> 
+        <br/>
         <el-button class="baocun-btn" type="primary" @click="insertCustomerNumber()">添加客服号</el-button>
 
       </el-form-item>
@@ -180,5 +183,6 @@ export default {
 .tips {
   color: #af1d2a;
 }
-
+.rad{
+float: left;}
 </style>
