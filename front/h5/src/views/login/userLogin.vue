@@ -2,19 +2,20 @@
   <div class="userLogin">
     <div class="userLogin_body">
       <ul class="userLogin_ul">
-        <li class="row userLogin_li">
-          <div class="userLogin_li_box row ac bb1">
-            <img src="http://static.pinlala.com/bxb/shoujihaoma.png"   alt="" class="ul_icon1">
-            <input type="text"  placeholder="请输入手机号码"     v-model="phone"  class="ul_input">
-          </div>
-        </li>
-        <li class="row userLogin_li jb">
-          <div class="userLogin_li_box row ac bb1 ul_sty1">
-            <img src="http://static.pinlala.com/bxb/yanzhengma.png"  alt="" class="ul_icon2">
-            <input type="text"  placeholder="请输入验证码"    v-model="phone"  class="ul_input">
-          </div>
-          <div class="btn_type1">发送验证码</div>
-        </li>
+        <!--<li class="row userLogin_li">-->
+          <!--<div class="userLogin_li_box row ac bb1">-->
+            <!--<img src="http://static.pinlala.com/bxb/shoujihaoma.png"   alt="" class="ul_icon1">-->
+            <!--<input type="text"  placeholder="请输入手机号码"     v-model="phone"  class="ul_input">-->
+          <!--</div>-->
+        <!--</li>-->
+        <!--<li class="row userLogin_li jb">-->
+          <!--<div class="userLogin_li_box row ac bb1 ul_sty1">-->
+            <!--<img src="http://static.pinlala.com/bxb/yanzhengma.png"  alt="" class="ul_icon2">-->
+            <!--<input type="text"  placeholder="请输入验证码"    v-model="phone"  class="ul_input">-->
+          <!--</div>-->
+          <!--<div class="btn_type1">发送验证码</div>-->
+        <!--</li>-->
+        <phone-verify @changePhone="changePhone" @changeCode="changeCode"></phone-verify>
       </ul>
       <div class="ul_login_btnBox">
           <div class="ul_login_btn btn_type2">登录</div>
@@ -30,13 +31,18 @@
 <script>
 import store from '@/utils/local-store'
 import userService from '@/api/user'
-
+import  phoneVerify  from '@/components/phoneVerify/phoneVerify';
 
 export default {
+  components: {
+    'phone-verify':phoneVerify
+  },
 
   data(){
 
     return {
+      phone:'',
+      code:''
     }
 
   },
@@ -67,6 +73,13 @@ export default {
       const redirectUrl = store.getUrl()
       store.removeUrl()
       window.location.href = redirectUrl
+    },
+    changePhone(phone) {
+      // console.log(phone);
+      this.phone = phone
+    },
+    changeCode(code) {
+      this.code = code
     },
   }
 }
