@@ -58,19 +58,27 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         TradeHall GetSingleTradeHallEntity(int tradeId);
 
         /// <summary>
-        /// 分页获取用户发布的交易信息
+        /// 后台分页获取交易信息
         /// </summary>
         /// <param name="offset">偏移量</param>
         /// <param name="size">每页条数</param>
         /// <param name="userId">用户ID</param>
-        /// <returns>当前页用户发布的交易信息</returns>
-        List<TradeHallAppResponse> PagedGetAppUserPublishTradeHalls(int offset, int size, int userId);
+        /// <param name="bType">货币类型</param>
+        /// <param name="status">状态</param>
+        /// <param name="startTime">开始时间</param>
+        /// <param name="endTime">结束时间</param>
+        /// <returns></returns>
+        List<TradeHallAppResponse> PageGetAdminTradeHalls(int offset, int size, int? userId, CurrencyType? bType, TradeHallShelfStatus? status, string startTime, string endTime);
 
         /// <summary>
-        /// 获取用户发布的交易信息总体条数
+        /// 后台获取交易信息总条数
         /// </summary>
         /// <param name="userId">用户ID</param>
-        /// <returns>用户发布的交易信息总体条数</returns>
-        int GetAppUserPublishTradeHallsCount(int userId);
+        /// <param name="bType">货币类型</param>
+        /// <param name="status">状态</param>
+        /// <param name="startTime">开始时间</param>
+        /// <param name="endTime">结束时间</param>
+        /// <returns>用户发布的交易信息总条数</returns>
+        int GetAdminTradeHallsCount(int? userId, CurrencyType? bType, TradeHallShelfStatus? status, string startTime, string endTime);
     }
 }

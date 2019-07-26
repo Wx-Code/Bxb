@@ -60,7 +60,22 @@ export const constantRouterMap = [
       }
     ]
   },
-
+  // 用户管理
+  {
+    path: '/user',
+    name: 'user',
+    redirect: '/user/tradehall',
+    meta: { title: '用户管理', icon: 'user' },
+    component: Layout,
+    children: [
+      {
+        path: 'tradehall',
+        name: 'tradehall',
+        meta: { title: '消息管理', icon: 'message' },
+        component: () => import('@/views/user/tradehall')
+      }
+    ]
+  },
   // 配置管理
   {
     path: '/config',

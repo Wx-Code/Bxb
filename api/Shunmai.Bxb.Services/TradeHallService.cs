@@ -88,15 +88,13 @@ namespace Shunmai.Bxb.Services
             return _tradeHallRepository.GetSingleTradeHallEntity(tradeId);
         }
 
-        public (int num, List<TradeHallAppResponse> result) PagedGetAppUserPublishTradeHalls(Pager query, int userId)
+        public (int count, List<TradeHallAppResponse> result) PageGetAdminTradeHalls(TradeHallQuery query)
         {
-            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppUserPublishTradeHalls(query.Offset, query.Size, userId);
+            List<TradeHallAppResponse> result = _tradeHallRepository.PageGetAdminTradeHalls(query.Offset, query.Size, query.UserId, query.BType, query.Status, query.StartTime, query.EndTime);
 
-            int count = _tradeHallRepository.GetAppUserPublishTradeHallsCount(userId);
+            int count = _tradeHallRepository.GetAdminTradeHallsCount(query.UserId, query.BType, query.Status, query.StartTime, query.EndTime);
 
-            int num = count % query.Size == 0 ? count / query.Size : count / query.Size + 1;
-
-            return (num, result);
+            return (count, result);
         }
     }
 }
