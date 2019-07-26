@@ -10,7 +10,7 @@ namespace Shunmai.Bxb.Entities
         ///<summary>
         /// 主键
         ///</summary>
-        public long LogId { get; set; }
+        public virtual long LogId { get; set; }
 
         ///<summary>
         /// 交易大厅ID

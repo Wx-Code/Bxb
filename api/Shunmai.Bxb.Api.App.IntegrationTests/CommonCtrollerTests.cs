@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Shunmai.Bxb.Common.Models;
+using Shunmai.Bxb.Test.Common;
 using Shunmai.Bxb.Utilities.Helpers;
 using System;
 using System.Globalization;
@@ -12,11 +15,13 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
 {
     public class CommonCtrollerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
-        private readonly WebApplicationFactory<Startup> _factory;
+        private readonly WebApplicationFactory<Startup> _fixture;
+        private readonly HttpClient _client;
 
-        public CommonCtrollerTests(WebApplicationFactory<Startup> factory)
+        public CommonCtrollerTests(WebApplicationFactory<Startup> fixture)
         {
-            _factory = factory;
+            _fixture = fixture;
+            _client = _fixture.CreateClient();
         }
 
         [Fact]
@@ -28,10 +33,9 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
             using (var fileStream = new FileStream(imageFilename, FileMode.Open, FileAccess.Read))
             using (var reader = new StreamReader(fileStream))
             using (var content = new MultipartFormDataContent($"Upload----{DateTime.Now.ToString(CultureInfo.InvariantCulture)}"))
-            using (var client = _factory.CreateClient())
             {
                 content.Add(new StreamContent(fileStream), "test-image", filename);
-                var response = await client.PostAsync("/common/wechat/qrcode", content);
+                var response = await _client.PostAsync("/common/wechat/qrcode", content);
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
@@ -47,7 +51,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
         public async Task SendSmsCode_Should_WorkWell()
         {
             var json = new { phone = "13521942500" };
-            var result = await TestSuite.PostAsync<JsonResponse>(_factory, "/common/sms/code", json);
+            var result = await TestSuite.PostAsync<JsonResponse>(_client, "/common/sms/code", json);
             Assert.True(result.success);
         }
     }

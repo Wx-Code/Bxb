@@ -11,8 +11,8 @@ using Senparc.Weixin.MP.Helpers;
 using Senparc.Weixin.Open.QRConnect;
 using Senparc.Weixin.TenPay.V3;
 using Shunmai.Bxb.Services.Models.Wechat;
+using Shunmai.Bxb.Utilities.Check;
 using Shunmai.Bxb.Utilities.Extenssions;
-using Shunmai.Bxb.Utilities.Validation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,7 +22,12 @@ namespace Shunmai.Bxb.Services
     public class WechatService
     {
         private readonly ILogger _logger;
-        private readonly WechatConfig _wechatConfig;
+        private readonly WechatConfig _config;
+
+        private T AccessTokenWrapper<T>(Func<T> action)
+        {
+            return AccessTokenWrapper(_config.AppId, _config.AppSecrect, action);
+        }
 
         private T AccessTokenWrapper<T>(string appId, string appSecret, Func<T> action)
         {
@@ -59,10 +64,7 @@ namespace Shunmai.Bxb.Services
         public WechatService(ILogger<WechatService> logger, WechatConfig wechatConfig)
         {
             _logger = logger;
-            _wechatConfig = wechatConfig;
-
-            RegisterAccessToken(wechatConfig.AppId, wechatConfig.AppSecrect).GetAwaiter().GetResult();
-            RegisterTenPayV3(wechatConfig);
+            _config = wechatConfig;
         }
 
         /// <summary>
@@ -75,10 +77,10 @@ namespace Shunmai.Bxb.Services
         /// </summary>
         /// <doc>https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842</doc>
         /// <param name="code"></param>
-        public string GetOpenId(string code)
+        public virtual string GetOpenId(string code)
         {
             Check.Empty(code, nameof(code));
-            var result = QRConnectAPI.GetAccessToken(_wechatConfig.AppId, _wechatConfig.AppSecrect, code);
+            var result = QRConnectAPI.GetAccessToken(_config.AppId, _config.AppSecrect, code);
             if (result.openid.IsEmpty())
             {
                 _logger.LogError($"Get openid failed, result: {result.ToLogFormatString()}");
@@ -92,26 +94,69 @@ namespace Shunmai.Bxb.Services
         /// </summary>
         /// <param name="openId">普通用户的标识，对当前公众号唯一</param>
         /// <returns>微信用户信息，当用户未关注公众号时，返回 null</returns>
-        public WechatUserInfo GetUserInfo(string openId)
+        public virtual WechatUserInfo GetUserInfo(string openId)
         {
             Check.Empty(openId, nameof(openId));
-            var result = UserApi.Info(_wechatConfig.AppId, openId);
-            if (result.subscribe == 0)
+            return AccessTokenWrapper(() =>
             {
-                _logger.LogError($"Get wechat user info failed, result: {result}");
-                return null;
-            }
-            return new WechatUserInfo
+                var result = UserApi.Info(_config.AppId, openId);
+                if (result.subscribe == 0)
+                {
+                    _logger.LogError($"Get wechat user info failed, result: {result}");
+                    return null;
+                }
+                return new WechatUserInfo
+                {
+                    Avatar = result.headimgurl,
+                    City = result.city,
+                    Country = result.country,
+                    NickName = result.nickname,
+                    OpenId = result.openid,
+                    Province = result.province,
+                    Sex = result.sex,
+                    UnionId = result.unionid,
+                };
+            });
+        }
+
+        /// <summary>
+        /// 通过微信授权登录所得的 code 获取微信用户信息
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public virtual WechatUserInfo GetUserInfoByCode(string code)
+        {
+            Check.Empty(code, nameof(code));
+            return AccessTokenWrapper(() =>
             {
-                Avatar = result.headimgurl,
-                City = result.city,
-                Country = result.country,
-                NickName = result.nickname,
-                OpenId = result.openid,
-                Province = result.province,
-                Sex = result.sex,
-                UnionId = result.unionid,
-            };
+                var tokenRes = OAuthApi.GetAccessToken(_config.AppId, _config.AppSecrect, code);
+                _logger.LogInformation($"Get oauth access token returned. [{tokenRes.ToLogFormatString()}]");
+                if (tokenRes == null || tokenRes.openid.IsEmpty() || tokenRes.access_token.IsEmpty())
+                {
+                    _logger.LogError($"Get oauth access failed. [{tokenRes.ToLogFormatString()}]");
+                    return null;
+                }
+
+                var userRes = OAuthApi.GetUserInfo(tokenRes.access_token, tokenRes.openid);
+                _logger.LogInformation($"Get user info returned. [{userRes.ToLogFormatString()}]");
+                if (userRes.nickname.IsEmpty())
+                {
+                    _logger.LogError($"Get user info failed. [{userRes.ToLogFormatString()}]");
+                    return null;
+                }
+
+                return new WechatUserInfo
+                {
+                    Avatar = userRes.headimgurl,
+                    City = userRes.city,
+                    Country = userRes.country,
+                    NickName = userRes.nickname,
+                    OpenId = userRes.openid,
+                    Province = userRes.province,
+                    Sex = userRes.sex,
+                    UnionId = userRes.unionid,
+                };
+            });
         }
 
         /// <summary>
@@ -120,17 +165,20 @@ namespace Shunmai.Bxb.Services
         /// <param name="sceneId">场景 ID</param>
         /// <param name="expireSeconds">过期时间（单位：秒）</param>
         /// <returns></returns>
-        public string CreateQRCode(int sceneId, int expireSeconds)
+        public virtual string CreateQRCode(int sceneId, int expireSeconds)
         {
-            Check.EnsureGreaterThanZero(sceneId, nameof(sceneId));
-            Check.EnsureGreaterThanZero(expireSeconds, nameof(expireSeconds));
-            var result = QrCodeApi.Create(_wechatConfig.AppId, expireSeconds, sceneId, QrCode_ActionName.QR_SCENE);
-            if (result.ticket.IsEmpty())
+            Check.EnsureMoreThanZero(sceneId, nameof(sceneId));
+            Check.EnsureMoreThanZero(expireSeconds, nameof(expireSeconds));
+            return AccessTokenWrapper(() =>
             {
-                _logger.LogError($"Create QR code failed, result: {result.ToLogFormatString()}");
-                return default(string);
-            }
-            return result.ticket;
+                var result = QrCodeApi.Create(_config.AppId, expireSeconds, sceneId, QrCode_ActionName.QR_SCENE);
+                if (result.ticket.IsEmpty())
+                {
+                    _logger.LogError($"Create QR code failed, result: {result.ToLogFormatString()}");
+                    return default(string);
+                }
+                return result.ticket;
+            });
         }
 
         /// <summary>
@@ -139,17 +187,20 @@ namespace Shunmai.Bxb.Services
         /// <param name="sceneString"></param>
         /// <param name="expireSeconds"></param>
         /// <returns></returns>
-        public string CreateQRCode(string sceneString, int expireSeconds)
+        public virtual string CreateQRCode(string sceneString, int expireSeconds)
         {
             Check.Empty(sceneString, nameof(sceneString));
-            Check.EnsureGreaterThanZero(expireSeconds, nameof(expireSeconds));
-            var result = QrCodeApi.Create(_wechatConfig.AppId, expireSeconds, 0, QrCode_ActionName.QR_STR_SCENE, sceneString);
-            if (result.ticket.IsEmpty())
+            Check.EnsureMoreThanZero(expireSeconds, nameof(expireSeconds));
+            return AccessTokenWrapper(() =>
             {
-                _logger.LogError($"Create QR code failed, result: {result.ToLogFormatString()}");
-                return default(string);
-            }
-            return result.ticket;
+                var result = QrCodeApi.Create(_config.AppId, expireSeconds, 0, QrCode_ActionName.QR_STR_SCENE, sceneString);
+                if (result.ticket.IsEmpty())
+                {
+                    _logger.LogError($"Create QR code failed, result: {result.ToLogFormatString()}");
+                    return default(string);
+                }
+                return result.ticket;
+            });
         }
 
         /// <summary>
@@ -159,7 +210,7 @@ namespace Shunmai.Bxb.Services
         /// <param name="request"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public bool IsTokenVerificationRequest(HttpRequest request, out WechatTokenVerificationModel data)
+        public virtual bool IsTokenVerificationRequest(HttpRequest request, out WechatTokenVerificationModel data)
         {
             data = null;
             Check.Null(request, nameof(request));
@@ -188,14 +239,14 @@ namespace Shunmai.Bxb.Services
         /// <doc>https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421135319</doc>
         /// <param name="request"></param>
         /// <returns></returns>
-        public bool IsSignValid(WechatTokenVerificationModel request)
+        public virtual bool IsSignValid(WechatTokenVerificationModel request)
         {
             Check.Null(request, nameof(request));
             var model = new PostModel
             {
                 Nonce = request.Nonce,
                 Timestamp = request.Timestamp,
-                Token = _wechatConfig.Token,
+                Token = _config.Token,
             };
             return CheckSignature.Check(request.Signature, model);
         }
@@ -206,10 +257,13 @@ namespace Shunmai.Bxb.Services
         /// <doc>https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115</doc>
         /// <param name="url"></param>
         /// <returns></returns>
-        public JssdkConfig GetJssdkConfig(string url)
+        public virtual JssdkConfig GetJssdkConfig(string url)
         {
-            var config = JSSDKHelper.GetJsSdkUiPackage(_wechatConfig.AppId, _wechatConfig.AppSecrect, url);
-            return config.MapTo<JssdkConfig>();
+            return AccessTokenWrapper(() =>
+            {
+                var config = JSSDKHelper.GetJsSdkUiPackage(_config.AppId, _config.AppSecrect, url);
+                return config.MapTo<JssdkConfig>();
+            });
         }
 
         /// <summary>
@@ -218,29 +272,32 @@ namespace Shunmai.Bxb.Services
         /// <param name="message">模板消息数据</param>
         /// <param name="timeOut">请求超时时间</param>
         /// <returns>表示请求成功与否的布尔值</returns>
-        public bool SendTemplateMessage(TemplateMessage message, int timeOut = DEFAULT_TIMEOUT)
+        public virtual bool SendTemplateMessage(TemplateMessage message, int timeOut = DEFAULT_TIMEOUT)
         {
-            TempleteModel_MiniProgram miniProgram = null;
-            if (message.MiniProgramAppId.IsNotEmpty() && message.MiniProgramPagePath.IsNotEmpty())
+            return AccessTokenWrapper(() =>
             {
-                miniProgram = new TempleteModel_MiniProgram
+                TempleteModel_MiniProgram miniProgram = null;
+                if (message.MiniProgramAppId.IsNotEmpty() && message.MiniProgramPagePath.IsNotEmpty())
                 {
-                    appid = message.MiniProgramAppId,
-                    pagepath = message.MiniProgramPagePath,
-                };
-            }
+                    miniProgram = new TempleteModel_MiniProgram
+                    {
+                        appid = message.MiniProgramAppId,
+                        pagepath = message.MiniProgramPagePath,
+                    };
+                }
 
-            var result = TemplateApi.SendTemplateMessage(
-                _wechatConfig.AppId
-                , message.ToUserId
-                , message.TemplateId
-                , message.Url
-                , message.Data
-                , miniProgram
-                , timeOut
-            );
-            _logger.LogInformation($"Send template result: {result.ToLogFormatString()}");
-            return result.msgid > 0;
+                var result = TemplateApi.SendTemplateMessage(
+                    _config.AppId
+                    , message.ToUserId
+                    , message.TemplateId
+                    , message.Url
+                    , message.Data
+                    , miniProgram
+                    , timeOut
+                );
+                _logger.LogInformation($"Send template result: {result.ToLogFormatString()}");
+                return result.msgid > 0;
+            });
         }
 
         /// <summary>
@@ -249,11 +306,14 @@ namespace Shunmai.Bxb.Services
         /// <param name="userOpenId">用户 openId</param>
         /// <param name="content">消息内容</param>
         /// <returns></returns>
-        public bool SendCustomMessage(string userOpenId, string content)
+        public virtual bool SendCustomMessage(string userOpenId, string content)
         {
-            var result = CustomApi.SendText(_wechatConfig.AppId, userOpenId, content);
-            _logger.LogInformation($"Send custom message result: {result.ToLogFormatString()}");
-            return result.errcode == ReturnCode.请求成功;
+            return AccessTokenWrapper(() =>
+            {
+                var result = CustomApi.SendText(_config.AppId, userOpenId, content);
+                _logger.LogInformation($"Send custom message result: {result.ToLogFormatString()}");
+                return result.errcode == ReturnCode.请求成功;
+            });
         }
 
         /// <summary>
@@ -261,15 +321,18 @@ namespace Shunmai.Bxb.Services
         /// </summary>
         /// <param name="menus"></param>
         /// <returns></returns>
-        public bool UpdateWechatMenu(List<Menu> menus)
+        public virtual bool UpdateWechatMenu(List<Menu> menus)
         {
-            var data = new
+            return AccessTokenWrapper(() => 
             {
-                button = menus
-            };
-            var result = CommonApi.CreateMenu(_wechatConfig.AppId, data);
-            _logger.LogInformation(result.ToLogFormatString());
-            return result.errcode == ReturnCode.请求成功;
+                var data = new
+                {
+                    button = menus
+                };
+                var result = CommonApi.CreateMenu(_config.AppId, data);
+                _logger.LogInformation(result.ToLogFormatString());
+                return result.errcode == ReturnCode.请求成功;
+            });
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Shunmai.Bxb.Entities
         ///<summary>
         /// 主键
         ///</summary>
-        public int TradeId { get; set; }
+        public virtual int TradeId { get; set; }
 
         ///<summary>
         /// 交易类型

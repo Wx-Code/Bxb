@@ -10,8 +10,5 @@
         public int Sex { get; set; }
         public string Province { get; set; }
         public string City { get; set; }
-        public int ShareId { get; set; }
-        public string ShareNickname { get; set; }
-        public bool Subscribed { get; set; } = true;
     }
 }

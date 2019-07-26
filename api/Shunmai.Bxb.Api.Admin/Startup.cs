@@ -65,6 +65,7 @@ namespace Shunmai.Bxb.Api.Admin
         {
             services.AddSingleton<AdminUserService>();
             services.AddSingleton<SystemConfigService>();
+            services.AddSingleton<UserService>();
             services.AddSingleton<TradeHallService>();
 
         }
