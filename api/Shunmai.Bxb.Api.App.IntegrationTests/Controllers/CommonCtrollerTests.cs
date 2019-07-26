@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Shunmai.Bxb.Api.App.IntegrationTests
+namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
 {
     public class CommonCtrollerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
@@ -39,11 +39,9 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
-                var res = JsonConvert.DeserializeObject<JsonResponse>(json);
+                var res = JsonConvert.DeserializeObject<JsonResponse<string>>(json);
                 Assert.NotNull(res);
                 Assert.NotNull(res.data);
-                var url = res.data.ToString();
-                Assert.NotEmpty(url);
             }
         }
 
@@ -51,7 +49,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
         public async Task SendSmsCode_Should_WorkWell()
         {
             var json = new { phone = "13521942500" };
-            var result = await TestSuite.PostAsync<JsonResponse>(_client, "/common/sms/code", json);
+            var result = await TestSuite.PostAsync<JsonResponse<string>>(_client, "/common/sms/code", json);
             Assert.True(result.success);
         }
     }
