@@ -3,7 +3,7 @@ using System;
 
 namespace Shunmai.Bxb.Utilities.Sms
 {
-    public class DefaultSms : ISms
+    public class DefaultSms : ISmsProvider
     {
         public string Api { get; set; } = "http://222.73.117.138:7891/mt?un=N13661252777&pw=792765&da={1}&sm={0}&dc=15&rd=1";
 
@@ -47,6 +47,15 @@ namespace Shunmai.Bxb.Utilities.Sms
             }
 
             return null;
+        }
+
+        public ResponseEntity SendCode(string phoneNo, string code)
+        {
+            Content = string.Format(Content, code);
+            var result = Send(phoneNo, Content);
+            if (result == null) return result;
+            result.Code = code;
+            return result;
         }
 
     }

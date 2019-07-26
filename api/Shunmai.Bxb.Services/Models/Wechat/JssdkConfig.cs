@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Shunmai.Bxb.Services.Models.Wechat
+﻿namespace Shunmai.Bxb.Services.Models.Wechat
 {
     /// <summary>
     /// JS-SDK 权限配置对象

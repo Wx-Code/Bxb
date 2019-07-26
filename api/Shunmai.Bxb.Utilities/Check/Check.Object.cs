@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Shunmai.Bxb.Utils.Check
+namespace Shunmai.Bxb.Utilities.Check
 {
     /// <summary>
     /// 封装对 <see cref="object"/> 类型的参数的常用检查方法

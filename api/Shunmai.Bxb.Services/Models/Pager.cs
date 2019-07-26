@@ -1,21 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Shunmai.Bxb.Services.Models
+﻿namespace Shunmai.Bxb.Services.Models
 {
     public class Pager
     {
-        public int Page { get; set; }
-        public int Size { get; set; }
+        private int _page;
+
+        public int Page
+        {
+            get => _page <= 0 ? 1 : _page;
+
+            set => _page = value;
+        }
+
+        private int _size;
+
+        public int Size
+        {
+            get => _size <= 0 ? 10 : _size;
+
+            set => _size = value;
+        }
+
         public int Offset => (Page - 1) * Size;
-
-        public Pager()
-        {
-
-        }
-        public Pager(int page, int size)
-        {
-            Page = page;
-            Size = size;
-        }
     }
 }

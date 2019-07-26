@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Shunmai.Bxb.Common.Dto;
-using Shunmai.Bxb.Utilities.Validation;
+using Shunmai.Bxb.Common.Models;
+using Shunmai.Bxb.Utilities.Check;
 
 namespace Shunmai.Bxb.Common
 {

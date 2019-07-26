@@ -6,6 +6,7 @@ using NLog.Extensions.Logging;
 using Quartz.Impl;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Cache;
+using Shunmai.Bxb.Repositories.DIExtenssions;
 using Shunmai.Bxb.Timer.Utils;
 using Shunmai.Bxb.Utilities.Extenssions;
 using System;
@@ -82,21 +83,11 @@ namespace Shunmai.Bxb.Timer
                 .AddSenparc(Configuration);
 
 
-            RegisterSmartSql(services);
+            services.AddSmartSqlRepositories();
             RegisterService(services);
             RegisterJob(services);
 
             return services.BuildAspectInjectorProvider();
-        }
-
-        private static void RegisterSmartSql(IServiceCollection services)
-        {
-            services
-                .AddSmartSql()
-                .AddRepositoryFromAssembly((options) =>
-                {
-                    options.AssemblyString = "Shunmai.Bxb.Repositories";
-                });
         }
 
         private static void RegisterService(IServiceCollection services)

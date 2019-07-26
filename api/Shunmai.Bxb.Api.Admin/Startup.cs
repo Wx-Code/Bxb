@@ -10,10 +10,10 @@ using NLog.Web;
 using Shunmai.Bxb.Abstractions;
 using Shunmai.Bxb.Api.Admin.Cache;
 using Shunmai.Bxb.Api.Admin.Filters;
-using Shunmai.Bxb.Common.Constants;
 using Shunmai.Bxb.Common.Filters;
 using Shunmai.Bxb.Common.Middleware;
 using Shunmai.Bxb.Common.ModelBinder;
+using Shunmai.Bxb.Repositories.DIExtenssions;
 using Shunmai.Bxb.Services;
 using System;
 
@@ -48,7 +48,7 @@ namespace Shunmai.Bxb.Api.Admin
                     json.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            AddSmartSqlRepositories(services);
+            services.AddSmartSqlRepositories();
             AddServices(services);
 
             services.AddHttpContextAccessor();
@@ -64,6 +64,10 @@ namespace Shunmai.Bxb.Api.Admin
         private void AddServices(IServiceCollection services)
         {
             services.AddSingleton<AdminUserService>();
+            services.AddSingleton<SystemConfigService>();
+            services.AddSingleton<UserService>();
+            services.AddSingleton<TradeHallService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,16 +88,6 @@ namespace Shunmai.Bxb.Api.Admin
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseCors(CORS_NAME);
             app.UseMvc();
-        }
-
-        private void AddSmartSqlRepositories(IServiceCollection services)
-        {
-            services
-                .AddSmartSql()
-                .AddRepositoryFromAssembly((options) =>
-                {
-                    options.AssemblyString = Names.REPOSITORY_ASSEMBLY_NAME;
-                });
         }
     }
 }

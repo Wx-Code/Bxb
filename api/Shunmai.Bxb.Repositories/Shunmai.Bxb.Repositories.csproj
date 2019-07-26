@@ -5,8 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SmartSql.DyRepository" Version="4.0.44" />
-    <PackageReference Include="SmartSql.TypeHandler" Version="4.0.42" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="SmartSql.DIExtension" Version="4.0.86" />
+    <PackageReference Include="SmartSql.DyRepository" Version="4.0.86" />
+    <PackageReference Include="SmartSql.TypeHandler" Version="4.0.86" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,7 +19,25 @@
     <None Update="Mappers\AdminUser.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Mappers\SmsLog.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappers\SmsVerificationCode.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappers\SystemConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappers\TradeHall.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappers\TradeHallLog.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Mappers\User.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Mappers\UserLog.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

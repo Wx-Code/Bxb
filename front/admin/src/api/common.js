@@ -24,12 +24,12 @@ export default {
   getUserLogType: factory('UserLogType'),
   //获取订单状态
   getOrderState: factory('ShakeOrderStatus'),
-  //获取订单支付渠道
-  getpayWayType: factory('ShakeOrderPayWay'),
-  //获取商品状态
-  getGoodsState: factory('ShakeGoodsState'),
-
+  
   getLogOperateType: factory('LogOperateType'),
 
-  getTerminalType: factory('LogTerminalType')
+  getTerminalType: factory('LogTerminalType'),
+  //获取交易信息状态
+  getTradeHallShelfStatus: factory('TradeHallShelfStatus'),
+  //获取货币类型
+  getCurrencyType: factory('CurrencyType'),
 }
