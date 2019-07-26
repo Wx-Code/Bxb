@@ -51,7 +51,7 @@ namespace Shunmai.Bxb.Api.Admin.Controllers
         {
             if (model.TradeId <= 0) return Failed();
 
-            (int code, string message) = _tradeHallService.UpdateTradeHallStatus(model.TradeId, TradeHallShelfStatus.Off);
+            (int code, string message) = _tradeHallService.UpdateTradeHallStatus(model.TradeId, TradeHallShelfStatus.Off, LogonUser.AdminUserId, LogonUser.Username);
 
             if (code == 200) return Success();
             _logger.LogError(message);

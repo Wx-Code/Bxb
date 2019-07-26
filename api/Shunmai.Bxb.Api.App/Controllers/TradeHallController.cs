@@ -134,7 +134,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
             if (entity == null || entity.ReleaseUserId != CurrentUser.UserId)
                 return Failed();
 
-            (int code, string message) = _tradeHallService.UpdateTradeHallStatus(model.TradeId, TradeHallShelfStatus.Off);
+            (int code, string message) = _tradeHallService.UpdateTradeHallStatus(model.TradeId, TradeHallShelfStatus.Off, CurrentUser.UserId, CurrentUser.Nickname);
 
             if (code == 200) return Success();
             _logger.LogError(message);

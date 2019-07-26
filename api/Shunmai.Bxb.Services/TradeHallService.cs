@@ -7,6 +7,7 @@ using Shunmai.Bxb.Services.Models;
 using Shunmai.Bxb.Services.Utils;
 using Shunmai.Bxb.Utilities.Check;
 using System.Collections.Generic;
+using Shunmai.Bxb.Utilities.Extenssions;
 
 namespace Shunmai.Bxb.Services
 {
@@ -38,7 +39,7 @@ namespace Shunmai.Bxb.Services
                 OperateId = entity.ReleaseUserId,
                 OperateName = entity.ReleaseName,
                 TradeHallId = entity.TradeId,
-                OperateLog = $"用户编号：{entity.ReleaseUserId} 发布新的交易信息。币种：{entity.BType.ToString()}, 总数量：{entity.TotalAmount}, 单价：{entity.Price} "
+                OperateLog = $"用户编号：{entity.ReleaseUserId.ToString()} 发布新的交易信息。币种：{entity.BType.ToString()}, 总数量：{entity.TotalAmount}, 单价：{entity.Price} "
             };
 
             log.LogId = _tradeHallLogRepository.InsertTradeHallLogEntity(log);
@@ -46,6 +47,7 @@ namespace Shunmai.Bxb.Services
             return log.LogId <= 0 ? (500, "添加交易日志信息失败") : (201, "添加成功");
         }
 
+        [SmartSqlTransaction]
         public (int, string) UpdateTradeHallEntity(TradeHall entity)
         {
             Check.EnsureMoreThanZero(entity.TradeId, nameof(entity.TradeId));
@@ -53,16 +55,41 @@ namespace Shunmai.Bxb.Services
             entity.State = TradeHallState.Working;
             int rowCount = _tradeHallRepository.UpdateTradeHallEntity(entity);
 
-            return rowCount != 1 ? (500, "修改交易信息失败") : (200, "修改成功");
+            if(rowCount != 1) return (500, "修改交易信息失败");
+
+            TradeHallLog log = new TradeHallLog
+            {
+                OperateId = entity.ReleaseUserId,
+                OperateName = entity.ReleaseName,
+                TradeHallId = entity.TradeId,
+                OperateLog = $"用户编号：{entity.ReleaseUserId.ToString()} 更新的交易信息。交易编号：{entity.TradeId.ToString()}，币种：{entity.BType.ToString()}, 总数量：{entity.TotalAmount}, 单价：{entity.Price} "
+            };
+
+            log.LogId = _tradeHallLogRepository.InsertTradeHallLogEntity(log);
+
+            return log.LogId <= 0 ? (500, "添加交易日志信息失败") : (200, "修改成功");
         }
 
-        public (int, string) UpdateTradeHallStatus(int tradeId, TradeHallShelfStatus status)
+        [SmartSqlTransaction]
+        public (int, string) UpdateTradeHallStatus(int tradeId, TradeHallShelfStatus status, int userId, string userNickName)
         {
             Check.EnsureMoreThanZero(tradeId, nameof(tradeId));
 
             int rowCount = _tradeHallRepository.UpdateTradeHallStatus(status, tradeId);
 
-            return rowCount != 1 ? (500, "修改交易信息失败") : (200, "修改成功");
+            if (rowCount != 1) return (500, "修改交易信息失败");
+
+            TradeHallLog log = new TradeHallLog
+            {
+                OperateId = userId,
+                OperateName = userNickName,
+                TradeHallId = tradeId,
+                OperateLog = $"用户编号：{userId.ToString()} 更新的交易信息状态。交易编号：{tradeId.ToString()}，状态：{status.GetDescription()}"
+            };
+
+            log.LogId = _tradeHallLogRepository.InsertTradeHallLogEntity(log);
+
+            return log.LogId <= 0 ? (500, "添加交易日志信息失败") : (200, "修改成功");
         }
 
         public (int num, List<TradeHallAppResponse> result) PagedGetAppTradeHalls(Pager query)
