@@ -12,7 +12,6 @@ using Shunmai.Bxb.Services.Constans;
 
 namespace Shunmai.Bxb.Api.App.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class ConfigController : AppBaseController
     {
@@ -27,7 +26,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         }
 
         [SkipLoginVerification]
-        [HttpGet("GetPlatformWalletAddressList")]
+        [HttpGet("platwallet/addr")]
         public IActionResult GetPlatformWalletAddressList()
         {
             var data = _systemConfigService.GetConfig<List<PaltWalletAddressResponse>>(SystemConfigNames.PLATFORM_WALLET_ADDRESS);
@@ -35,7 +34,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         }
 
         [SkipLoginVerification]
-        [HttpGet("GetWXCustomerList")]
+        [HttpGet("customer/service")]
         public IActionResult GetWXCustomerList()
         {
             var data = _systemConfigService.GetConfig<WXCustomerInfoResponse>(SystemConfigNames.CUSTOMER_SERVICE);
