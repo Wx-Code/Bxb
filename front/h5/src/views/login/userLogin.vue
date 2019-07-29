@@ -18,11 +18,11 @@
         <phone-verify @changePhone="changePhone" @changeCode="changeCode"></phone-verify>
       </ul>
       <div class="ul_login_btnBox">
-          <div class="ul_login_btn btn_type2">登录</div>
+          <div class="ul_login_btn btn_type2" @click="login">登录</div>
       </div>
     </div>
     <div class="ul_register_btnBox row jc">
-      <span class="ul_register_btn " @click="goRegisterPage()">立即注册</span>
+      <span class="ul_register_btn " @click="goRegisterPage">立即注册</span>
     </div>
   </div>
 
@@ -30,7 +30,7 @@
 
 <script>
 import store from '@/utils/local-store'
-import userService from '@/api/user'
+import user from '@/api/user'
 import  phoneVerify  from '@/components/phoneVerify/phoneVerify';
 
 export default {
@@ -80,6 +80,46 @@ export default {
     },
     changeCode(code) {
       this.code = code
+    },
+    login() {
+      console.log(this.phone);
+      if (!this.validateRequestData()) return
+      const { data } = user.login({
+        phone: this.phone,
+        smsCode: this.code,
+      })
+      if (!data) return
+      if (data.errorCode = '0000') {
+        this.$toast({message: '登录成功', duration: '1500'})
+        const  that =this
+        setTimeout(function () {
+          that.redirect()
+        },1500)
+
+      } else if (data.errorCode = '0001') {
+        this.$toast({message: '短信验证码有误', duration: '1500'})
+      } else {
+        this.$toast({message: '登录失败', duration: '1500'})
+      }
+
+    },
+    validateRequestData() {
+      //手机号正则式
+      let regPho = /^1[0-9]{10}$/
+      let regCode = /^\d{6}$/
+      if (!regPho.test(this.phone)) {
+        this.$toast({message: '请填写正确的手机号码', duration: '1500'})
+        return false
+      } else {
+        return true
+      }
+      if (!regCode.test(this.code)) {
+        this.$toast({message: '请填写正确的验证码', duration: '1500'})
+        return false
+      } else {
+        return true
+      }
+
     },
   }
 }

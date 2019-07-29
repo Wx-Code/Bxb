@@ -28,6 +28,7 @@
       <div class="ul_login_btnBox">
         <div class="ul_login_btn btn_type2" @click="register()">立即注册</div>
       </div>
+      <div class="goLoginBtn row ac" @click="goLogin"><span class="goLoginTxt">< 返回登录</span></div>
     </div>
   </div>
 
@@ -109,8 +110,12 @@
         })
         if (!data) return
         if (data.errorCode = '0000') {
-          this.$toast({message: '请填写正确的手机号码', duration: '1500'})
-        } else if (data.errorCode = '000') {
+          const  that =this
+          that.$toast({message: '注册成功', duration: '1500'})
+          setTimeout(function () {
+            that.redirect()
+          },1500)
+        } else if (data.errorCode = '0001') {
           this.$toast({message: '短信验证码有误', duration: '1500'})
         } else {
           this.$toast({message: '注册失败', duration: '1500'})
@@ -163,7 +168,6 @@
         const {data} = await common.getRule()
         if (!data) return false
         this.content_txt = data
-
       },
       async showRule() {
         await this.getRule()
@@ -172,6 +176,9 @@
           content_txt: this.content_txt,
         })
       },
+      goLogin(){
+        this.$router.replace({path: '/'})
+      }
 
     }
   }
@@ -185,6 +192,17 @@
 
   .userLogin_li_box {
     width: 100%;
+  }
+  .goLoginBtn{
+    width: 100%;
+    font-size: 0.5rem;
+    position: fixed;
+    left: 0.2rem;
+    top: 0.2rem;
+    height: 0.8rem ;
+  }
+  .goLoginTxt{
+    font-size: 0.28rem;
   }
 
   .ul_sty1 {

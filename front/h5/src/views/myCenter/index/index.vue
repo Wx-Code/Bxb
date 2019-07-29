@@ -10,12 +10,12 @@
     <div class="mc_content col ac">
       <div class="mc_num_box row jb ac">
         <div class="mc_num_num col ac" @click="goRecord">
-          <div class="mc_num tc">900</div>
+          <div class="mc_num tc">{{userInfo.outTotalAmount || 0}}</div>
           <div class="mc_num_txt tc">累计售出</div>
         </div>
         <div class="mc_num_line"></div>
         <div class="mc_num_num col ac " @click="goRecord">
-          <div class="mc_num tc">900</div>
+          <div class="mc_num tc">{{userInfo.inTotalAmount || 0}}</div>
           <div class="mc_num_txt tc">累计购买</div>
         </div>
 
@@ -82,9 +82,11 @@
 
 <script>
   import store from '@/utils/local-store'
+  import user from '@/api/user'
 
   export default {
     created() {
+      this.getMyCenterData()
 
     },
 
@@ -92,6 +94,7 @@
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
+        userInfo:'',
         clidata:'1111'
 
       }
@@ -121,7 +124,15 @@
       goMySell(){
         this.$router.push({ name: 'mySell' })
 
+      },
+      async getMyCenterData(){
+        const { data } = await user.getUserInfo()
+        if (!data) return
+        if (data.errorCode = '0000') {
+          this.userInfo = data
+        }
       }
+
     }
   }
 </script>
