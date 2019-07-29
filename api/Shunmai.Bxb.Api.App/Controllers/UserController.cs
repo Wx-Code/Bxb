@@ -121,6 +121,9 @@ namespace Shunmai.Bxb.Api.App.Controllers
             return Success(CurrentUser.MapTo<UserResponse>());
         }
 
+
+        [SkipLoginVerification]
+
         [HttpPost("editwalletaddr")]
         public IActionResult UpdateUserWalletAddr([FromBody] UpdateUserWalletAddrRequest request)
         {
