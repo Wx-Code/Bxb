@@ -16,6 +16,7 @@ let dialog = function (settingContent) {
       confirmDom.cancelText = settingContent.cancelText || '取消'
       confirmDom.confirmText = settingContent.confirmText || '确认'
       typeof(settingContent.showCancel) == 'boolean' && !settingContent.showCancel? confirmDom.showCancel = false: confirmDom.showCancel = true
+      typeof(settingContent.showBtn) == 'boolean' && !settingContent.showBtn? confirmDom.showBtn = false: confirmDom.showBtn = true
     }
     confirmDom.confirmBtn = function () { //确认
       res()

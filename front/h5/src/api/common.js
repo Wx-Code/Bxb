@@ -7,6 +7,14 @@ export default {
       url: '/common/sms/code',
       data: data
     })
+  },
+  getRule(){
+    return request({
+      method: 'POST',
+      url: '/common/trade/rules',
+      data: null
+    })
+  },
 
-  }
+
 }

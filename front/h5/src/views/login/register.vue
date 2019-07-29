@@ -9,15 +9,20 @@
             <div class="row jb w_100">
               <span class="ul_code_text2" v-if="imgUploadSuccess">上传成功</span>
               <span class="ul_code_text1" v-if="!imgUploadSuccess">请上传图片二维码</span>
-              <img src="http://static.pinlala.com/bxb/shangchuan.png" alt="" class="ul_icon4">
+              <van-uploader :after-read="afterRead">
+                <img src="http://static.pinlala.com/bxb/shangchuan.png" alt="" class="ul_icon4">
+              </van-uploader>
+
             </div>
           </div>
 
         </li>
       </ul>
       <div class="ul_agree_box row ac">
-        <van-checkbox v-model="checked" class="register_checked" icon-size="14px" checked-color="#5585E4">我已仔细阅读
-        </van-checkbox>
+        <div class="ul_agree_tit">
+          <van-checkbox v-model="checked" class="register_checked" icon-size="14px" checked-color="#5585E4">我已仔细阅读并同意
+          </van-checkbox>
+        </div>
         <span class="register_txt" @click="showRule()">《币小保平台交易规则》</span>
       </div>
       <div class="ul_login_btnBox">
@@ -30,70 +35,144 @@
 
 <script>
   import store from '@/utils/local-store'
-  import userService from '@/api/user'
-  import { Checkbox } from 'vant';
-  import  phoneVerify  from '@/components/phoneVerify/phoneVerify';
+  import common from '@/api/common'
+  import user from '@/api/user'
+  import {Checkbox} from 'vant';
+  import phoneVerify from '@/components/phoneVerify/phoneVerify';
 
   export default {
     components: {
       'van-checkbox': Checkbox, //自定义弹框组组件
-      'phone-verify':phoneVerify
-    },
-    data() {
-      return {
-        phone:'',
-        code:''
-      }
+      'phone-verify': phoneVerify
     },
     created() {
       this.weChatLogin()
+
     },
 
     data() {
       return {
         host: process.env.FRONT_HOST,
+        apiHost: process.env.BASE_API,
         appId: process.env.WECHAT_APP_ID,
         imgUploadSuccess: false,
         checked: false,
         phone: '',
-        code:''
+        wechatCode: '',
+        code: '',
+        imgData: '',
+        canClick: true
       }
     },
 
     methods: {
-      showRule() {
-        this.$dialog({
-          showCancel: false,
-          confirmText: '同意',
-          content_txt: '好多卡好地方回归到付款更好看电饭锅和待付款各个好地方开个店的活动风华高科的复合弓大骨饭开的会待付款峰会上开发好多卡好地方回归到付款更好看电饭锅和待付款各个好地方开个店的活动风华高科的复合弓大骨饭开的会待付款峰会上开发好多卡好地方回归到付款更好看电饭锅和待付款 各个好地方开个店的活动风华高科的复合弓大骨饭开的会待付款峰会上开发好多卡好地方回归到付款更好看电饭锅和待付款 各个好地方开个店的活动风华高科的复合弓大骨饭开的会待付款峰会上开发好多卡好地方回归到付款更好看电饭锅和待付款各个好地方开个店的活动风华高科的复合弓大骨饭开的会待付款峰会上开发\n' +
-            '       好多卡好地方回归到付款更好看电饭锅和待付款各个好地方开个店的活动风华高科的复合弓大骨饭开的会待付款峰会上开发。',
-          confirmBtn() {
-            console.log(111);
-          }
+      async afterRead(file) {
+        this.$toast.loading({
+          duration: 0,       // 持续展示 toast
+          forbidClick: true, // 禁用背景点击
+          loadingType: 'spinner',
+          message: '上传中'
         })
+        // 此时可以自行将文件上传至服务器
+        let formData = new window.FormData();
+        formData.append('file', file.file);//通过append向form对象添加数据
+        formData.get("file")
+        let config = {
+          headers: {'Content-Type': 'multipart/form-data'}
+        }; //添加请求头
+        const { data } = await this.$axios.post(this.apiHost + '/common/wechat/qrcode', formData, config)
+        if (!data) return
+        this.imgData = data.data
+        this.imgUploadSuccess = true
+        const that = this
+        setTimeout(function () {
+          that.$toast.clear()
+        }, 300)
       },
       changePhone(phone) {
         // console.log(phone);
         this.phone = phone
-
       },
       changeCode(code) {
         this.code = code
+      },
+      register() {
+        console.log(this.phone);
+        if (!this.validateRequestData()) return
+        if (!this.canClick) return
+        this.canClick = true
+        const {data} = user.register({
+          wechatCode: this.wechatCode,
+          phone: this.phone,
+          smsCode: this.code,
+          qrCodeUrl: this.imgData
+        })
+        if (!data) return
+        if (data.errorCode = '0000') {
+          this.$toast({message: '请填写正确的手机号码', duration: '1500'})
+        } else if (data.errorCode = '000') {
+          this.$toast({message: '短信验证码有误', duration: '1500'})
+        } else {
+          this.$toast({message: '注册失败', duration: '1500'})
+        }
 
       },
-      register(){
-        console.log(this.phone);
+      validateRequestData() {
+        //手机号正则式
+        let regPho = /^1[0-9]{10}$/
+        let regCode = /^\d{6}$/
+        if (!regPho.test(this.phone)) {
+          this.$toast({message: '请填写正确的手机号码', duration: '1500'})
+          return false
+        } else {
+          return true
+        }
+        if (!regCode.test(this.code)) {
+          this.$toast({message: '请填写正确的验证码', duration: '1500'})
+          return false
+        } else {
+          return true
+        }
+        if (this.imgData && this.imgData.length > 0) {
+          return true
+        } else {
+          this.$toast({message: '请上传您的图片二维码', duration: '1500'})
+          return false
+        }
+
+        if (!this.checked) {
+          this.$toast({message: '您还未未同意《币小保平台交易规则》喔~', duration: '1500'})
+          return false
+        } else {
+          return true
+        }
+
       },
-      weChatLogin(){
+      weChatLogin() {
         const code = this.$route.query.code
-        if(code){
-          this.code=code
-        }else{
+        console.log('wechatCode', code);
+        if (code) {
+          this.wechatCode = code
+        } else {
           const backUrl = encodeURIComponent(this.host + '/register')
           window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
         }
 
-      }
+      },
+      async getRule() {
+        const {data} = await common.getRule()
+        if (!data) return false
+        this.content_txt = data
+
+      },
+      async showRule() {
+        await this.getRule()
+        this.$dialog({
+          showBtn: false,
+          content_txt: this.content_txt,
+        })
+      },
+
     }
   }
 </script>
@@ -138,7 +217,6 @@
     padding-left: 0.17rem;
     color: #333333;
     font-size: 0.28rem;
-    font-size: 0.28rem;
   }
 
   .ul_input::placeholder {
@@ -153,6 +231,10 @@
   .ul_login_btn {
     width: 3.64rem;
     margin: 0 auto;
+  }
+
+  .ul_agree_tit {
+    font-size: 0.24rem;
   }
 
   .ul_icon3 {

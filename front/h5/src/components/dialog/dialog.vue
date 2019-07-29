@@ -20,7 +20,7 @@
 
       </div>
       <!--弹框按钮全显示-->
-      <div class="btns row jb" v-if="showCancel">
+      <div class="btns row jb" v-if="showCancel && showBtn">
         <!--取消按钮-->
         <div
           class="cancel_btn"
@@ -38,7 +38,7 @@
         </div>
       </div>
       <!--只显示确定按钮-->
-      <div class="btns row jb" v-if="!showCancel">
+      <div class="btns row jb" v-if="!showCancel && showBtn">
         <!--确认按钮-->
         <div
           class=" confirm_btn confirm_btn_one"
@@ -63,6 +63,7 @@
         cancelText: '取消', //取消按钮（左）文案
         confirmText: '确定', //确认按钮（右）文案
         showCancel: true,// //是否显示取消按钮
+        showBtn:true
 
       };
     },
