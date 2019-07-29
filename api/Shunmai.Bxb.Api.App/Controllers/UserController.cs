@@ -121,7 +121,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
             return Success(CurrentUser.MapTo<UserResponse>());
         }
 
-        [HttpPost("edit/walletaddr")]
+        [HttpPost("editwalletaddr")]
         public IActionResult UpdateUserWalletAddr([FromBody] UpdateUserWalletAddrRequest request)
         {
             string message = string.Empty;
