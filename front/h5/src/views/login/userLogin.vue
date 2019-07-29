@@ -110,13 +110,10 @@ export default {
       if (!regPho.test(this.phone)) {
         this.$toast({message: '请填写正确的手机号码', duration: '1500'})
         return false
-      } else {
-        return true
-      }
-      if (!regCode.test(this.code)) {
+      } else if (!regCode.test(this.code)) {
         this.$toast({message: '请填写正确的验证码', duration: '1500'})
         return false
-      } else {
+      }else{
         return true
       }
 

@@ -97,7 +97,7 @@
       changeCode(code) {
         this.code = code
       },
-      register() {
+      async register() {
         console.log(this.phone);
         if (!this.validateRequestData()) return
         if (!this.canClick) return
@@ -129,27 +129,18 @@
         if (!regPho.test(this.phone)) {
           this.$toast({message: '请填写正确的手机号码', duration: '1500'})
           return false
-        } else {
-          return true
-        }
-        if (!regCode.test(this.code)) {
+        } else if (!regCode.test(this.code)) {
           this.$toast({message: '请填写正确的验证码', duration: '1500'})
           return false
-        } else {
-          return true
-        }
-        if (this.imgData && this.imgData.length > 0) {
-          return true
-        } else {
+        } else if ( this.imgData.length <= 0 || !this.imgUploadSuccess) {
           this.$toast({message: '请上传您的图片二维码', duration: '1500'})
           return false
-        }
-
-        if (!this.checked) {
+        } else if (!this.checked) {
           this.$toast({message: '您还未未同意《币小保平台交易规则》喔~', duration: '1500'})
           return false
-        } else {
+        }else{
           return true
+          console.log(this.checked);
         }
 
       },
@@ -160,7 +151,7 @@
           this.wechatCode = code
         } else {
           const backUrl = encodeURIComponent(this.host + '/register')
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+          // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
         }
 
       },
