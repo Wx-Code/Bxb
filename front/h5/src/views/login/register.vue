@@ -151,7 +151,7 @@
           this.wechatCode = code
         } else {
           const backUrl = encodeURIComponent(this.host + '/register')
-          // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
         }
 
       },
