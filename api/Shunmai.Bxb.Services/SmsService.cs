@@ -96,6 +96,7 @@ namespace Shunmai.Bxb.Services
             }
 
             var res = _smsProvider.SendCode(phone, code);
+            _logger.LogInformation($"Send {code} to {phone}.");
             if (res == null || res.Code.IsEmpty())
             {
                 _logger.LogError($"Send verification code failed.");
