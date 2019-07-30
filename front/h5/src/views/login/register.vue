@@ -102,20 +102,20 @@
         if (!this.validateRequestData()) return
         if (!this.canClick) return
         this.canClick = true
-        const {data} = user.register({
+        const { data ,errorCode } = user.register({
           wechatCode: this.wechatCode,
           phone: this.phone,
           smsCode: this.code,
           qrCodeUrl: this.imgData
         })
         if (!data) return
-        if (data.errorCode = '0000') {
+        if (errorCode == '0000') {
           const  that =this
           that.$toast({message: '注册成功', duration: '1500'})
           setTimeout(function () {
             that.redirect()
           },1500)
-        } else if (data.errorCode = '0001') {
+        } else if (errorCode == '0001') {
           this.$toast({message: '短信验证码有误', duration: '1500'})
         } else {
           this.$toast({message: '注册失败', duration: '1500'})
