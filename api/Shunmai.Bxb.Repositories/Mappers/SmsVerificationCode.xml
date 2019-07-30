@@ -40,7 +40,7 @@
           `VerificationCode`=?code
         </IsNotEmpty>
         <IsNotEmpty Prepend="AND" Property="expires">
-          <![CDATA[DATE_ADD(`CreateTime`, INTERVAL ?expires SECOND)<CURRENT_TIMESTAMP]]>
+          <![CDATA[DATE_ADD(`CreateTime`, INTERVAL ?expires SECOND)>CURRENT_TIMESTAMP]]>
         </IsNotEmpty>
       </Where>
       ORDER BY
