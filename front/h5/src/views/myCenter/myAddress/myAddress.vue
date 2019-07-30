@@ -1,10 +1,18 @@
 <template>
   <div class="platformAddress">
     <ul class="pa_content">
-      <li class="pa_item row ac jb" v-for="(item,index) in addressArr" @click="goChangeMyAddress">
-        <div class="pa_item_txt1">{{item.name}}钱包地址</div>
+      <!--<li class="pa_item row ac jb" v-for="(item,index) in addressArr" @click="goChangeMyAddress">-->
+        <!--<div class="pa_item_txt1">{{item.name}}钱包地址</div>-->
+        <!--<div class="pa_item_r row ac">-->
+          <!--<div class="pa_item_txt2 wd">{{item.address}}</div>-->
+          <!--<img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="next_btn">-->
+        <!--</div>-->
+
+      <!--</li>-->
+      <li class="pa_item row ac jb"  @click="goChangeMyAddress">
+        <div class="pa_item_txt1">GRT钱包地址</div>
         <div class="pa_item_r row ac">
-          <div class="pa_item_txt2 wd">{{item.address}}</div>
+          <div class="pa_item_txt2 wd">{{walletAddress}}</div>
           <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="next_btn">
         </div>
 
@@ -19,10 +27,6 @@
   import store from '@/utils/local-store'
 
   export default {
-    created() {
-
-    },
-
     data() {
       return {
         host: process.env.FRONT_HOST,
@@ -30,17 +34,17 @@
         addressArr:[{
           name:'GDT',
           address:'SHBV123452JFHN34'
-        }]
+        }],
+        walletAddress:''
       }
+    },
+    created() {
+      const userData = store.getUser()
+      if(!userData)return false
+      this.walletAddress = userData.walletAddress
     },
 
     methods: {
-      goChange(txt) {
-
-
-
-
-      },
       goChangeMyAddress(){
         this.$router.push({ name: 'changeMyAddress' })
       },

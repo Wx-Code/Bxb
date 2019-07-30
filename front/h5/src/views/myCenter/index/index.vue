@@ -22,7 +22,7 @@
       </div>
       <div class="mc_nav">
         <div class="mc_nav_content col ">
-          <div class="mc_nav_item row jb ac "  @click="goMySend">
+          <div class="mc_nav_item row jb ac " @click="goMySend">
             <div class="mc_nav_item1 row ac ">
               <img src="http://static.pinlala.com/bxb/send.png" alt="" class="mc_nav_icon1">
               <div class="mc_nav_item2">我发布的</div>
@@ -57,7 +57,7 @@
             </div>
             <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
           </div>
-          <div class="mc_nav_item row jb ac "  @click="goMyInformation">
+          <div class="mc_nav_item row jb ac " @click="goMyInformation">
             <div class="mc_nav_item1 row ac ">
               <img src="http://static.pinlala.com/bxb/my.png" alt="" class="mc_nav_icon5">
               <div class="mc_nav_item2">我的资料</div>
@@ -85,51 +85,66 @@
   import user from '@/api/user'
 
   export default {
-    created() {
-      this.getMyCenterData()
 
-    },
 
     data() {
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
-        userInfo:'',
-        clidata:'1111'
+        userInfo: '',
+        clidata: '1111'
 
       }
     },
+    created() {
+      // this.getMyCenterData()
+      store.setUser({
+        "userId":1,
+        "nickname":"test_nickname",
+        "avatar":"test_avatar",
+        "realname":"test_realname",
+        "wxCodePhoto":"test_qrcode",
+        "wxUnionId":"test_unionId",
+        "wxOpenId":"test_openId",
+        "phone":"13521942500",
+        "walletAddress":null,
+        "outTotalAmount":0,
+        "inTotalAmount":0,
+        "createdTime":"0001-01-01 00:00:00"
+      })
+    },
 
     methods: {
-      goCustomer(){
-        this.$router.push({ name: 'customer' })
+      goCustomer() {
+        this.$router.push({name: 'customer'})
       },
-      goPlatformAddress(){
-        this.$router.push({ name: 'platformAddress' })
+      goPlatformAddress() {
+        this.$router.push({name: 'platformAddress'})
       },
-      goMyAddress(){
-        this.$router.push({ name: 'myAddress' })
+      goMyAddress() {
+        this.$router.push({name: 'myAddress', params: {walletAddress: this.userInfo.walletAddress}})
       },
-      goMyInformation(){
-        this.$router.push({ name: 'myInformation' })
+      goMyInformation() {
+        this.$router.push({name: 'myInformation'})
       },
-      goRecord(){
-        this.$router.push({ name: 'record' })
-
-      } ,
-      goMySend(){
-        this.$router.push({ name: 'mySend' })
+      goRecord() {
+        this.$router.push({name: 'record'})
 
       },
-      goMySell(){
-        this.$router.push({ name: 'mySell' })
+      goMySend() {
+        this.$router.push({name: 'mySend'})
 
       },
-      async getMyCenterData(){
-        const { data } = await user.getUserInfo()
-        if (!data) return
+      goMySell() {
+        this.$router.push({name: 'mySell'})
+
+      },
+      async getMyCenterData() {
+        const {data} = await user.getUserInfo()
+        if (!data) return false
         if (data.errorCode = '0000') {
-          this.userInfo = data
+          this.userInfo = data.data
+          store.setUser(this.userInfo)
         }
       }
 

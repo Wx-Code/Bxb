@@ -1,11 +1,25 @@
 <template>
   <div class="platformAddress">
     <ul class="pa_content">
-      <li class="pa_item row ac jb" v-for="(item,index) in addressArr" @click="goChangeCode(index)">
-        <div class="pa_item_txt1">{{item.name}}</div>
+      <li class="pa_item row ac jb" >
+        <div class="pa_item_txt1">微信昵称</div>
         <div class="pa_item_r row ac">
-          <div class="pa_item_txt2 wd">{{item.address}}</div>
-          <img src="http://static.pinlala.com/bxb/ic_nav_back.png" v-if="index==2" alt="" @click="goChange" class="next_btn">
+          <div class="pa_item_txt2 wd">{{userInfo.nickname || ''}}</div>
+
+        </div>
+      </li>
+      <li class="pa_item row ac jb">
+        <div class="pa_item_txt1">手机号码</div>
+        <div class="pa_item_r row ac">
+          <div class="pa_item_txt2 wd">{{userInfo.phone || ''}}</div>
+
+        </div>
+      </li>
+      <li class="pa_item row ac jb"  @click="goChangeCode(2)">
+        <div class="pa_item_txt1">微信二维码</div>
+        <div class="pa_item_r row ac">
+          <div class="pa_item_txt2 wd"></div>
+          <img src="http://static.pinlala.com/bxb/ic_nav_back.png"  alt=""  class="next_btn">
         </div>
       </li>
 
@@ -18,28 +32,24 @@
   import store from '@/utils/local-store'
 
   export default {
-    created() {
 
-    },
 
     data() {
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
-        addressArr: [
-          {
-            name: '微信昵称',
-            address: '小犀牛'
-          },{
-            name: '手机号码',
-            address: '18348093356'
-          },{
-            name: '微信二维码',
-            address: ''
-          },]
+        userInfo:{
+          nickname:'123',
+          phone:'123123'
+        },
       }
     },
+    created() {
+      const userData = store.getUser()
+      if(!userData)return false
+      this.userInfo = userData
 
+    },
     methods: {
       goChange(txt) {
       },

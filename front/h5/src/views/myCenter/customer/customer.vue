@@ -1,18 +1,21 @@
 <template>
   <div class="customer col ac">
     <img src="http://static.pinlala.com/bxb/customer.png" alt="" class="customer_img">
-    <div class="customer_content">
+    <div class="customer_content" v-for="item in weiXinCustomerList" v-if="item.isChecked">
       <div class="customer_box1 row ac">
         <p class="customer_box_txt1 txt_j">客服微信号</p>
-        <span class="customer_box_txt2 wd">{{wxNumber}}</span>
-        <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(wxNumber)" class="customer_box_btn">
+        <span class="customer_box_txt2 wd">{{item.wxCustomerNumber}}</span>
+        <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(item.wxCustomerNumber)" class="customer_box_btn">
 
       </div>
-      <div class="customer_box1 row ac">
-        <p class="customer_box_txt1 txt_j">客服电话</p>
-        <a class="customer_box_txt2 wd" href="tel:18348093356">18348093356</a>
-      </div>
+
+
     </div>
+    <div class="customer_box1 row ac">
+      <p class="customer_box_txt1 txt_j">客服电话</p>
+      <a class="customer_box_txt2 wd" :href="'tel:'+ phone">{{phone}}</a>
+    </div>
+
 
 
 
@@ -22,28 +25,22 @@
 
 <script>
   import store from '@/utils/local-store'
+  import pageServe from '@/api/page'
 
   export default {
-
-    data() {
-
-      return {}
-
-    },
     created() {
-
+      // this.getCustomerInfo()
     },
-
     data() {
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
-        wxNumber:'m18348093353',
-        phone:'18348093356'
+        weiXinCustomerList:[],
+        wxNumber:'',
+        phone:''
 
       }
     },
-
     methods: {
       copyCode(txt) {
         this.$copyText(txt).then(
@@ -55,11 +52,13 @@
             this.$toast("复制失败");
           }
         )
-
-
-
+      },
+      async getCustomerInfo(){
+        const  { data } =  await pageServe.getCustomerInfo()
+        if(!data) return
+        this.weiXinCustomerList = data.weiXinCustomerList
+        this.phone = data.phone
       }
-
     }
   }
 </script>

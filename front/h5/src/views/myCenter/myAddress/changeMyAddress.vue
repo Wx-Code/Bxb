@@ -6,7 +6,7 @@
         <img src="http://static.pinlala.com/bxb/guanbi-2.png" alt="" @click="clearInput" v-show="address.length>0"
              class="clear_input">
       </div>
-      <div class="cma_btn btn_type2">完成</div>
+      <div class="cma_btn btn_type2" @click="completeChange">完成</div>
     </div>
   </div>
 
@@ -14,19 +14,23 @@
 
 <script>
   import store from '@/utils/local-store'
-
+  import userServe from '@/api/user'
   export default {
-    created() {
 
-    },
 
     data() {
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
-        address: ''
+        address: '',
+        userInfo:''
 
       }
+    },
+    created() {
+      const userData = store.getUser()
+      if(!userData)return false
+      this.userInfo = userData
     },
 
     methods: {
@@ -36,6 +40,20 @@
       },
       clearInput() {
         this.address = ''
+      },
+      async completeChange(){
+
+       const  { data } = await  userServe.editwalletaddr({WalletAddress:this.address,UserId:this.userInfo.userId})
+        if(!data) return false
+        if(data.errorCode = '0000'){
+          this.userInfo.walletAddress = this.address
+          store.setUser(this.userInfo)
+          this.$toast({message: '修改成功', duration: '1500'})
+          this.$router.go(-1)
+        }else{
+          this.$toast({message: '修改失败', duration: '1500'})
+        }
+
       }
 
     }

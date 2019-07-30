@@ -23,6 +23,13 @@ export default {
       url: '/user',
       params: null
     })
+  },
+  editwalletaddr(data){
+    return request({
+      method: 'POST',
+      url: '/user/editwalletaddr',
+      data: data
+    })
   }
 
 

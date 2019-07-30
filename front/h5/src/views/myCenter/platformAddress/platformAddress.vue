@@ -1,10 +1,10 @@
 <template>
   <div class="platformAddress">
     <ul class="pa_content">
-      <li class="pa_item row ac jc" v-for="(item,index) in addressArr">
-        <div class="pa_item_txt1">{{item.name}}钱包</div>
-        <div class="pa_item_txt2">{{item.address}}</div>
-        <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(item.address)" class="customer_box_btn">
+      <li class="pa_item row ac jc" v-for="(item,index) in addressArr" v-if="item.state==1">
+        <div class="pa_item_txt1">{{item.platWalletAddrName}}</div>
+        <div class="pa_item_txt2">{{item.platWalletAddr}}</div>
+        <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(item.platWalletAddr)" class="customer_box_btn">
       </li>
       <p class="pa_tit">温馨提示：<br>转币时请确保钱包地址的正确，以免影响您的正常交易。</p>
     </ul>
@@ -15,9 +15,10 @@
 
 <script>
   import store from '@/utils/local-store'
-
+  import pageServe from '@/api/page'
   export default {
     created() {
+      this.getPlatformAddress()
 
     },
 
@@ -44,6 +45,13 @@
           }
         )
 
+
+
+      },
+      async getPlatformAddress(){
+        const  { data } =  await pageServe.getPlatformAddress()
+        if(!data) return
+        this.addressArr = data
 
 
       }
