@@ -67,7 +67,9 @@ export default {
 
   methods: {
     goRegisterPage(){
-      this.$router.push({ name: 'register' })
+      const backUrl = encodeURIComponent(this.host + '/register')
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+      // this.$router.push({ name: 'register' })
     },
     async redirect() {
       const redirectUrl = store.getUrl()
@@ -84,19 +86,19 @@ export default {
     login() {
       console.log(this.phone);
       if (!this.validateRequestData()) return
-      const { data } = user.login({
+      const { data ,errorCode} = user.login({
         phone: this.phone,
         smsCode: this.code,
       })
       if (!data) return
-      if (data.errorCode = '0000') {
+      if (errorCode == '0000') {
         this.$toast({message: '登录成功', duration: '1500'})
-        const  that =this
+        const  that = this
         setTimeout(function () {
           that.redirect()
         },1500)
 
-      } else if (data.errorCode = '0001') {
+      } else if (errorCode == '0001') {
         this.$toast({message: '短信验证码有误', duration: '1500'})
       } else {
         this.$toast({message: '登录失败', duration: '1500'})

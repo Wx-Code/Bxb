@@ -28,7 +28,7 @@
       <div class="ul_login_btnBox">
         <div class="ul_login_btn btn_type2" @click="register()">立即注册</div>
       </div>
-      <div class="goLoginBtn row ac" @click="goLogin"><span class="goLoginTxt">< 返回登录</span></div>
+      <!--<div class="goLoginBtn row ac" ><span class="goLoginTxt" @click="goLogin">< 返回登录</span></div>-->
     </div>
   </div>
 
@@ -102,20 +102,20 @@
         if (!this.validateRequestData()) return
         if (!this.canClick) return
         this.canClick = true
-        const {data} = user.register({
+        const { data ,errorCode } = user.register({
           wechatCode: this.wechatCode,
           phone: this.phone,
           smsCode: this.code,
           qrCodeUrl: this.imgData
         })
         if (!data) return
-        if (data.errorCode = '0000') {
+        if (errorCode == '0000') {
           const  that =this
           that.$toast({message: '注册成功', duration: '1500'})
           setTimeout(function () {
             that.redirect()
           },1500)
-        } else if (data.errorCode = '0001') {
+        } else if (errorCode == '0001') {
           this.$toast({message: '短信验证码有误', duration: '1500'})
         } else {
           this.$toast({message: '注册失败', duration: '1500'})
@@ -149,9 +149,6 @@
         console.log('wechatCode', code);
         if (code) {
           this.wechatCode = code
-        } else {
-          const backUrl = encodeURIComponent(this.host + '/register')
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
         }
 
       },
@@ -184,17 +181,17 @@
   .userLogin_li_box {
     width: 100%;
   }
-  .goLoginBtn{
-    width: 100%;
-    font-size: 0.5rem;
-    position: fixed;
-    left: 0.2rem;
-    top: 0.2rem;
-    height: 0.8rem ;
-  }
-  .goLoginTxt{
-    font-size: 0.28rem;
-  }
+  /*.goLoginBtn{*/
+    /*width: 100%;*/
+    /*font-size: 0.5rem;*/
+    /*position: fixed;*/
+    /*left: 0.2rem;*/
+    /*top: 0.2rem;*/
+    /*height: 0.8rem ;*/
+  /*}*/
+  /*.goLoginTxt{*/
+    /*font-size: 0.28rem;*/
+  /*}*/
 
   .ul_sty1 {
     width: 4.74rem;
