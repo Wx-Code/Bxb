@@ -1,4 +1,5 @@
-﻿using Shunmai.Bxb.Entities;
+﻿using System;
+using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
 using Shunmai.Bxb.Entities.Views;
 using Shunmai.Bxb.Repositories.Interfaces;
@@ -29,9 +30,10 @@ namespace Shunmai.Bxb.Services
             entity.Amount = entity.TotalAmount;
             entity.State = TradeHallState.Working;
             entity.Status = TradeHallShelfStatus.On;
+            entity.ReleaseTime = DateTime.Now;
             entity.TradeCode = IdGenerator.GenerateTradeCode();
             entity.TradeId = _tradeHallRepository.InsertTradeHallEntity(entity);
-
+            
             if (entity.TradeId <= 0) return (500, "添加交易信息失败");
 
             TradeHallLog log = new TradeHallLog
@@ -53,6 +55,7 @@ namespace Shunmai.Bxb.Services
             Check.EnsureMoreThanZero(entity.TradeId, nameof(entity.TradeId));
 
             entity.State = TradeHallState.Working;
+            entity.Amount = entity.TotalAmount;
             int rowCount = _tradeHallRepository.UpdateTradeHallEntity(entity);
 
             if(rowCount != 1) return (500, "修改交易信息失败");

@@ -58,6 +58,8 @@ namespace Shunmai.Bxb.Api.App.Controllers
             if (entity == null || entity.ReleaseUserId != CurrentUser.UserId)
                 return Failed();
 
+            model.ReleaseName = CurrentUser.Nickname;
+
             (int code, string message) = _tradeHallService.UpdateTradeHallEntity(model);
 
             if(code == 200) return Success();

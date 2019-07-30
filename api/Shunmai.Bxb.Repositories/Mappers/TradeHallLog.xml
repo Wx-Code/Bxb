@@ -10,7 +10,7 @@
   <Statements>
     <Statement Id="InsertTradeHallLogEntity">
       INSERT INTO `TradeHallLog` (
-        `TradeHallId`，
+        `TradeHallId`,
         `OperateId`,
         `OperateName`,
         `OperateLog`
