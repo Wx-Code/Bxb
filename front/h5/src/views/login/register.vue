@@ -28,7 +28,7 @@
       <div class="ul_login_btnBox">
         <div class="ul_login_btn btn_type2" @click="register()">立即注册</div>
       </div>
-      <div class="goLoginBtn row ac" ><span class="goLoginTxt" @click="goLogin">< 返回登录</span></div>
+      <!--<div class="goLoginBtn row ac" ><span class="goLoginTxt" @click="goLogin">< 返回登录</span></div>-->
     </div>
   </div>
 
@@ -181,17 +181,17 @@
   .userLogin_li_box {
     width: 100%;
   }
-  .goLoginBtn{
-    width: 100%;
-    font-size: 0.5rem;
-    position: fixed;
-    left: 0.2rem;
-    top: 0.2rem;
-    height: 0.8rem ;
-  }
-  .goLoginTxt{
-    font-size: 0.28rem;
-  }
+  /*.goLoginBtn{*/
+    /*width: 100%;*/
+    /*font-size: 0.5rem;*/
+    /*position: fixed;*/
+    /*left: 0.2rem;*/
+    /*top: 0.2rem;*/
+    /*height: 0.8rem ;*/
+  /*}*/
+  /*.goLoginTxt{*/
+    /*font-size: 0.28rem;*/
+  /*}*/
 
   .ul_sty1 {
     width: 4.74rem;

@@ -10,7 +10,7 @@ export default {
   },
   getRule(){
     return request({
-      method: 'POST',
+      method: 'GET',
       url: '/common/trade/rules',
       data: null
     })
