@@ -7,5 +7,5 @@ module.exports = merge(prodEnv, {
   BASE_API: '"http://testapi.pinlala.com/bxb_app"',
   FRONT_HOST: '"http://localhost:8080/app"',
   RELOAD_ON_CLICK_MENU: true,
-  WECHAT_APP_ID: '"wx378dc130adbcf3e3"',
+  WECHAT_APP_ID: '"wxacde7318d98fad96"',
 })
