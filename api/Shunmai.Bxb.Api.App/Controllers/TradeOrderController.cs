@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MySqlX.XDevAPI.Common;
 using Shunmai.Bxb.Api.App.Constansts;
 using Shunmai.Bxb.Api.App.Models.Request;
+using Shunmai.Bxb.Api.App.Utils;
 using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Enums;
 using Shunmai.Bxb.Utilities.Extenssions;
@@ -33,7 +35,8 @@ namespace Shunmai.Bxb.Api.App.Controllers
             }
 
             var success = _orderService.Submit(request.TradeHallId, request.Count, request.Code, out OrderSubmitResult result);
-
+            var errorInfo = ErrorInfoHelper.FromSubmitResult(result);
+            return Json(errorInfo);
         }
     }
 }

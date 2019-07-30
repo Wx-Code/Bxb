@@ -7,6 +7,7 @@ using Shunmai.Bxb.Utilities.Extenssions;
 using Shunmai.Bxb.Utilities.Sms;
 using Shunmai.Bxb.Utilities.Check;
 using System;
+using Shunmai.Bxb.Utilities.Helpers;
 
 namespace Shunmai.Bxb.Services
 {
@@ -42,8 +43,7 @@ namespace Shunmai.Bxb.Services
 
         /// <summary>
         /// 向给定手机号码发送短信验证码，采用以下策略：
-        /// 若数据库中存在未过期且未验证过的验证码，则发送此码
-        /// 否则生成新的验证码进行发送
+        /// 将数据库中状态为 0 的验证码设置为已过期
         /// </summary>
         /// <param name="phone"></param>
         /// <param name="length"></param>
@@ -56,27 +56,18 @@ namespace Shunmai.Bxb.Services
             Check.EnsureMoreThanZero(length, nameof(length));
             Check.EnsureMoreThanZero(expireSeconds, nameof(expireSeconds));
 
-            var nonExpired = QueryNonExpired(phone, expireSeconds);
-            if (nonExpired != null && IsValid(nonExpired))
+            var cnt = _verificationCodeRepository.Count(phone, SmsCodeState.Default);
+            var success = _verificationCodeRepository.SetExpired(phone) == cnt;
+            if (success == false)
             {
-                if (_smsProvider.SendCode(phone, nonExpired.VerificationCode) != null)
-                {
-                    return true;
-                }
-                _logger.LogError($"Send verification code failed.");
+                _logger.LogError($"Set code expired failed.");
                 return false;
             }
 
-            var res = _smsProvider.Send(phone, length);
-            if (res == null || res.Code.IsEmpty())
-            {
-                _logger.LogError($"Send verification code failed.");
-                return false;
-            }
-
+            var code = Randoms.Numbers(length);
             var smsLog = new SmsLog
             {
-                Content = res.Content,
+                Content = code,
                 Phone = phone,
                 Sign = string.Empty,
                 RequestPlat = appType,
@@ -95,12 +86,19 @@ namespace Shunmai.Bxb.Services
             {
                 Phone = phone,
                 State = SmsCodeState.Default,
-                VerificationCode = res.Code,
+                VerificationCode = code,
             };
             var codeId = _verificationCodeRepository.Insert(codeModel);
             if (codeId == 0)
             {
                 _logger.LogError($"Insert verification code failed.");
+                return false;
+            }
+
+            var res = _smsProvider.SendCode(phone, code);
+            if (res == null || res.Code.IsEmpty())
+            {
+                _logger.LogError($"Send verification code failed.");
                 return false;
             }
 

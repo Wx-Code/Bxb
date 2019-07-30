@@ -26,7 +26,7 @@ namespace Shunmai.Bxb.Services.Utils
             long ts = now.TotalSeconds() - now.Date.TotalSeconds();
             string year = now.Year.ToString().Substring(2);
             int day = now.DayOfYear;
-            int rd = RandomHelper.Next(999);
+            int rd = Randoms.Next(999);
             string IdStr = $"{((int)t)}{rd.ToString("000")}{year}{day.ToString("000")}{ts.ToString("00000")}";
             return IdStr.ToInt64();
         }
@@ -36,9 +36,9 @@ namespace Shunmai.Bxb.Services.Utils
         /// <returns></returns>
         public static string GenerateTradeCode()
         {
-            int prefix = RandomHelper.Next(16, 1);
+            int prefix = Randoms.Next(16, 1);
             long ts = DateTime.Now.TotalSeconds();
-            int postfix = RandomHelper.Next(4096, 256);
+            int postfix = Randoms.Next(4096, 256);
             string result = $"{Convert.ToString(prefix, 16)}{Convert.ToString(ts, 16)}{Convert.ToString(postfix, 16)}";
             return result.ToUpper();
         }

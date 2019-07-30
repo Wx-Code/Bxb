@@ -11,5 +11,7 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         [Statement(Id = nameof(ISmsVerificationCodeRepository.QuerySingle))]
         SmsVerificationCode QueryNonExpired(string phone, int expires);
         bool UpdateState(int id, SmsCodeState state);
+        int SetExpired(string phone);
+        int Count(string phone, SmsCodeState? state);
     }
 }
