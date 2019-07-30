@@ -67,7 +67,9 @@ export default {
 
   methods: {
     goRegisterPage(){
-      this.$router.push({ name: 'register' })
+      const backUrl = encodeURIComponent(this.host + '/register')
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+      // this.$router.push({ name: 'register' })
     },
     async redirect() {
       const redirectUrl = store.getUrl()

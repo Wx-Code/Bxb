@@ -28,7 +28,7 @@
       <div class="ul_login_btnBox">
         <div class="ul_login_btn btn_type2" @click="register()">立即注册</div>
       </div>
-      <div class="goLoginBtn row ac" @click="goLogin"><span class="goLoginTxt">< 返回登录</span></div>
+      <div class="goLoginBtn row ac" ><span class="goLoginTxt" @click="goLogin">< 返回登录</span></div>
     </div>
   </div>
 
@@ -149,9 +149,6 @@
         console.log('wechatCode', code);
         if (code) {
           this.wechatCode = code
-        } else {
-          const backUrl = encodeURIComponent(this.host + '/register')
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
         }
 
       },

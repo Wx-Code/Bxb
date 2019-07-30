@@ -3,16 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="1e1403e6-e677-4979-a056-13059435eb7d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/api/page.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/api/page.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/api/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/api/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/utils/vue-router.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/utils/vue-router.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/customer/customer.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/customer/customer.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/index/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/index/index.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/myAddress/changeMyAddress.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/myAddress/changeMyAddress.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/myAddress/myAddress.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/myAddress/myAddress.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/myInformation/changeCode.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/myInformation/changeCode.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/myInformation/myInformation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/myInformation/myInformation.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/platformAddress/platformAddress.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/platformAddress/platformAddress.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/h5/src/views/login/register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/login/register.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -28,10 +20,23 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/login/register.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
-              <caret line="154" column="9" lean-forward="true" selection-start-line="154" selection-start-column="9" selection-end-line="154" selection-end-column="9" />
+            <state relative-caret-position="296">
+              <caret line="151" column="9" lean-forward="true" selection-start-line="151" selection-start-column="9" selection-end-line="151" selection-end-column="9" />
               <folding>
+                <element signature="e#1447#1486#0" expanded="true" />
                 <element signature="e#2194#2960#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="71" column="27" selection-start-line="71" selection-start-column="27" selection-end-line="71" selection-end-column="27" />
+              <folding>
+                <element signature="e#2854#3232#0" />
               </folding>
             </state>
           </provider>
@@ -49,9 +54,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>myCenter</find>
-      <find>whiteList</find>
-      <find>redirect</find>
       <find>login</find>
       <find>hall</find>
       <find>changePhone</find>
@@ -79,6 +81,9 @@
       <find>goChange</find>
       <find>userInfo</find>
       <find>cc_btn</find>
+      <find>goRegisterPage</find>
+      <find>goLoginTxt</find>
+      <find>host</find>
     </findStrings>
     <replaceStrings>
       <replace>mySell</replace>
@@ -114,8 +119,6 @@
         <option value="$PROJECT_DIR$/front/h5/src/components/dialog/dialog.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/components/dialog/dialog.js" />
         <option value="$PROJECT_DIR$/front/h5/src/components/phoneVerify/phoneVerify.vue" />
-        <option value="$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue" />
-        <option value="$PROJECT_DIR$/front/h5/src/views/login/register.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/platformAddress/platformAddress.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/api/page.js" />
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/customer/customer.vue" />
@@ -126,6 +129,8 @@
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/myInformation/myInformation.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/utils/vue-router.js" />
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/myInformation/changeCode.vue" />
+        <option value="$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue" />
+        <option value="$PROJECT_DIR$/front/h5/src/views/login/register.vue" />
       </list>
     </option>
   </component>
@@ -253,12 +258,12 @@
       <workItem from="1563946462305" duration="15807000" />
       <workItem from="1564017787890" duration="31750000" />
       <workItem from="1564105213005" duration="22404000" />
-      <workItem from="1564363661163" duration="31400000" />
+      <workItem from="1564363661163" duration="33427000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146664000" />
+    <option name="totallyTimeSpent" value="148691000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
@@ -629,13 +634,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="115" column="12" lean-forward="true" selection-start-line="115" selection-start-column="12" selection-end-line="115" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/front/admin/src/store/getters.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -771,11 +769,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="71" column="27" selection-start-line="71" selection-start-column="27" selection-end-line="71" selection-end-column="27" />
+          <folding>
+            <element signature="e#2854#3232#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/front/h5/src/views/login/register.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="154" column="9" lean-forward="true" selection-start-line="154" selection-start-column="9" selection-end-line="154" selection-end-column="9" />
+        <state relative-caret-position="296">
+          <caret line="151" column="9" lean-forward="true" selection-start-line="151" selection-start-column="9" selection-end-line="151" selection-end-column="9" />
           <folding>
+            <element signature="e#1447#1486#0" expanded="true" />
             <element signature="e#2194#2960#0" />
           </folding>
         </state>
