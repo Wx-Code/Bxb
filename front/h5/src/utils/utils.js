@@ -1,5 +1,4 @@
-import login from '@/api/login'
-import Cookies from 'js-cookie'
+import login from '@/api/user'
 
 const utils =  {
   //获取链接中的参数
@@ -24,76 +23,7 @@ const utils =  {
     )
 
   },
-  getToken(){
-    return window.localStorage.getItem('token')
-  },
-  //设置本地缓存
-  setLocalData(k,v){
-
-    if(!window.localStorage.getItem('global')){
-      return
-    }
-    var globalObj = JSON.parse(window.localStorage.getItem('global'))
-    globalObj[k] = v
-    window.localStorage.setItem('global',JSON.stringify(globalObj))
-
-  },
-  //取本地缓存
-  getLocalData(k){
-    if(!window.localStorage.getItem('global')){
-      return
-    }
-    var globalObj = JSON.parse(window.localStorage.getItem('global'))
-    console.log(globalObj);
-    return k ? globalObj[k] : globalObj
-
-  },
-  //获取用户信息
-  getUserInfo(_s){
-    login.getUserInfo().then(res => {
-
-      if (res.success) {
-        _s.userInof=res.data
-
-
-      } else {
-        _s.$toast(res.message)
-
-
-
-
-
-      }
-    })
-
-  },
-  // 活动规则处理
-  ruleChange(ruleContent,_s){
-    if(ruleContent && ruleContent.length>0){
-      var arr = ruleContent.split('\n')
-      var ruleContent = []
-      for (let i = 0; i < arr.length; i++) {
-        const o ={}
-        if(arr[i].length>0){
-          o.txt =arr[i]
-          ruleContent.push(o)
-        }
-
-
-
-      }
-      return  ruleContent
-
-    }
-
-
-  },
-  //获取本地token值
-  getTokenNew(){
-    return Cookies.get('token') || window.localStorage.getItem('token')
-  },
-  getTime(){
-
+  getNowTime(){
       var date = new Date();
       var seperator1 = "-";
       var seperator2 = ":";
@@ -111,16 +41,6 @@ const utils =  {
       return currentdate;
 
   },
-  clearCache(){
-    Cookies.set('token', '')
-
-
-  }
-
-
-
-
-
 }
 
 export default utils

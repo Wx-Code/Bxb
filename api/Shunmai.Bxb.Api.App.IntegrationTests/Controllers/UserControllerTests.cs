@@ -91,7 +91,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             var dbContext = TestSuite.GetDbContext();
             dbContext.Truncate(nameof(SmsVerificationCode), nameof(User), nameof(UserLog));
 
-            var smsCode = dbContext.SmsVerificationCode.Add(new SmsCode { Phone = phone, State = SmsCodeState.Default, VerificationCode = code }).Entity;
+            var smsCode = dbContext.SmsVerificationCode.Add(new SmsCode { Phone = phone, State = SmsCodeState.Default, VerificationCode = code, CreateTime = DateTime.Now }).Entity;
             dbContext.SaveChanges(); 
 
             var request = new RegisterRequest

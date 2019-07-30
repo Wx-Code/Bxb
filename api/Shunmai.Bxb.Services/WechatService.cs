@@ -139,11 +139,6 @@ namespace Shunmai.Bxb.Services
 
                 var userRes = OAuthApi.GetUserInfo(tokenRes.access_token, tokenRes.openid);
                 _logger.LogInformation($"Get user info returned. [{userRes.ToLogFormatString()}]");
-                if (userRes.nickname.IsEmpty())
-                {
-                    _logger.LogError($"Get user info failed. [{userRes.ToLogFormatString()}]");
-                    return null;
-                }
 
                 return new WechatUserInfo
                 {

@@ -54,5 +54,6 @@ namespace Shunmai.Bxb.Test.Common
         public virtual DbSet<TradeHallLogExt> TradeHallLog { get; set; }
         public virtual DbSet<TradeOrderExt> TradeOrder { get; set; }
         public virtual DbSet<TradeOrderLogExt> TradeOrderLog { get; set; }
+        public virtual DbSet<SystemConfigExt> SystemConfig { get; set; }
     }
 }

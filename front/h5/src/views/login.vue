@@ -27,7 +27,7 @@
 
 <script>
 import store from '@/utils/local-store'
-import userService from '@/api/login'
+import userService from '@/api/user'
 import { addPrefix } from '@/utils/path'
 
 export default {

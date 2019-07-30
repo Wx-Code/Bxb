@@ -1,6 +1,5 @@
 import axios from 'axios'
-import utils from './utils.js'
-import Cookies from 'js-cookie'
+import store from '@/utils/local-store'
 import router from '../router'
 import { Toast, Dialog } from 'vant'
 
@@ -14,10 +13,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 可在此向服务器添加统一的头部信息
-    // const user = local.getUser() || {}
-
-    // config.headers['X-Token'] = Cookies.get('token') || window.localStorage.getItem('token')
-    config.headers['X-Token'] = utils.getTokenNew()
+    config.headers['X-Token'] = store.getToken() || 0
     // config.headers['X-UserId'] = user.userId
     return config
   },
@@ -42,11 +38,7 @@ service.interceptors.response.use(
     }
 
     if (res.errorCode === '0005') {
-      Toast.clear()
-      Cookies.set('token', '')
-      window.localStorage.setItem('token', '')
-      utils.setLocalData('userInfo',null)
-      utils.setLocalData('userId',null)
+      store.setToken('')
       Dialog.confirm({
         title: '温馨提示',
         message: '登录已失效，请重新登录'

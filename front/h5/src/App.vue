@@ -1,21 +1,36 @@
 <template>
   <div id="app">
-    <router-view v-wechat-title="$route.meta.title"></router-view>
-    <!-- <router-view/> -->
+    <!--<transition :name="animate">-->
+      <router-view class="Router" v-wechat-title="$route.meta.title"></router-view>
+    <!--</transition>-->
   </div>
 </template>
 
 <script>
   export default {
     name: 'App',
+    data(){
+      return {
+        animate:''
+      }
+    },
+    // watch: {
+    //   $route(to, from) {
+    //     if (to.meta.index > from.meta.index) {
+    //       //设置动画名称
+    //       this.animate = 'slide-left';
+    //     } else {
+    //       this.animate = 'slide-right';
+    //     }
+    //   }
+    // }
   }
 </script>
 
-<style>
+<style >
   #app {
     min-height: 100%;
   }
-
 
 
   *,
@@ -119,6 +134,9 @@
     outline: 0;
     background-color: transparent;
   }
+  .wd{
+    word-wrap:break-word
+  }
 
   /* img {
       border: 0 !important;
@@ -193,6 +211,22 @@
     border-bottom: 0 !important;
   }
 
+  .bb1 {
+    border-bottom: 1px solid #C8C8C8 !important;
+  }
+
+  .bt1 {
+    border-top: 1px solid #C8C8C8 !important;
+  }
+
+  .bl1 {
+    border-left: 1px solid #C8C8C8 !important;
+  }
+
+  .br1 {
+    border-right: 1px solid #C8C8C8 !important;
+  }
+
   .po_top {
     position: absolute;
     left: 0;
@@ -262,11 +296,24 @@
     display: flex;
     flex-direction: row;
   }
+  .row_r{
+    display: flex;
+    flex-direction: row-reverse;
+  }
 
   .col {
     display: flex;
     flex-direction: column;
   }
+  .pb0{
+    padding-bottom: 0 !important;
+
+  }
+  .pt0{
+    padding-bottom: 0 !important;
+
+  }
+
 
   .ac {
     align-items: center;
@@ -324,9 +371,117 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
-  .noBg{
-    background: none!important;
+  .txt_j{
+    text-align-last: justify;
   }
+
+  .noBg {
+    background: none !important;
+  }
+  .btn_type1{
+    min-width:1.76rem;
+    height:0.68rem;
+    background:rgba(85,133,228,1);
+    color: #fff;
+    font-size:0.24rem;
+    text-align: center;
+    line-height: 0.68rem;
+    border-radius:0.08rem;
+
+  }
+  .btn_type2{
+    height:0.88rem;
+    background:linear-gradient(62deg,rgba(64,101,218,1) 0%,rgba(102,149,238,1) 100%);
+    box-shadow:0px 0.07rem 0.28rem 0px rgba(85,133,228,0.53);
+    border-radius:0.44rem;
+    color: #fff;
+    font-size:0.34rem;
+    text-align: center;
+    line-height: 0.88rem;
+  }
+  .btn_type3{
+    height:0.58rem;
+    color: #fff;
+    font-size:0.28rem;
+    font-weight:500;
+    text-align: center;
+    line-height: 0.58rem;
+    background:rgba(215,2,2,1);
+    border-radius:0.11rem;
+  }
+  .btn_type4{
+    height:0.58rem;
+    color: #fff;
+    font-size:0.28rem;
+    font-weight:500;
+    text-align: center;
+    line-height: 0.58rem;
+    background:rgba(85,133,228,1);
+    border-radius:0.11rem;
+  }
+  .btn_type5{
+    height:0.58rem;
+    color: #fff;
+    font-size:0.28rem;
+    font-weight:500;
+    text-align: center;
+    line-height: 0.58rem;
+    background:rgba(197,197,197,1);
+    border-radius:0.11rem;
+  }
+
+
+ /*路由动画*/
+
+  .Router {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  .slide-right-enter-active,
+  .slide-right-leave-active,
+  .slide-left-enter-active,
+  .slide-left-leave-active {
+    will-change: transform;
+    transition: all 500ms;
+    position: absolute;
+  }
+
+  .slide-right-enter {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  .slide-right-leave-active {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .slide-left-enter {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .slide-left-leave-active {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  /*复制按钮样式*/
+  .customer_box_btn{
+    width: 0.29rem;
+    height: 0.33rem;
+
+  }
+
+  .mr20{
+    margin-right: 0.2rem;
+  }
+  .ml20{
+    margin-left: 0.2rem;
+
+  }
+
 
 
 </style>

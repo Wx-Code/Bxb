@@ -3,16 +3,16 @@ import App from './App'
 import router from './router'
 import Axios from 'axios'
 import request from './utils/request'
-import globalData from './store/globalData.js'
+import globalData from './store/globalData'
 import utils from './utils/utils.js'
 import './assets/iconfont/iconfont.css'
-import { Toast,Popup } from 'vant'
-Vue.use(require('vue-wechat-title'),Toast,Popup )
-// import theConfirm  from './components/testDialog/testDialog.js'
-
+import VueClipboard from 'vue-clipboard2';
 import './utils/vue-router'
+import dialog  from './components/dialog/dialog'
+import { Toast,Popup,Picker,Tabbar, TabbarItem,Tab, Tabs,CountDown,Uploader  } from 'vant'
+Vue.use(require('vue-wechat-title')).use(VueClipboard).use(Picker).use(Toast).use(Popup).use(Tabbar).use(TabbarItem).use(Tab).use(Tabs).use(CountDown).use(Uploader)
 
-// Vue.prototype.$confirms = theConfirm;
+Vue.prototype.$dialog = dialog;
 Vue.prototype.$http = request
 Vue.prototype.globalData = globalData
 Vue.prototype.utils = utils
