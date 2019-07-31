@@ -15,6 +15,7 @@ export default {
     })
 
   },
+  // 获取平台钱包地址
   getPlatformAddress(){
     return request({
       url: '/config/platwallet/addr',
@@ -22,6 +23,7 @@ export default {
       params: null
     })
   },
+  // 发布消息
   publishInformation(data){
     return request({
       url: '/TradeHall/user/message',
@@ -29,12 +31,30 @@ export default {
       data: data
     })
   },
+  // 获取交易大厅列表
   getTradeHallList(data){
     return request({
       url: '/TradeHall/message',
       method: 'GET',
       params: data
     })
+  },
+  // 我发送的列表
+  getMySendLsit(data){
+    return request({
+      url: '/TradeHall/user/message',
+      method: 'GET',
+      params: data
+    })
+  },
+  // 下架发送的
+  putOffMySend(data){
+    return request({
+      url: '/TradeHall/user/message/putOff',
+      method: 'POST',
+      data: data
+    })
   }
+
 
 }

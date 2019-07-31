@@ -6,11 +6,9 @@
         <div class="pa_item_txt2">{{item.platWalletAddr}}</div>
         <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(item.platWalletAddr)" class="customer_box_btn">
       </li>
-      <p class="pa_tit">温馨提示：<br>转币时请确保钱包地址的正确，以免影响您的正常交易。</p>
+      <p class="pa_tit" v-if="addressArr.length>0">温馨提示：<br>转币时请确保钱包地址的正确，以免影响您的正常交易。</p>
     </ul>
-
   </div>
-
 </template>
 
 <script>
@@ -26,10 +24,7 @@
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
-        addressArr:[{
-          name:'之融',
-          address:'SHBV123452JFHN34'
-        }]
+        addressArr:[]
       }
     },
 
