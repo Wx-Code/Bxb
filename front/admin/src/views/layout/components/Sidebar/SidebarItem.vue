@@ -112,6 +112,7 @@ export default {
      * 点击菜单时刷新页面
      */
     load(path) {
+      debugger;
       if (this.isExternalLink(path)) {
         return
       }
