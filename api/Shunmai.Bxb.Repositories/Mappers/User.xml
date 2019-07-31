@@ -124,20 +124,6 @@
       </Where>
       ;
     </Statement>
-
-
-    <!--更新用户钱包地址-->
-    <Statement Id="UpdateWalletAddress">
-      UPDATE
-      `User`
-      <Set>
-        WalletAddress=?WalletAddress
-      </Set>
-      <Where>
-        `UserId`=?UserId
-      </Where>
-      ;
-    </Statement>
     
     <!-- 查询 单条数据 -->
     <Statement Id="QueryUserDetail">

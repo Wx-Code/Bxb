@@ -103,9 +103,9 @@ namespace Shunmai.Bxb.Services
             return true;
         }
 
-        public bool UpdateWalletAddress(object condition)
+        public bool UpdateUser(object condition)
         {
-            return _userRepository.UpdateWalletAddress(condition);
+            return _userRepository.Update(condition);
         }
 
         public List<User> QueryList(object condition)
