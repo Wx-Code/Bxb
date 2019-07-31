@@ -65,7 +65,8 @@
              t.`BType`,
              t.`ReleaseTime`,
              u.`Nickname`,
-             u.`Avatar`
+             u.`Avatar`,
+             u.`WxCodePhoto`
       FROM `TradeHall` AS t
       INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
       <Include RefId="TradeNormalStatusParams"></Include>
