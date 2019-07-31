@@ -49,7 +49,8 @@ export default {
   created() {
     const action = this.$route.query.action
     if (action === 'login') {
-      this.redirect()
+      this.setUrl()
+
     } else {
       return false
     }
@@ -65,7 +66,12 @@ export default {
     }
   },
 
+
   methods: {
+    setUrl(){
+      const redirectUrl = this.$route.query.redirect
+      store.setUrl(redirectUrl)
+    },
     goRegisterPage(){
       const backUrl = encodeURIComponent(this.host + '/register')
       window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.appId}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
@@ -83,15 +89,17 @@ export default {
     changeCode(code) {
       this.code = code
     },
-    login() {
+    async login() {
       console.log(this.phone);
       if (!this.validateRequestData()) return
-      const { data ,errorCode} = user.login({
+      const { data , errorCode} = await user.login({
         phone: this.phone,
         smsCode: this.code,
       })
+      console.log(data);
       if (!data) return
       if (errorCode == '0000') {
+        store.setToken(data.token)
         this.$toast({message: '登录成功', duration: '1500'})
         const  that = this
         setTimeout(function () {

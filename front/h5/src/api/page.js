@@ -21,7 +21,20 @@ export default {
       method: 'GET',
       params: null
     })
-
+  },
+  publishInformation(data){
+    return request({
+      url: '/TradeHall/user/message',
+      method: 'POST',
+      data: data
+    })
+  },
+  getTradeHallList(data){
+    return request({
+      url: '/TradeHall/message',
+      method: 'GET',
+      params: data
+    })
   }
 
 }

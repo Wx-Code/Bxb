@@ -41,7 +41,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
 
             (int code, string message) = _tradeHallService.InsertTradeHallEntity(model);
 
-            if (code == 201) return Success();
+            if (code == 201) return Success(model.TradeCode);
 
             _logger.LogError(message);
             return Failed("发布交易信息失败");

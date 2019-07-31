@@ -3,9 +3,9 @@
   <div class="myCenter">
     <div class="mc_header  col ac">
       <div class="my_user_logo">
-        <img src="" alt="">
+        <img :src="userInfo.avatar" alt="" class="my_user_logoImg">
       </div>
-      <div class="mc_user_name tc">小犀牛兜兜</div>
+      <div class="mc_user_name tc">{{userInfo.nickname || '游客'}}</div>
     </div>
     <div class="mc_content col ac">
       <div class="mc_num_box row jb ac">
@@ -85,8 +85,6 @@
   import user from '@/api/user'
 
   export default {
-
-
     data() {
       return {
         host: process.env.FRONT_HOST,
@@ -97,21 +95,22 @@
       }
     },
     created() {
-      // this.getMyCenterData()
-      store.setUser({
-        "userId":1,
-        "nickname":"test_nickname",
-        "avatar":"test_avatar",
-        "realname":"test_realname",
-        "wxCodePhoto":"test_qrcode",
-        "wxUnionId":"test_unionId",
-        "wxOpenId":"test_openId",
-        "phone":"13521942500",
-        "walletAddress":null,
-        "outTotalAmount":0,
-        "inTotalAmount":0,
-        "createdTime":"0001-01-01 00:00:00"
-      })
+      // store.setToken('CBA649688043000643C9D0A437A18CDF')
+      this.getMyCenterData()
+      // store.setUser({
+      //   "userId":1,
+      //   "nickname":"test_nickname",
+      //   "avatar":"test_avatar",
+      //   "realname":"test_realname",
+      //   "wxCodePhoto":"test_qrcode",
+      //   "wxUnionId":"test_unionId",
+      //   "wxOpenId":"test_openId",
+      //   "phone":"13521942500",
+      //   "walletAddress":null,
+      //   "outTotalAmount":0,
+      //   "inTotalAmount":0,
+      //   "createdTime":"0001-01-01 00:00:00"
+      // })
     },
 
     methods: {
@@ -141,9 +140,11 @@
       },
       async getMyCenterData() {
         const { data,errorCode } = await user.getUserInfo()
+
         if (!data) return false
+
         if (errorCode == '0000') {
-          this.userInfo = data.data
+          this.userInfo = data
           store.setUser(this.userInfo)
         }
       }
@@ -169,7 +170,10 @@
       overflow: hidden;
       border-radius: 50%;
       background: pink;
-
+    }
+    .my_user_logoImg{
+      width: 100%;
+      height: 100%;
     }
 
     .mc_user_name {

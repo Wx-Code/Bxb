@@ -29,7 +29,7 @@
 
   export default {
     created() {
-      // this.getCustomerInfo()
+      this.getCustomerInfo()
     },
     data() {
       return {
@@ -57,7 +57,7 @@
         const  { data } =  await pageServe.getCustomerInfo()
         if(!data) return
         this.weiXinCustomerList = data.weiXinCustomerList
-        this.phone = data.phone
+        this.phone = data.customerTel
       }
     }
   }

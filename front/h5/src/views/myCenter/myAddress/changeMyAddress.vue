@@ -42,14 +42,14 @@
         this.address = ''
       },
       async completeChange(){
-
-       const  { data } = await  userServe.editwalletaddr({WalletAddress:this.address,UserId:this.userInfo.userId})
+       const  { data ,errorCode} = await  userServe.editwalletaddr({WalletAddress:this.address,UserId:this.userInfo.userId})
         if(!data) return false
-        if(data.errorCode = '0000'){
-          this.userInfo.walletAddress = this.address
-          store.setUser(this.userInfo)
+        if(errorCode == '0000'){
           this.$toast({message: '修改成功', duration: '1500'})
-          this.$router.go(-1)
+          const  that =this
+          setTimeout(function () {
+            that.$router.go(-1)
+          },1500)
         }else{
           this.$toast({message: '修改失败', duration: '1500'})
         }

@@ -123,14 +123,14 @@ namespace Shunmai.Bxb.Api.App.Controllers
 
 
         [HttpPost("editwalletaddr")]
-        public IActionResult UpdateUserWalletAddr([FromBody] UpdateUserWalletAddrRequest request)
+        public IActionResult UpdateUserWalletAddr([FromBody] UpdateUserRequest request)
         {
             string message = string.Empty;
             if(request!=null&&request.UserId>0&&!request.WalletAddress.IsNullOrEmpty())
             {
                 var userDetail = _userService.QueryUserDetail(request.UserId);
 
-                bool query = _userService.UpdateWalletAddress(request);
+                bool query = _userService.UpdateUser(request);
                 message = $"更新钱包地址为：{request.WalletAddress}";
                 if (query)
                 {
@@ -157,6 +157,51 @@ namespace Shunmai.Bxb.Api.App.Controllers
                 }
                 return Success(query);
                 
+            }
+            else
+            {
+                message = "请求参数不能为空值";
+                return Failed(message);
+            }
+
+
+        }
+
+        [HttpPost("editwxcode")]
+        public IActionResult UpdateWxCodePhoto([FromBody] UpdateUserRequest request)
+        {
+            string message = string.Empty;
+            if (request != null && request.UserId > 0 && !request.WxCodePhoto.IsNullOrEmpty())
+            {
+                var userDetail = _userService.QueryUserDetail(request.UserId);
+
+                bool query = _userService.UpdateUser(request);
+                message = $"更新微信二维码图片地址为：{request.WxCodePhoto}";
+                if (query)
+                {
+                    //增加操作日志
+                    UserLog log = new UserLog()
+                    {
+                        UserId = request.UserId,
+                        LogContent = message,
+                        LogContentFront = message,
+                        Operator = $"{userDetail.Realname}",
+                        CreatedTime = DateTime.Now,
+                        LogType = UserLogType.UpdateQrCode,
+                        Deleted = false
+                    };
+                    try
+                    {
+                        _userService.InsertUserLog(log);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"用户更新二维码图片记录日志异常，内容：{log.JsonSerialize()}");
+                    }
+                }
+                return Success(query);
+
             }
             else
             {

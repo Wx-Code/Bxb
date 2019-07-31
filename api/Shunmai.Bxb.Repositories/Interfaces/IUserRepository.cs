@@ -18,7 +18,7 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         [Statement(Id = "Exists")]
         bool ExistsByOpenId(string openId);
 
-        bool UpdateWalletAddress(object condition);
+        bool Update(object condition);
         int Count(object condition);
         List<User> QueryList(object condition);
 

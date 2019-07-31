@@ -12,7 +12,7 @@
       <li class="pa_item row ac jb"  @click="goChangeMyAddress">
         <div class="pa_item_txt1">GRT钱包地址</div>
         <div class="pa_item_r row ac">
-          <div class="pa_item_txt2 wd">{{walletAddress}}</div>
+          <div class="pa_item_txt2 wd">{{walletAddress || '去填写'}}</div>
           <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="next_btn">
         </div>
 

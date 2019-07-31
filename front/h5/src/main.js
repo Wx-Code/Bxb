@@ -9,8 +9,8 @@ import './assets/iconfont/iconfont.css'
 import VueClipboard from 'vue-clipboard2';
 import './utils/vue-router'
 import dialog  from './components/dialog/dialog'
-import { Toast,Popup,Picker,Tabbar, TabbarItem,Tab, Tabs,CountDown,Uploader  } from 'vant'
-Vue.use(require('vue-wechat-title')).use(VueClipboard).use(Picker).use(Toast).use(Popup).use(Tabbar).use(TabbarItem).use(Tab).use(Tabs).use(CountDown).use(Uploader)
+import { Toast,Popup,Picker,Tabbar, TabbarItem,Tab, Tabs,CountDown,Uploader ,PullRefresh ,List  } from 'vant'
+Vue.use(require('vue-wechat-title')).use(VueClipboard).use(Picker).use(Toast).use(Popup).use(Tabbar).use(TabbarItem).use(Tab).use(Tabs).use(CountDown).use(Uploader).use(PullRefresh).use(List)
 
 Vue.prototype.$dialog = dialog;
 Vue.prototype.$http = request
