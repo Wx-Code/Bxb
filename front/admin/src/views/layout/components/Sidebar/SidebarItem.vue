@@ -121,14 +121,14 @@ export default {
         return
       }
 
-      let url = path
       if (this.$router.mode !== 'history') {
 
         // VUE-ROUTER 默认路由方式是通过 url 的哈希值来判断路由的变化的
         // 因此在这种情况下改变 location.href 是不会触发页面刷新的，所以需要手动刷新
 
-        url = `/#${path}`
-        location.href = url
+        const index = location.href.indexOf('#')
+        const currentPath = location.href.substr(index+1)
+        location.href = location.href.replace(currentPath, path)
         // fix: 从 QQ 等软件跳转过来的链接，会被添加一些参数导致路由无法正常解析
         if (!location.search) {
           location.reload()

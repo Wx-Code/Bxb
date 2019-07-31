@@ -8,6 +8,8 @@ using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Models.Wechat;
 using Shunmai.Bxb.Test.Common;
 using Shunmai.Bxb.Test.Common.Models;
+using Shunmai.Bxb.Utilities.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -74,13 +76,15 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
         {
             return new UserExt
             {
-                Avatar = "test_avatar",
-                Nickname = "test_nickname",
-                WxOpenId = "test_openId",
-                WxUnionId = "test_unionId",
-                WxCodePhoto = "test_qrcode",
-                Phone = "13521942500",
-                Realname = "test_realname",
+                Avatar = Randoms.Letters(30),
+                Nickname = Randoms.Letters(10),
+                WxOpenId = Randoms.String(32),
+                WxUnionId = Randoms.String(32),
+                WxCodePhoto = Randoms.String(32),
+                Phone = "135" + Randoms.Numbers(8),
+                Realname = Randoms.Letters(10),
+                CreatedTime = DateTime.Now,
+                WalletAddress = Randoms.String(32),
             };
         }
     }

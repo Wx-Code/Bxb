@@ -48,7 +48,7 @@ export const constantRouterMap = [
   {
     path: '/system',
     name: 'System',
-    redirect: '/system/user',
+    redirect: '/system/adminUser',
     meta: { title: '系统设置', icon: 'settings' },
     component: Layout,
     children: [

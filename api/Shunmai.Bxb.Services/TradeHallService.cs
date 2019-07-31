@@ -126,5 +126,10 @@ namespace Shunmai.Bxb.Services
 
             return (count, result);
         }
+
+        public TradeHall GetById(int id)
+        {
+            return _tradeHallRepository.Find(id);
+        }
     }
 }

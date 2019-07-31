@@ -7,6 +7,6 @@ namespace Shunmai.Bxb.Repositories.Interfaces
 {
     public interface ITradeOrderRepository
     {
-        int Insert(TradeOrder order);
+        bool Insert(TradeOrder order);
     }
 }
