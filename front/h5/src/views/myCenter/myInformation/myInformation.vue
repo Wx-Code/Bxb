@@ -29,26 +29,20 @@
 </template>
 
 <script>
-  import store from '@/utils/local-store'
-
+  import user from '@/api/user'
   export default {
-
-
     data() {
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
         userInfo:{
-          nickname:'123',
-          phone:'123123'
+          nickname:'',
+          phone:''
         },
       }
     },
     created() {
-      const userData = store.getUser()
-      if(!userData)return false
-      this.userInfo = userData
-
+      this.getMyInfo()
     },
     methods: {
       goChange(txt) {
@@ -57,6 +51,13 @@
         if(inx!=2) return
         this.$router.push({name: 'changeCode'})
       },
+      async getMyInfo() {
+        const { data,errorCode } = await user.getUserInfo()
+        if (!data) return false
+        if (errorCode == '0000') {
+          this.userInfo = data
+        }
+      }
 
     }
   }

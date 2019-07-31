@@ -15,7 +15,6 @@ export default {
       url: '/user/register',
       data: data
     })
-
   },
   getUserInfo(){
     return request({
@@ -30,7 +29,15 @@ export default {
       url: '/user/editwalletaddr',
       data: data
     })
-  }
+  },
+  editwxcode(data){
+    return request({
+      method: 'POST',
+      url: '/user/editwxcode',
+      data: data
+    })
+  },
+
 
 
 

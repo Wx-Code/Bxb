@@ -1,7 +1,7 @@
 <template>
   <div class="platformAddress">
     <ul class="pa_content">
-      <li class="pa_item row ac jc" v-for="(item,index) in addressArr" v-if="item.state==1">
+      <li class="pa_item row ac jc" v-for="(item,index) in addressArr" v-if="item.state==0">
         <div class="pa_item_txt1">{{item.platWalletAddrName}}</div>
         <div class="pa_item_txt2">{{item.platWalletAddr}}</div>
         <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(item.platWalletAddr)" class="customer_box_btn">
@@ -73,7 +73,7 @@
       border-bottom: 1px solid rgba(151, 151, 151, 0.51);
     }
     .pa_item_txt1{
-      width: 1.7rem;
+      width: 2rem;
       font-size:0.28rem;
       font-family:PingFangSC-Regular;
       font-weight:400;
@@ -81,7 +81,7 @@
     }
 
     .pa_item_txt2{
-      width: 4.7rem;
+      width: 4.4rem;
       margin-right: 0.1rem;
       text-align: right;
       font-size:0.28rem;

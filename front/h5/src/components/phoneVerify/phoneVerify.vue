@@ -89,7 +89,6 @@
       getCodeRequest(){
       userService.sendCode({phone:this.phone}).then(res => {
         console.log(res)
-
       })
       },
       watchPhone(){

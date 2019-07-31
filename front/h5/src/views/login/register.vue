@@ -164,9 +164,6 @@
           content_txt: this.content_txt,
         })
       },
-      goLogin(){
-        this.$router.replace({path: '/'})
-      }
 
     }
   }

@@ -21,23 +21,23 @@
 
 <script>
   import store from '@/utils/local-store'
-
+  import user from '@/api/user'
   export default {
-    created() {
-
-    },
-
     data() {
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
         apiHost:process.env.BASE_API,
+        imgDataSave:'',//临时路径
         imgData:'',
+        userInfo:'',
         imgUploadSuccess:false
 
       }
     },
-
+    created() {
+      this.getMyCode()
+    },
     methods: {
       async afterRead(file) {
         this.$toast.loading({
@@ -55,15 +55,35 @@
         }; //添加请求头
         const { data } = await this.$axios.post(this.apiHost + '/common/wechat/qrcode', formData, config)
         if (!data) return
-        this.imgData = data.data
-        this.imgUploadSuccess = true
-        const that = this
-        setTimeout(function () {
-          that.$toast.clear()
-        }, 300)
+        if(data.errorCode == '0000'){
+          this.imgDataSave = data.data
+          this.editwxcode()
+        }else {
+          this.$toast.clear()
+          this.$toast({message: '图片上传失败', duration: '1500'})
+        }
       },
-
-
+      async getMyCode() {
+        const { data,errorCode } = await user.getUserInfo()
+        if (!data) return false
+        if (errorCode == '0000') {
+          this.userInfo = data
+          this.imgData = data.wxCodePhoto
+        }
+      },
+      async editwxcode() {
+        const { data,errorCode } = await user.editwxcode({UserId:this.userInfo.userId,WxCodePhoto:this.imgDataSave})
+        if (!data) return false
+        if (errorCode == '0000') {
+          this.imgUploadSuccess = true
+          this.imgData = this.imgDataSave
+          const that = this
+          setTimeout(function () {
+            that.$toast.clear()
+            that.$toast({message: '更换成功', duration: '1500'})
+          }, 300)
+        }
+      },
     }
   }
 </script>

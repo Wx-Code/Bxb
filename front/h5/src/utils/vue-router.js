@@ -41,9 +41,9 @@ const trimEnd = (source, target) => {
 
 const whiteList = [
   '/',
-  '/login',
+  '/userLogin',
   '/register',
-  '/myCenter',
+  // '/myCenter',
   '/customer',
   '/myAddress',
   '/changeMyAddress',
@@ -63,6 +63,6 @@ router.beforeEach(async (to, from, next) => {
   if (!!token) {
     next()
   } else {
-    next({ path: '/', query: to.query })
+    next({ name: 'userLogin', query: { redirect: to.fullPath, action: 'login' } })
   }
 })
