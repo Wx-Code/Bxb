@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1e1403e6-e677-4979-a056-13059435eb7d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/h5/src/views/login/register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/login/register.vue" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -19,7 +20,7 @@
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/login/register.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="377">
-              <caret line="117" column="26" selection-start-line="117" selection-start-column="26" selection-end-line="117" selection-end-column="26" />
+              <caret line="108" column="33" lean-forward="true" selection-start-line="108" selection-start-column="33" selection-end-line="108" selection-end-column="33" />
               <folding>
                 <element signature="e#2202#2968#0" />
                 <element signature="e#2995#3062#0" />
@@ -59,7 +60,7 @@
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/publishInformation/publishInformation.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="337">
-              <caret line="32" column="41" lean-forward="true" selection-start-line="32" selection-start-column="41" selection-end-line="32" selection-end-column="41" />
+              <caret line="32" column="41" selection-start-line="32" selection-start-column="41" selection-end-line="32" selection-end-column="41" />
               <folding>
                 <element signature="e#3240#3747#0" />
                 <element signature="e#3255#3741#0" />
@@ -127,7 +128,7 @@
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/platformAddress/platformAddress.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="200">
-              <caret line="8" column="40" lean-forward="true" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
+              <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
               <folding>
                 <element signature="n#script#0;n#!!top" />
                 <element signature="e#644#1343#0" />
@@ -354,12 +355,12 @@
       <workItem from="1564017787890" duration="31750000" />
       <workItem from="1564105213005" duration="22404000" />
       <workItem from="1564363661163" duration="33427000" />
-      <workItem from="1564473248092" duration="39069000" />
+      <workItem from="1564473248092" duration="39523000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="188795000" />
+    <option name="totallyTimeSpent" value="189249000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
@@ -837,7 +838,7 @@
     <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/platformAddress/platformAddress.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
-          <caret line="8" column="40" lean-forward="true" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
+          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
           <folding>
             <element signature="n#script#0;n#!!top" />
             <element signature="e#644#1343#0" />
@@ -849,7 +850,7 @@
     <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/publishInformation/publishInformation.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="337">
-          <caret line="32" column="41" lean-forward="true" selection-start-line="32" selection-start-column="41" selection-end-line="32" selection-end-column="41" />
+          <caret line="32" column="41" selection-start-line="32" selection-start-column="41" selection-end-line="32" selection-end-column="41" />
           <folding>
             <element signature="e#3240#3747#0" />
             <element signature="e#3255#3741#0" />
@@ -863,7 +864,7 @@
     <entry file="file://$PROJECT_DIR$/front/h5/src/views/login/register.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="377">
-          <caret line="117" column="26" selection-start-line="117" selection-start-column="26" selection-end-line="117" selection-end-column="26" />
+          <caret line="108" column="33" lean-forward="true" selection-start-line="108" selection-start-column="33" selection-end-line="108" selection-end-column="33" />
           <folding>
             <element signature="e#2202#2968#0" />
             <element signature="e#2995#3062#0" />

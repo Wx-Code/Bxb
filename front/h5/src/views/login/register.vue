@@ -102,7 +102,7 @@
         if (!this.validateRequestData()) return
         if (!this.canClick) return
         this.canClick = true
-        const { data ,errorCode ,message} = user.register({
+        const { data ,errorCode ,message} = await user.register({
           wechatCode: this.wechatCode,
           phone: this.phone,
           smsCode: this.code,
