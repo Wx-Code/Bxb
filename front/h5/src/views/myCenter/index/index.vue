@@ -3,9 +3,9 @@
   <div class="myCenter">
     <div class="mc_header  col ac">
       <div class="my_user_logo">
-        <img src="" alt="">
+        <img :src="userInfo.avatar" alt="" class="my_user_logoImg">
       </div>
-      <div class="mc_user_name tc">小犀牛兜兜</div>
+      <div class="mc_user_name tc">{{userInfo.nickname || '游客'}}</div>
     </div>
     <div class="mc_content col ac">
       <div class="mc_num_box row jb ac">
@@ -170,7 +170,10 @@
       overflow: hidden;
       border-radius: 50%;
       background: pink;
-
+    }
+    .my_user_logoImg{
+      width: 100%;
+      height: 100%;
     }
 
     .mc_user_name {
