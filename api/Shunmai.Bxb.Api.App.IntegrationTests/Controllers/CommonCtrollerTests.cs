@@ -2,7 +2,10 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shunmai.Bxb.Common.Models;
+using Shunmai.Bxb.Entities;
+using Shunmai.Bxb.Services.Constans;
 using Shunmai.Bxb.Test.Common;
+using Shunmai.Bxb.Test.Common.Models;
 using Shunmai.Bxb.Utilities.Helpers;
 using System;
 using System.Globalization;
@@ -17,11 +20,14 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
     {
         private readonly WebApplicationFactory<Startup> _fixture;
         private readonly HttpClient _client;
+        private readonly BxbContext _dbContext;
+        private readonly object _lockKey = new object();
 
         public CommonCtrollerTests(WebApplicationFactory<Startup> fixture)
         {
             _fixture = fixture;
             _client = _fixture.CreateClient();
+            _dbContext = TestSuite.GetDbContext();
         }
 
         [Fact]
@@ -51,6 +57,36 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             var json = new { phone = "13521942500" };
             var result = await TestSuite.PostAsync<JsonResponse<string>>(_client, "/common/sms/code", json);
             Assert.True(result.success);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("123456")]
+        [InlineData("\"_$%{}\"")]
+        [InlineData("abcd\naced\r\n")]
+        public async Task GetTradeRules_Should_WorkWell(string content)
+        {
+            _dbContext.Truncate(nameof(SystemConfig));
+            var entity = await _dbContext.SystemConfig.FindAsync(SystemConfigNames.TRADE_RULES);
+            if (entity == null)
+            {
+                entity = new SystemConfigExt
+                {
+                    ConfigName = SystemConfigNames.TRADE_RULES,
+                    ConfigValue = content,
+                    CreateUser = "test_user",
+                    Remark = "test_remark"
+                };
+            }
+            _dbContext.SystemConfig.Add(entity);
+            _dbContext.SaveChanges();
+
+            var result = await TestSuite.GetAsync<JsonResponse<string>>(_client, "/common/trade/rules");
+            Assert.True(result.success);
+            Assert.Equal(content, result.data);
+
+            _dbContext.SystemConfig.Remove(entity);
+            _dbContext.SaveChanges();
         }
     }
 }

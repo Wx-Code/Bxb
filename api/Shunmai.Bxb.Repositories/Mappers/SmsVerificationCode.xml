@@ -40,7 +40,7 @@
           `VerificationCode`=?code
         </IsNotEmpty>
         <IsNotEmpty Prepend="AND" Property="expires">
-          <![CDATA[DATE_ADD(`CreateTime`, INTERVAL ?expires SECOND)<CURRENT_TIMESTAMP]]>
+          <![CDATA[DATE_ADD(`CreateTime`, INTERVAL ?expires SECOND)>CURRENT_TIMESTAMP]]>
         </IsNotEmpty>
       </Where>
       ORDER BY
@@ -57,6 +57,33 @@
         `State`=?state
       WHERE
         `VcId`=?id
+      ;
+    </Statement>
+    
+    <!-- 将指定电话下的验证码设置为已过期 -->
+    <Statement Id="SetExpired">
+      UPDATE
+        `SmsVerificationCode`
+      SET
+        `State`=-1
+      WHERE
+        `Phone`=?phone
+        AND `State`=0
+      ;
+    </Statement>
+
+    <!-- 统计数量 -->
+    <Statement Id="Count">
+      SELECT
+        COUNT(*)
+      FROM
+        `SmsVerificationCode`
+      <Where>
+        `Phone`=?phone
+        <IsNotEmpty Prepend="AND" Property="state">
+          `State`=?state
+        </IsNotEmpty>
+      </Where>
       ;
     </Statement>
     

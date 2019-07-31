@@ -21,6 +21,11 @@ namespace Shunmai.Bxb.Services
         public T GetConfig<T>(string configName)
         {
             var config = _systemConfigRepository.QuerySingle(configName);
+            // fix: json.net deserialize string error
+            if (typeof(T) == typeof(string))
+            {
+                return (T)Convert.ChangeType(config.ConfigValue, typeof(T));
+            }
             if (config == null || string.IsNullOrEmpty(config.ConfigValue))
             {
                 return default(T);

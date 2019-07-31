@@ -53,8 +53,8 @@ export const constantRouterMap = [
     component: Layout,
     children: [
       {
-        path: 'user',
-        name: 'User',
+        path: 'adminUser',
+        name: 'AdminUser',
         meta: { title: '管理员管理', icon: 'user' },
         component: () => import('@/views/system/user')
       }

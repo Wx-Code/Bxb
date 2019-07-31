@@ -22,5 +22,9 @@
         /// 平台钱包配置
         /// </summary>
         public const string PLATFORM_WALLET_ADDRESS = "PlatformWalletAddress";
+        /// <summary>
+        /// 收取手续费的钱包地址
+        /// </summary>
+        public const string SERVICE_FEE_RECEIVE_WALLET_ADDRESS = "ServiceFeeReceiveWalletAddress";
     }
 }

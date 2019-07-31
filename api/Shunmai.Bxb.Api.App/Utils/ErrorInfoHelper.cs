@@ -11,7 +11,7 @@ namespace Shunmai.Bxb.Api.App.Utils
 {
     public static class ErrorInfoHelper
     {
-        public static ErrorInfo FromSubmitResult(this ErrorInfo errorInfo, OrderSubmitResult result)
+        public static ErrorInfo FromSubmitResult(OrderSubmitResult result)
         {
             switch (result)
             {
@@ -20,15 +20,14 @@ namespace Shunmai.Bxb.Api.App.Utils
                 case OrderSubmitResult.TradeHallNotExists:
                     return Errors.TradeHallNotExists;
                 case OrderSubmitResult.TradeHallStateException:
-                    break;
                 case OrderSubmitResult.TradeHallStatusException:
-                    break;
+                    return Errors.CannotTrade;
                 case OrderSubmitResult.TradeCodeInputError:
-                    break;
+                    return Errors.TradeCodeError;
                 case OrderSubmitResult.CountNotEnough:
-                    break;
+                    return Errors.NotEnoughCount;
                 case OrderSubmitResult.PersistenceFailed:
-                    break;
+                    return ErrorInfo.OfRequestFailed();
                 default:
                     throw new UnsupportedTypeException(nameof(result), result);
             }
