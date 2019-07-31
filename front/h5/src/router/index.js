@@ -11,6 +11,11 @@ Vue.use(Router)
 const routerMap = [
   {
     path: '/',
+    name: 'Empty',
+    component: Empty
+  },
+  {
+    path: '/userLogin',
     name: 'userLogin',
     meta: { title: '登录' },
     component: () => import('@/views/login/userLogin')
@@ -105,12 +110,7 @@ const routerMap = [
     meta: { title: '订单详情' },
     component: () => import('@/views/myCenter/orderDetail/orderDetail')
   },
-  {
-    path: '/login',
-    name: 'Login',
-    meta: { title: '登录' },
-    component: () => import('@/views/login')
-  },
+
 
 
   {

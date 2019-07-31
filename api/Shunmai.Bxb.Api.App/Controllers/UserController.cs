@@ -167,7 +167,6 @@ namespace Shunmai.Bxb.Api.App.Controllers
 
         }
 
-        [SkipLoginVerification]
         [HttpPost("editwxcode")]
         public IActionResult UpdateWxCodePhoto([FromBody] UpdateUserRequest request)
         {

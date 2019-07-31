@@ -43,10 +43,8 @@ service.interceptors.response.use(
         title: '温馨提示',
         message: '登录已失效，请重新登录'
       }).then(() => {
-        // var urlHost = encodeURIComponent(process.env.FRONT_HOST)
-        // window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + process.env.WECHAT_APP_ID + '&redirect_uri=' + urlHost + '&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect'
         const redictUrl = window.location.href
-        router.push({ name: 'LoginV2', query: { redirect: redictUrl, action: 'login' } })
+        router.push({ name: 'userLogin', query: { redirect: redictUrl, action: 'login' } })
       }).catch(() => {
         // on cancel
       });
