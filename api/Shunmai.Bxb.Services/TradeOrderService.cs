@@ -5,6 +5,7 @@ using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Services.Attributes;
 using Shunmai.Bxb.Services.Enums;
 using Shunmai.Bxb.Services.Models;
+using Shunmai.Bxb.Services.Utils;
 using Shunmai.Bxb.Utilities.Extenssions;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace Shunmai.Bxb.Services
             var hall = data.Hall;
             return new TradeOrder
             {
+                OrderId = IdGenerator.Generate(IdGenerator.IdType.OrderId),
                 Amount = data.RequiredCount,
                 Btype = hall.BType,
                 BuyerPhone = data.Buyer.Phone,
@@ -58,24 +60,7 @@ namespace Shunmai.Bxb.Services
             };
         }
 
-        /// <summary>
-        /// 尝试提交订单，如果出现如下情形之一，则返回 false 表示订单提交失败
-        ///     1. 如果交易信息不存在
-        ///     2. 如果交易信息的 `Status` 不处于上架状态
-        ///     3. 如果交易信息的 `State` 不处于正常进行中
-        ///     4. 如果输入的交易码错误
-        ///     5. 如果输入的购买数量大于剩余数量
-        ///     6. 尝试创建交易订单，如果创建失败
-        ///     7. 尝试创建交易日志，如果创建失败
-        /// </summary>
-        /// <param name="hallId"></param>
-        /// <param name="count"></param>
-        /// <param name="tradeCode"></param>
-        /// <param name="buyerId"></param>
-        /// <param name="result"></param>
-        /// <returns></returns>
-        [SmartSqlTransaction]
-        public bool Submit(SubmitData data, out OrderSubmitResult result)
+        private bool CanSubmit(SubmitData data, out OrderSubmitResult result)
         {
             var hall = data.Hall;
             if (hall.Status != TradeHallShelfStatus.On)
@@ -99,9 +84,37 @@ namespace Shunmai.Bxb.Services
                 return false;
             }
 
+            result = OrderSubmitResult.Success;
+            return true;
+        }
+
+        /// <summary>
+        /// 尝试提交订单，如果出现如下情形之一，则返回 false 表示订单提交失败
+        ///     1. 如果交易信息不存在
+        ///     2. 如果交易信息的 `Status` 不处于上架状态
+        ///     3. 如果交易信息的 `State` 不处于正常进行中
+        ///     4. 如果输入的交易码错误
+        ///     5. 如果输入的购买数量大于剩余数量
+        ///     6. 尝试创建交易订单，如果创建失败
+        ///     7. 尝试创建交易日志，如果创建失败
+        ///     8. 尝试更新可交易数量，如果更新失败
+        /// </summary>
+        /// <param name="hallId"></param>
+        /// <param name="count"></param>
+        /// <param name="tradeCode"></param>
+        /// <param name="buyerId"></param>
+        /// <returns></returns>
+        [SmartSqlTransaction]
+        public bool Submit(SubmitData data, out OrderSubmitResult result)
+        {
+            if (CanSubmit(data, out result) == false)
+            {
+                return false;
+            }
+
             var order = CreateOrder(data);
-            var orderId = _orderRepos.Insert(order);
-            if (orderId <= 0)
+            var addOrderSuccess = _orderRepos.Insert(order);
+            if (addOrderSuccess == false)
             {
                 result = OrderSubmitResult.PersistenceFailed;
                 _logger.LogError($"Insert into `TradeOrder` failed.");
@@ -113,13 +126,21 @@ namespace Shunmai.Bxb.Services
                 OperateId = data.Buyer.UserId,
                 OperateLog = "用户下单",
                 OperateName = data.Buyer.Nickname,
-                OrderId = orderId,
+                OrderId = order.OrderId,
             };
             var logId = _orderLogRepos.Insert(orderLog);
             if (logId <= 0)
             {
                 result = OrderSubmitResult.PersistenceFailed;
                 _logger.LogError($"Insert into `TradeOrderLog` failed.");
+                return false;
+            }
+
+            var updateSuccess = _hallRepos.UpdateAmount(data.Hall.TradeId, data.Hall.Amount - data.RequiredCount);
+            if (updateSuccess == false)
+            {
+                result = OrderSubmitResult.PersistenceFailed;
+                _logger.LogError($"Update `TradeHall` failed.");
                 return false;
             }
 

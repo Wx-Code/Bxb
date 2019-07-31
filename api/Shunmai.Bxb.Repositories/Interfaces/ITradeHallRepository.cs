@@ -80,5 +80,15 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         /// <param name="endTime">结束时间</param>
         /// <returns>用户发布的交易信息总条数</returns>
         int GetAdminTradeHallsCount(int? userId, CurrencyType? bType, TradeHallShelfStatus? status, string startTime, string endTime);
+
+        /// <summary>
+        /// 更新可交易数量
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        bool UpdateAmount(int id, decimal amount);
+
+        TradeHall Find(int id);
     }
 }

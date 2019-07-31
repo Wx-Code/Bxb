@@ -8,6 +8,11 @@
   </Caches>
 
   <Statements>
+
+    <Statement Id="Fields">
+      `TradeId`,`TradeType`,`ReleaseUserId`,`ReleaseName`,`BType`,`TotalAmount`,`Amount`,`Price`,`ReleaseTime`,`State`,`Status`,`TradeCode`
+    </Statement>
+    
     <!-- APP 发布交易 -->
     <Statement Id="InsertTradeHallEntity">
       INSERT INTO `TradeHall`(
@@ -158,6 +163,29 @@
         </IsNotEmpty>
       </Where>
     </Statement>
+
+    <!-- 更新可交易数量 -->
+    <Statement Id="UpdateAmount">
+      UPDATE
+        `TradeHall`
+      SET
+        `Amount`=?amount
+      WHERE
+        `TradeId`=?id
+      ;
+    </Statement>
+
+    <!-- 查询单条数据 -->
+    <Statement Id="Find">
+      SELECT
+        <Include RefId="Fields"></Include>
+      FROM
+        `TradeHall`
+      WHERE
+        `TradeId`=?id
+      ;
+    </Statement>
+    
   </Statements>
   
 </SmartSqlMap>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SmartSqlMap Scope="TradeOrderLog"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  
+  <Statements>
+
+    <!-- 字段 -->
+    <Statement Id="Fields">
+      `LogId`, `OrderId`, `OperateId`, `OperateName`, `OperateLog`, `CreateTime`
+    </Statement>
+    
+    <!-- 新增 -->
+    <Statement Id="Insert">
+      INSERT INTO
+        `TradeOrderLog`
+        (
+          `OrderId`, `OperateId`, `OperateName`, `OperateLog`
+        )
+      VALUES
+        (
+          ?OrderId, ?OperateId, ?OperateName, ?OperateLog
+        )
+      ;
+      SELECT LAST_INSERT_ID();
+    </Statement>
+    
+  </Statements>
+</SmartSqlMap>
+
+

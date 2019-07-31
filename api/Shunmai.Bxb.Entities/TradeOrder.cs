@@ -18,7 +18,7 @@ namespace Shunmai.Bxb.Entities
         ///<summary>
         /// OrderId, int
         ///</summary>
-        public virtual int OrderId { get; set; }
+        public virtual long OrderId { get; set; }
         ///<summary>
         /// TradeId, int
         ///</summary>
