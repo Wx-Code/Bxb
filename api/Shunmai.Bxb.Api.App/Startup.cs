@@ -49,7 +49,7 @@ namespace Shunmai.Bxb.Api.App
             });
             services.AddSingleton<TradeHallService>();
             services.AddSingleton<SystemConfigService>();
-
+            services.AddSingleton<TradeOrderService>();
         }
 
         public Startup(IConfiguration configuration)

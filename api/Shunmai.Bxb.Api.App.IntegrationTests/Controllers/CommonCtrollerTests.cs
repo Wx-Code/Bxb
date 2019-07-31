@@ -81,7 +81,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             _dbContext.SystemConfig.Add(entity);
             _dbContext.SaveChanges();
 
-            var result = await TestSuite.GetAsync<JsonResponse<string>>(_client, "/common/trade/rules");
+            var result = await _client.GetAsync<JsonResponse<string>>("/common/trade/rules");
             Assert.True(result.success);
             Assert.Equal(content, result.data);
 

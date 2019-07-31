@@ -53,5 +53,15 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
                 }
             }
         }
+
+        public static async Task<T> PostAsync<T>(this HttpClient client, string url, object data, Dictionary<string, string> headers = null)
+        {
+            return await TestSuite.PostAsync<T>(client, url, data, headers);
+        }
+
+        public static async Task<T> GetAsync<T>(this HttpClient client, string url, object data = null, Dictionary<string, string> headers = null)
+        {
+            return await TestSuite.GetAsync<T>(client, url, data, headers);
+        }
     }
 }

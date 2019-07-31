@@ -7,6 +7,10 @@ namespace Shunmai.Bxb.Utilities.Helpers
 {
     public class Randoms
     {
+        private const string UPPER_LETTERS = "QWERTYUIOPLKJHGFDSAZXCVBNM";
+        private const string LOWER_LETTERS = "qwertyuioplkjhgfdsazxcvbnm";
+        private const string LETTERS = UPPER_LETTERS + LOWER_LETTERS;
+
         /// <summary>
         /// 随机数的偏移量生成
         /// </summary>
@@ -31,6 +35,18 @@ namespace Shunmai.Bxb.Utilities.Helpers
             return _random.Generate(min, max);
         }
 
+        public static string Text(int length, string from)
+        {
+            Check.Check.EnsureMoreThanZero(length, nameof(length));
+            Check.Check.Empty(from, nameof(from));
+            var builder = new StringBuilder();
+            for (var i = 0; i < length; i++)
+            {
+                builder.Append(GetRandomChar(from));
+            }
+            return builder.ToString();
+        }
+
         /// <summary>
         /// 生成指定长度的随机数字
         /// </summary>
@@ -38,13 +54,27 @@ namespace Shunmai.Bxb.Utilities.Helpers
         /// <returns></returns>
         public static string Numbers(int length)
         {
-            Check.Check.EnsureMoreThanZero(length, nameof(length));
-            var builder = new StringBuilder();
-            for (var i = 0; i < length; i++)
-            {
-                builder.Append(GetRandomChar(Const.Numbers));
-            }
-            return builder.ToString();
+            return Text(length, Const.Numbers);
+        }
+
+        /// <summary>
+        /// 生成指定长度的字符串（由大小写英文字母组成）
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string Letters(int length)
+        {
+            return Text(length, LETTERS);
+        }
+
+        /// <summary>
+        /// 生成指定长度的随机字符串（由数字和英文字母组成）
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string String(int length)
+        {
+            return Text(length, Const.Numbers + LETTERS);
         }
     }
 }

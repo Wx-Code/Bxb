@@ -37,7 +37,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         [HttpPost]
         public JsonResult Submit([FromBody]SubmitRequest request, [FromServices]UserService userService, [FromServices]SystemConfigService configService)
         {
-            var hall = _hallService.GetSingleTradeHallEntity(request.TradeHallId);
+            var hall = _hallService.GetById(request.TradeId);
             if (hall == null)
             {
                 return Failed(Errors.TradeHallNotExists);
@@ -75,15 +75,15 @@ namespace Shunmai.Bxb.Api.App.Controllers
                 Buyer = CurrentUser,
                 Hall = hall,
                 PlatformWalletAddr = platWalletAddr,
-                RequiredCount = request.Count,
+                RequiredCount = request.RequiredCount,
                 Seller = seller,
                 ServiceFeeRate = serviceFeeRate,
                 ServiceFeeReceiveWalletAddr = serviceFeeWalletAddr,
-                TradeCode = request.Code,
+                TradeCode = request.TradeCode,
             };
             var success = _orderService.Submit(submitData, out OrderSubmitResult result);
             var errorInfo = ErrorInfoHelper.FromSubmitResult(result);
-            return Json(errorInfo);
+            return success ? Success() : Failed(errorInfo);
         }
     }
 }

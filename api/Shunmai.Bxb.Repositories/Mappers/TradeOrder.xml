@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SmartSqlMap Scope="TradeOrder"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
+  <Caches>
+    <Cache Id="TradeOrderCache" Type="Lru">
+      <FlushInterval Hours="1"/>
+    </Cache>
+  </Caches>
+  
+  <Statements>
+
+    <!-- 字段 -->
+    <Statement Id="Fields">
+      `OrderId`, `TradeId`, `TradeType`, `SellerUserId`, `SellerWalletAddress`, `SellerPhone`, `BuyerUserId`, `BuyerWalletAddress`, `BuyerPhone`, `Btype`, `Amount`, `Price`, `TotalAmount`, `State`, `TradeCode`, `ServiceAmount`, `PlatWalletAddress`, `PlatServiceWalletAddress`, `CreateTime`, `ReceivedTime`, `PayTime`, `CompleteTime`
+    </Statement>
+    
+    <!-- 新增 -->
+    <Statement Id="Insert">
+      INSERT INTO
+        `TradeOrder`
+        (
+          `OrderId`, `TradeId`, `TradeType`, `SellerUserId`, `SellerWalletAddress`, `SellerPhone`, `BuyerUserId`, `BuyerWalletAddress`, `BuyerPhone`, `Btype`, `Amount`, `Price`, `TotalAmount`, `State`, `TradeCode`, `ServiceAmount`, `PlatWalletAddress`, `PlatServiceWalletAddress`
+        )
+      VALUES
+        (
+          ?OrderId, ?TradeId, ?TradeType, ?SellerUserId, ?SellerWalletAddress, ?SellerPhone, ?BuyerUserId, ?BuyerWalletAddress, ?BuyerPhone, ?Btype, ?Amount, ?Price, ?TotalAmount, ?State, ?TradeCode, ?ServiceAmount, ?PlatWalletAddress, ?PlatServiceWalletAddress
+        )
+      ;
+    </Statement>
+    
+  </Statements>
+</SmartSqlMap>
+
+

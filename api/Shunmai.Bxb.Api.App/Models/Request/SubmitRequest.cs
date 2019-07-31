@@ -9,10 +9,10 @@ namespace Shunmai.Bxb.Api.App.Models.Request
     public class SubmitRequest
     {
         [Required, Range(1, int.MaxValue)]
-        public int TradeHallId { get; set; }
+        public int TradeId { get; set; }
         [Required, Range(1, int.MaxValue)]
-        public int Count { get; set; }
+        public int RequiredCount { get; set; }
         [Required]
-        public string Code { get; set; }
+        public string TradeCode { get; set; }
     }
 }

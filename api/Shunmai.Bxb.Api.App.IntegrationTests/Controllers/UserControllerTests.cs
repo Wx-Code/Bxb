@@ -126,8 +126,9 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
         public async Task Login_Should_ExecuteSuccessfully_While_UserExists()
         {
             _dbContext.Truncate(nameof(User), nameof(SmsVerificationCode));
-            var user = _dbContext.User.Add(TestSuite.CreateTestUser()).Entity;
-            var code = _dbContext.SmsVerificationCode.Add(new SmsCode { Phone = user.Phone, VerificationCode = "123456" }).Entity;
+            var user = TestSuite.CreateTestUser();
+            _dbContext.User.Add(user);
+            var code = _dbContext.SmsVerificationCode.Add(new SmsCode { Phone = user.Phone, VerificationCode = "123456", CreateTime = DateTime.Now }).Entity;
             _dbContext.SaveChanges();
 
             var result = await TestSuite.PostAsync<JsonResponse<JToken>>(_client, "/user/login", new LoginRequest { Phone = user.Phone, SmsCode = code.VerificationCode });
@@ -151,13 +152,14 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
         public async Task GetInfo_Should_ReturnUserInfo_While_UserHasLogin()
         {
             _dbContext.Truncate(nameof(User), nameof(SmsVerificationCode));
-            var user = _dbContext.User.Add(TestSuite.CreateTestUser()).Entity;
+            var user = TestSuite.CreateTestUser();
+            _dbContext.User.Add(user);
             _dbContext.SaveChanges();
             var token = Guid.NewGuid().ToString("N");
             var cache = _fixture.Server.GetService<ICache>();
             cache.Set(token, user.UserId, null);
 
-            var result = await TestSuite.GetAsync<JsonResponse<UserExt>>(_client, "/user", null, new Dictionary<string, string> { { Headers.TOKEN, token } });
+            var result = await _client.GetAsync<JsonResponse<UserExt>>("/user", null, new Dictionary<string, string> { { Headers.TOKEN, token } });
             Assert.NotNull(result);
             Assert.True(result.success);
             Assert.NotNull(result.data);

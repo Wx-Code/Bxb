@@ -1,11 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <SmartSqlMap Scope="TradeHallLog"  xmlns="http://SmartSql.net/schemas/SmartSqlMap.xsd">
-  <Caches>
-    <Cache Id="TradeHallLogCache" Type="Lru">
-      <FlushInterval Hours="1"/>
-    </Cache>
-  </Caches>
 
   <Statements>
     <Statement Id="InsertTradeHallLogEntity">

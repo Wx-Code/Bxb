@@ -43,7 +43,12 @@ namespace Shunmai.Bxb.Test.Common
         public void Truncate(params string[] tables)
         {
             var sql = tables.Select(t => "TRUNCATE TABLE `" + t + "`;").Join("");
-            _ = Database.ExecuteSqlCommand(sql);
+            Database.ExecuteSqlCommand(sql);
+        }
+
+        public void ExecuteSql(string sql)
+        {
+            Database.ExecuteSqlCommand(sql);
         }
 
         public virtual DbSet<UserExt> User { get; set; }
