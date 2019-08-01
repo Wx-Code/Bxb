@@ -123,13 +123,15 @@
         this.pickShow = false
       },
       copyCode(txt) {
+        const  that = this
         this.$copyText(txt).then(
           res => {
-            console.log(res)
-            this.$toast("复制成功");
+            that.$toast({message: '复制成功', duration: '1500'})
+
           },
           err => {
-            this.$toast("复制失败");
+            that.$toast({message: '复制失败', duration: '1500'})
+
           }
         )
       },
@@ -138,7 +140,7 @@
         if (!this.price || this.price < 0) {
           this.$toast({message: '请正确填写出售单价', duration: '1500'})
           return false
-        } else if (!this.totalAmount || this.totalAmount < 0) {
+        } else if (!this.totalAmount || this.totalAmount < 0 ||  this.totalAmount >1000000) {
           this.$toast({message: '请正确填写出售数量', duration: '1500'})
           return false
         } else if (!this.isHasAddress) {

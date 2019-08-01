@@ -47,9 +47,7 @@
     },
     created() {
       this.weChatLogin()
-
     },
-
     data() {
       return {
         host: process.env.FRONT_HOST,
