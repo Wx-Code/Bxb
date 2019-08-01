@@ -9,6 +9,7 @@ using Shunmai.Bxb.Api.App.Models.Response;
 using Shunmai.Bxb.Common.Attributes;
 using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Common.Constans;
+using Shunmai.Bxb.Common.Extensions;
 
 namespace Shunmai.Bxb.Api.App.Controllers
 {
@@ -37,7 +38,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         [HttpGet("customer/service")]
         public IActionResult GetWXCustomerList()
         {
-            var data = _systemConfigService.GetConfig<WXCustomerInfoResponse>(SystemConfigNames.CUSTOMER_SERVICE);
+            var data = _systemConfigService.GetServiceCustomer();
             return Success(data);
         }
 
