@@ -8,12 +8,12 @@
     <br>
     <el-form :model="model" label-width="300px" class="formpadding">
       <el-form-item  label="单笔转币手续费：">
-        <el-input class="input-txt" type="number" v-model="model.sigleTradeFee" placeholder="请输入单笔转币手续费">
+        <el-input class="input-txt" type="number" v-model="model.SigleTradeFee" placeholder="请输入单笔转币手续费">
           <template slot="append"></template>
         </el-input>
       </el-form-item>
       <el-form-item label="单笔转币服务费：">
-        <el-input class="input-txt" type="number" v-model="model.sigleServiceFee" placeholder="请输入单笔转币服务费">
+        <el-input class="input-txt" type="number" v-model="model.SigleServiceFee" placeholder="请输入单笔转币服务费">
           <template slot="append">%</template>
         </el-input>
         <br>
@@ -33,8 +33,8 @@ export default {
   data() {
     return {
       model: {
-        sigleTradeFee: 0,
-        sigleServiceFee: 0
+        SigleTradeFee: 0,
+        SigleServiceFee: 0
       },
       query: {
         configName: "TradeFee",
@@ -49,7 +49,7 @@ export default {
         this.$log("LoadConfig Response Result is :", res);
         if (res.success == true) {
           this.model = JSON.parse(res.data.configValue);
-          this.model.sigleServiceFee=this.model.sigleServiceFee*100
+          this.model.SigleServiceFee=this.model.SigleServiceFee*100
         } else {
           this.$error(res.message);
         }
@@ -58,7 +58,7 @@ export default {
 
     onSubmit() {
          
-      if(this.model.sigleServiceFee!=null&&(this.model.sigleServiceFee>100||this.model.sigleServiceFee<0))
+      if(this.model.SigleServiceFee!=null&&(this.model.SigleServiceFee>100||this.model.SigleServiceFee<0))
       {
           this.$error("单笔转币服务费百分比输入不合理")
           return false
@@ -66,7 +66,7 @@ export default {
 
       const postData = Object.assign({}, this.model);
 
-      postData.sigleServiceFee=postData.sigleServiceFee/100
+      postData.SigleServiceFee=postData.SigleServiceFee/100
 
       this.query.configValue = JSON.stringify(postData);
       this.$log("this query is:",this.query)
