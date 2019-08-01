@@ -8,12 +8,12 @@
     <br>
     <el-form :model="model" label-width="300px" class="formpadding">
       <el-form-item  label="卖家转币有效时间：">
-        <el-input class="input-txt" type="number" v-model="model.sellerTrunCoinTime" placeholder="请输入卖家转币有效时间">
+        <el-input class="input-txt" type="number" v-model="model.SellerTrunCoinTime" placeholder="请输入卖家转币有效时间">
           <template slot="append">小时</template>
         </el-input>
       </el-form-item>
       <el-form-item label="卖家确认收款有效时间:">
-        <el-input class="input-txt" v-model="model.sellerReceiveMoneyTime" type="number" placeholder="请输入卖家确认收款有效时间">
+        <el-input class="input-txt" v-model="model.SellerReceiveMoneyTime" type="number" placeholder="请输入卖家确认收款有效时间">
           <template slot="append">小时</template>
         </el-input>
       </el-form-item>
@@ -30,8 +30,8 @@ export default {
   data() {
     return {
       model: {
-        sellerTrunCoinTime: 0,
-        sellerReceiveMoneyTime: 0
+        SellerTrunCoinTime: 0,
+        SellerReceiveMoneyTime: 0
       },
       query: {
         configName: "OrderTimeLimit",
@@ -46,11 +46,11 @@ export default {
         this.$log("LoadConfig Response Result is :", res);
         if (res.success == true) {
           this.model = JSON.parse(res.data.configValue);
-          this.model.sellerTrunCoinTime = this.calculateValidHours(
-            this.model.sellerTrunCoinTime
+          this.model.SellerTrunCoinTime = this.calculateValidHours(
+            this.model.SellerTrunCoinTime
           );
-          this.model.sellerReceiveMoneyTime = this.calculateValidHours(
-            this.model.sellerReceiveMoneyTime
+          this.model.SellerReceiveMoneyTime = this.calculateValidHours(
+            this.model.SellerReceiveMoneyTime
           );
         } else {
           this.$error(res.message);
@@ -71,22 +71,22 @@ export default {
     onSubmit() {
     
       this.$log("This Model: ", this.model)
-      if(this.model.sellerTrunCoinTime==null)
+      if(this.model.SellerTrunCoinTime==null)
       {
           this.$error("请输入卖家转币有效时间")
           return false
       }
-     if(this.model.sellerReceiveMoneyTime==null)
+     if(this.model.SellerReceiveMoneyTime==null)
       {
           this.$error("请输入卖家确认收款有效时间")
           return false
       }
       const postData = Object.assign({}, this.model);
-      postData.sellerTrunCoinTime = this.calculateValidMilliseconds(
-        this.model.sellerTrunCoinTime
+      postData.SellerTrunCoinTime = this.calculateValidMilliseconds(
+        this.model.SellerTrunCoinTime
       );
-     postData.sellerReceiveMoneyTime = this.calculateValidMilliseconds(
-        this.model.sellerReceiveMoneyTime
+     postData.SellerReceiveMoneyTime = this.calculateValidMilliseconds(
+        this.model.SellerReceiveMoneyTime
       );
       this.query.configValue = JSON.stringify(postData);
       this.$log("this query is:",this.query)

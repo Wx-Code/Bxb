@@ -41,7 +41,7 @@
         <div class="tH_address_tit">购买前请完善您的{{moneyType}}钱包地址</div>
         <div class="tH_address_box row jb "><span class="tH_address_span">{{moneyType}}钱包地址：</span>
           <div class="tH_address_input"><input type="text" class="tH_address_inputs" v-model="address"
-                                               placeholder="请输入您的XXX钱包地址"></div>
+                                               :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
         </div>
       </div>
       <div class="tH_add_success" v-if="temp==2">
@@ -90,7 +90,7 @@
         pickShow: false,
         transactionCode: '',
         moneyType: 'GRT',
-        initIndex: '0',
+        initIndex: '0', //设置的默认选择的币种索引
         userInfo: '',
         columns: ['GRT', 'GDT', 'VIT', 'CDT'],
         dialog: {
@@ -98,10 +98,12 @@
         }
       }
     },
-    created() {
-      const userData = store.getUser()
+    async created() {
+      const userData = await store.getUser()
       if (!userData) return false
       this.userInfo = userData
+      this.judgeIsHasAddress()
+      this.change()
     },
     methods: {
       goChange() {
@@ -109,6 +111,7 @@
       },
       goSend() {
         if (!this.validateRequestData()) return
+
         this.publishInformationRequest()
       },
       onConfirm(value, index) {
@@ -172,8 +175,10 @@
         }
       },
       async publishInformationRequest() {
-        const {data, errorCode} = await pageServe.getTradeHallList({
-
+        const {data, errorCode} = await pageServe.publishInformation({
+          bType: this.moneyTypeIndex,
+          totalAmount: this.totalAmount,
+          price: this.price,
         })
         console.log('发布信息后数据', data);
         if (!data) return
@@ -194,9 +199,28 @@
           dialogShow: true,
           position: 'center',
           confirm() {
-            that.$router.go(-1)
+            // that.$router.go(-1)
+            that.$router.push({name: 'mySend'})
           }
         }
+      },
+      judgeIsHasAddress() {
+        if (this.userInfo.walletAddress && this.userInfo.walletAddress.length > 0) {
+          this.isHasAddress = true
+
+        }
+      },
+      change() {
+        const { pageName, itemData } = this.$route.query
+        if ( pageName != 'mySend' ) return
+        this.moneyType = itemData.bTypeText
+        this.moneyTypeIndex = itemData.bType
+        this.initIndex = this.columns.findIndex(value => value === itemData.bTypeText)
+        this.price = itemData.price
+        this.totalAmount = itemData.amount
+        this.transactionCode = itemData.tradeCode
+
+
       }
     }
   }

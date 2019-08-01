@@ -14,7 +14,6 @@ service.interceptors.request.use(
   config => {
     // 可在此向服务器添加统一的头部信息
     config.headers['X-Token'] = store.getToken() || 0
-    // config.headers['X-UserId'] = user.userId
     return config
   },
   error => {

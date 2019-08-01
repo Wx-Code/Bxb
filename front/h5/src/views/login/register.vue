@@ -102,13 +102,12 @@
         if (!this.validateRequestData()) return
         if (!this.canClick) return
         this.canClick = true
-        const { data ,errorCode } = user.register({
+        const { data ,errorCode ,message} = await user.register({
           wechatCode: this.wechatCode,
           phone: this.phone,
           smsCode: this.code,
           qrCodeUrl: this.imgData
         })
-        if (!data) return
         if (errorCode == '0000') {
           const  that =this
           that.$toast({message: '注册成功', duration: '1500'})
@@ -116,7 +115,7 @@
             that.redirect()
           },1500)
         } else if (errorCode == '0001') {
-          this.$toast({message: '短信验证码有误', duration: '1500'})
+          this.$toast({message: message, duration: '1500'})
         } else {
           this.$toast({message: '注册失败', duration: '1500'})
         }
@@ -160,11 +159,11 @@
       async showRule() {
         await this.getRule()
         this.$dialog({
+          title:'币小保平台交易规则',
           showBtn: false,
           content_txt: this.content_txt,
         })
       },
-
     }
   }
 </script>

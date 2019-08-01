@@ -140,9 +140,7 @@
       },
       async getMyCenterData() {
         const { data,errorCode } = await user.getUserInfo()
-
         if (!data) return false
-
         if (errorCode == '0000') {
           this.userInfo = data
           store.setUser(this.userInfo)

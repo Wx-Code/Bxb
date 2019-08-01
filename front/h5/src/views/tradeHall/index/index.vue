@@ -11,7 +11,7 @@
     >
       <div class="tradeHall">
         <div class="tH_content">
-          <div class="tH_item" v-for="(item,index) in list" @click="goDetail()">
+          <div class="tH_item" v-for="(item,index) in list">
             <div class="tH_item_box row jb">
               <img :src="item.avatar" alt="" class="tH_user_logo">
               <div class="tH_item_r">
@@ -57,9 +57,9 @@
           </div>
           <!--填写钱包地址-->
           <div class="tH_add_address" v-if="temp==2">
-            <div class="tH_address_tit">购买前前请完善您的XXXX钱包地址</div>
-            <div class="tH_address_box row jb "><span class="tH_address_span">XXX钱包地址：</span>
-              <div class="tH_address_input"><input type="text" class="tH_address_inputs" placeholder="请输入您的XXX钱包地址"></div>
+            <div class="tH_address_tit">购买前前请完善您的{{moneyType}}钱包地址</div>
+            <div class="tH_address_box row jb "><span class="tH_address_span">{{moneyType}}钱包地址：</span>
+              <div class="tH_address_input"><input type="text" v-model="address" class="tH_address_inputs" :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
             </div>
           </div>
           <!--提交订单 -->
@@ -97,9 +97,11 @@
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
         isHasAddress:false,
+        address:'',
         buyNum:'',//购买数量
         sellCode:'',//交易吗
         amount:'',//交易吗
+        moneyType:'',
         query: {
           page: 1,
           size: 10
@@ -145,12 +147,11 @@
         await this.getTradeHallLsit()
         this.isLoading = false
       },
-      goCustomer() {
-        this.$router.push({name: 'customer'})
-      },
+      //跳转到发送消息界面
       goSend() {
         this.$router.push({name: 'publishInformation'})
       },
+      //展示去沟通弹窗
       goLink(src) {
         this.temp = 1
         this.wxCodePhoto = src
@@ -163,6 +164,7 @@
           }
         }
       },
+      //点击购买按钮
       goBuy(itemData){
         if(!this.isHasAddress){
           this.showAddAress(itemData)
@@ -171,6 +173,7 @@
         this.showOrderCommit(itemData)
 
       },
+      // 展示提交订单弹窗
       showOrderCommit(itemData){
        const  that =this
         this.amount = itemData.amount
@@ -185,7 +188,10 @@
           }
         }
       },
+      // 展示添加地址弹窗
       showAddAress(itemData){
+       const  that =this
+        this.moneyType = itemData.bTypeText
         this.temp = 2
         this.dialog = {
           showCancel: false,
@@ -193,13 +199,29 @@
           dialogShow: true,
           position: 'bottom',
           confirm() {
+            that.addAddressRequest()
           }
         }
 
       },
+      // 添加地址请求
+      async addAddressRequest() {
+        const {data, errorCode} = await userServe.editwalletaddr({
+          WalletAddress: this.address,
+          UserId: this.userInfo.userId
+        })
+        console.log('钱包地址更新后数据', data);
+        if (!data) return
+        if (errorCode == '0000') {
+          this.isHasAddress = true
+          this.$toast({message: '钱包地址更新成功', duration: '1500'})
+        }
+      },
+      // 提交订单的请求
       orderCommitRequest(itemData){
 
       },
+      // 获取用户信息
       async getUserInfo() {
         const { data,errorCode } = await userServe.getUserInfo()
         if (!data) return false
@@ -208,10 +230,10 @@
           store.setUser(this.userInfo)
         }
       },
+      // 判断是否有地址
       judgeIsHasAddress() {
         if (this.userInfo.walletAddress && this.userInfo.walletAddress.length > 0) {
           this.isHasAddress = true
-
         }
       }
 
