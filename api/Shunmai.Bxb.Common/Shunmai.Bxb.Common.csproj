@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shunmai.Bxb.Services\Shunmai.Bxb.Services.csproj" />
     <ProjectReference Include="..\Shunmai.Bxb.Utilities\Shunmai.Bxb.Utilities.csproj" />
   </ItemGroup>
 

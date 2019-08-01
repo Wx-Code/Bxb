@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shunmai.Bxb.Abstractions\Shunmai.Bxb.Abstractions.csproj" />
-    <ProjectReference Include="..\Shunmai.Bxb.Common\Shunmai.Bxb.Common.csproj" />
     <ProjectReference Include="..\Shunmai.Bxb.Entities\Shunmai.Bxb.Entities.csproj" />
     <ProjectReference Include="..\Shunmai.Bxb.Repositories\Shunmai.Bxb.Repositories.csproj" />
     <ProjectReference Include="..\Shunmai.Bxb.Utilities\Shunmai.Bxb.Utilities.csproj" />

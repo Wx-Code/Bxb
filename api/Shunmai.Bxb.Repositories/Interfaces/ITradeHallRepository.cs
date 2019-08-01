@@ -90,5 +90,6 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         bool UpdateAmount(int id, decimal amount);
 
         TradeHall Find(int id);
+        bool UpdateState(int id, TradeHallState state);
     }
 }

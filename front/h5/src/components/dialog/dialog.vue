@@ -101,7 +101,7 @@
     }
     .dialog_container {
       width: 6.7rem;
-      padding: 1.12rem 0.62rem 0.5rem;
+      padding: 0.8rem 0.62rem 0.5rem;
       background: #ffffff;
       position: absolute;
       top: 50%;

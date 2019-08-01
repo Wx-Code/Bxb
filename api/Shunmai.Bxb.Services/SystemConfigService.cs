@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
-using Shunmai.Bxb.Repositories.Interfaces;
-using Shunmai.Bxb.Services.Constans;
-using Shunmai.Bxb.Utilities.Check;
 using Shunmai.Bxb.Entities;
+using Shunmai.Bxb.Repositories.Interfaces;
+using Shunmai.Bxb.Utilities.Check;
 using System;
 
 namespace Shunmai.Bxb.Services
@@ -51,8 +50,5 @@ namespace Shunmai.Bxb.Services
             config.CreateTime = DateTime.Now;
             return _systemConfigRepository.Insert(config);
         }
-
-
-
     }
 }

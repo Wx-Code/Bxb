@@ -8,7 +8,7 @@ using Shunmai.Bxb.Api.App.Constants;
 using Shunmai.Bxb.Api.App.Models.Request;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
-using Shunmai.Bxb.Services.Constans;
+using Shunmai.Bxb.Common.Constans;
 using Shunmai.Bxb.Test.Common;
 using Shunmai.Bxb.Test.Common.Models;
 using Shunmai.Bxb.Test.Common.TestPriority;
@@ -20,6 +20,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
+using Newtonsoft.Json;
+using Shunmai.Bxb.Common.Models.Config;
+using Shunmai.Bxb.Common.Enums;
 
 namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
 {
@@ -53,10 +56,23 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
          *     生成正确的订单日志，且交易信息应该被更新
          */
 
+        private SystemConfigExt CreateConfig(string name, object value)
+        {
+            var json = value.GetType() == typeof(string) ? value.ToString() : JsonConvert.SerializeObject(value);
+            return new SystemConfigExt
+            {
+                ConfigName = name,
+                ConfigValue = json,
+                CreateTime = DateTime.Now,
+                CreateUser = "Test",
+                Remark = "Test",
+            };
+        }
+
         // 由于 SystemConfig 具有 ConfigName 唯一特性，因此只需要初始化一次即可
         private bool _platConfigInited = false;
-        private (SystemConfigExt PlatformAddrConfig, SystemConfigExt FeeAddrConfig, SystemConfigExt RateConfig) _platConfig;
-        private (SystemConfigExt PlatformAddrConfig, SystemConfigExt FeeAddrConfig, SystemConfigExt RateConfig)
+        private (SystemConfigExt PlatformAddrConfig, SystemConfigExt RateConfig) _platConfig;
+        private (SystemConfigExt PlatformAddrConfig, SystemConfigExt RateConfig)
             PreparePlatformConfig()
         {
             if (_platConfigInited == false)
@@ -67,14 +83,17 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
                     {
                         var dbContext = _contextPool.Get();
                         dbContext.Truncate(nameof(SystemConfig));
-                        var platformAddrConfig = new SystemConfigExt { ConfigName = SystemConfigNames.PLATFORM_WALLET_ADDRESS, ConfigValue = Randoms.String(32), CreateTime = DateTime.Now, CreateUser = "Test", Remark = "Test", };
-                        var feeAddrConfig = new SystemConfigExt { ConfigName = SystemConfigNames.SERVICE_FEE_RECEIVE_WALLET_ADDRESS, ConfigValue = Randoms.String(32), CreateTime = DateTime.Now, CreateUser = "Test", Remark = "Test", };
-                        var rateConfig = new SystemConfigExt { ConfigName = SystemConfigNames.TRADE_FEE, ConfigValue = "0.1", CreateTime = DateTime.Now, CreateUser = "Test", Remark = "Test", };
-                        dbContext.SystemConfig.AddRange(platformAddrConfig, feeAddrConfig, rateConfig);
+
+                        var platformAddrConfig = CreateConfig(SystemConfigNames.PLATFORM_WALLET_ADDRESS, new List<PlatWalletAddrInfo> {
+                            TestSuite.GetTestWalletConfig(PurposeType.TurnCoin),
+                            TestSuite.GetTestWalletConfig(PurposeType.CommissionCharge),
+                        });
+                        var rateConfig = CreateConfig(SystemConfigNames.TRADE_FEE, new TradeFeeInfo { SigleServiceFee = 0.1M, SigleTradeFee = 1M });
+                        dbContext.SystemConfig.AddRange(platformAddrConfig, rateConfig);
                         dbContext.SaveChanges();
 
                         _contextPool.Return(dbContext);
-                        _platConfig = (platformAddrConfig, feeAddrConfig, rateConfig);
+                        _platConfig = (platformAddrConfig, rateConfig);
                     }
                 }
             }
@@ -125,13 +144,12 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             dbContext.Database.CommitTransaction();
             _contextPool.Return(dbContext);
 
-            var (platformAddrConfig, feeAddrConfig, rateConfig) = PreparePlatformConfig();
+            var (platformAddrConfig,  rateConfig) = PreparePlatformConfig();
             return new SubmitPreparedData
             {
                 Seller = seller,
                 Buyer = buyer,
                 Hall = hall,
-                FeeAddrConfig = feeAddrConfig,
                 PlatformAddrConfig = platformAddrConfig,
                 RateConfig = rateConfig,
                 SubmitRequest = submitRequest,
@@ -150,19 +168,6 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             var dbContext = _contextPool.Get();
             var data = PrepareDataBeforeTestSubmit();
             dbContext.SystemConfig.RemoveRange(data.PlatformAddrConfig);
-            dbContext.SaveChanges();
-            _contextPool.Return(dbContext);
-
-            var result = await Submit(data);
-            Assert.False(result.success);
-        }
-
-        [Fact, TestPriority(3)]
-        public async Task SubmitShouldFail_While_ServiceFeeWalletAddressNotPresented()
-        {
-            var dbContext = _contextPool.Get();
-            var data = PrepareDataBeforeTestSubmit();
-            dbContext.SystemConfig.Remove(data.FeeAddrConfig);
             dbContext.SaveChanges();
             _contextPool.Return(dbContext);
 
@@ -236,6 +241,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             var hall = dbContext.TradeHall.Find(data.Hall.TradeId);
             Assert.Equal(data.Hall.Amount - data.SubmitRequest.RequiredCount, hall.Amount); // 可交易数量应该减少
             Assert.Equal(data.Hall.TotalAmount, hall.TotalAmount); // 总数应该保持不变
+            data.Hall.State.Should().Be(TradeHallState.Working, "the state should be working");
 
             // 订单信息应该保存正确
             var order = dbContext.TradeOrder.FirstOrDefault(o => o.TradeId == hall.TradeId);
@@ -247,18 +253,40 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             order.SellerUserId.Should().Be(data.Seller.UserId, "the seller's userId should be right setted");
             order.SellerPhone.Should().Be(data.Seller.Phone, "the seller's phone should be right setted");
             order.SellerWalletAddress.Should().Be(data.Seller.WalletAddress, "the seller's wallet address should be right setted");
-            order.PlatWalletAddress.Should().Be(data.PlatformAddrConfig.ConfigValue, "the platform wallet address should be right setted");
-            order.PlatServiceWalletAddress.Should().Be(data.FeeAddrConfig.ConfigValue, "the wallet address for receiving service fee should be right setted");
-            order.ServiceAmount.Should().Be(data.SubmitRequest.RequiredCount * Convert.ToDecimal(data.RateConfig.ConfigValue), "the service fee should be right calculated");
             order.State.Should().Be(TradeOrderState.SellerOperating, "the order state should be right setted");
             order.TotalAmount.Should().Be(data.SubmitRequest.RequiredCount * data.Hall.Price, "the total amount should be right calculated");
             order.Price.Should().Be(data.Hall.Price, "the price should be right setted");
             order.Btype.Should().Be(data.Hall.BType, "the currency type should be right setted");
             order.Amount.Should().Be(data.SubmitRequest.RequiredCount, "the required count should be right setted");
             order.TradeCode.Should().Be(data.Hall.TradeCode, "the trade code should be right setted");
+
+            var list = JsonConvert.DeserializeObject<List<PlatWalletAddrInfo>>(data.PlatformAddrConfig.ConfigValue);
+            var platWalletAddr = list.Single(c => c.Purpost == PurposeType.TurnCoin).PlatWalletAddr;
+            var serviceFeeWalletAddr = list.Single(c => c.Purpost == PurposeType.CommissionCharge).PlatWalletAddr;
+            order.PlatWalletAddress.Should().Be(platWalletAddr, "the platform wallet address should be right setted");
+            order.PlatServiceWalletAddress.Should().Be(serviceFeeWalletAddr, "the wallet address for receiving service fee should be right setted");
+
+            var tradeConf = JsonConvert.DeserializeObject<TradeFeeInfo>(data.RateConfig.ConfigValue);
+            var serviceFee = (data.SubmitRequest.RequiredCount * tradeConf.SigleServiceFee) + tradeConf.SigleTradeFee;
+            order.ServiceAmount.Should().Be(serviceFee, "the service fee should be right calculated");
             // 应该生成订单日志
             var orderLog = dbContext.TradeOrderLog.FirstOrDefault(log => log.OrderId == order.OrderId);
             orderLog.Should().NotBeNull("the order log should be inserted");
+
+            _contextPool.Return(dbContext);
+        }
+
+        [Fact, TestPriority(1)]
+        public async Task TradeState_Should_BeCompleted_AfterSubmit()
+        {
+            var dbContext = _contextPool.Get();
+            var data = PrepareDataBeforeTestSubmit();
+            data.SubmitRequest.RequiredCount = (int)data.Hall.Amount;
+            var result = await Submit(data);
+            result.success.Should().Be(true, "submit should success");
+
+            var trade = dbContext.TradeHall.Find(data.Hall.TradeId);
+            trade.State.Should().Be(TradeHallState.Completed, "the trade state should be completed after all coins were sold out");
 
             _contextPool.Return(dbContext);
         }
@@ -282,7 +310,6 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
         public UserExt Buyer { get; set; }
         public TradeHallExt Hall { get; set; }
         public SystemConfigExt PlatformAddrConfig { get; set; }
-        public SystemConfigExt FeeAddrConfig { get; set; }
         public SystemConfigExt RateConfig { get; set; }
         public SubmitRequest SubmitRequest { get; set; }
         public string LoginToken { get; set; }

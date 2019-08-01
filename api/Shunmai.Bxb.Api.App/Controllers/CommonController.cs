@@ -7,7 +7,7 @@ using Shunmai.Bxb.Common.Attributes;
 using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Common.Enums;
 using Shunmai.Bxb.Services;
-using Shunmai.Bxb.Services.Constans;
+using Shunmai.Bxb.Common.Constans;
 using Shunmai.Bxb.Utilities.Extenssions;
 using Shunmai.Bxb.Utils.Helpers;
 using System.Linq;
