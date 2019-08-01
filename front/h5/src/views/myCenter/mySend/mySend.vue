@@ -52,8 +52,6 @@
   import pageServe from '@/api/page'
 
   export default {
-
-
     data() {
       return {
         host: process.env.FRONT_HOST,
@@ -66,14 +64,11 @@
         list: [], //数组
         loading: false,
         finished: false,
-
       }
     },
     async created() {
       await this.init()
-
     },
-
     methods: {
       async init() {
         this.query.page = 1
@@ -95,8 +90,7 @@
 
       },
       goSend(itemData) {
-        this.$router.push({name: 'publishInformation',query: { pageName: 'mySend', itemData  }})
-
+        this.$router.push({name: 'changeMySend',query: { pageName: 'mySend', itemData  }})
       },
       goDown(arg) {
         const that = this
@@ -139,8 +133,8 @@
       async onRefresh() {
         this.init()
       },
+    },
 
-    }
   }
 </script>
 
