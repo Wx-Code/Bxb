@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Entities;
-using Shunmai.Bxb.Services.Constans;
+using Shunmai.Bxb.Common.Constans;
 using Shunmai.Bxb.Test.Common;
 using Shunmai.Bxb.Test.Common.Models;
 using Shunmai.Bxb.Utilities.Helpers;

@@ -1,7 +1,5 @@
 ﻿using Shunmai.Bxb.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Shunmai.Bxb.Services.Models
 {
@@ -20,10 +18,19 @@ namespace Shunmai.Bxb.Services.Models
         /// 平台钱包地址
         /// </summary>
         public string PlatformWalletAddr { get; set; }
-        /// <summary>
-        /// 服务费比例
-        /// </summary>
-        public decimal ServiceFeeRate { get; set; }
-        public decimal ServiceFee => ServiceFeeRate * RequiredCount;
+
+        private decimal _serviceFee;
+        public decimal ServiceFee
+        {
+            get { return _serviceFee; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                _serviceFee = value;
+            }
+        }
     }
 }

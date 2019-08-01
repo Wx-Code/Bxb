@@ -26,6 +26,28 @@
         )
       ;
     </Statement>
+
+    <!-- 根据主键查询 -->
+    <Statement Id="Find">
+      SELECT
+        <Include RefId="Fields"></Include>
+      FROM
+        `TradeOrder`
+      WHERE
+        `OrderId`=?orderId
+      ;
+    </Statement>
+
+    <!-- 更新订单状态 -->
+    <Statement Id="UpdateState">
+      UPDATE
+        `TradeOrder`
+      SET
+        `State`=?state
+      WHERE
+        `OrderId`=?orderId
+      ;
+    </Statement>
     
   </Statements>
 </SmartSqlMap>

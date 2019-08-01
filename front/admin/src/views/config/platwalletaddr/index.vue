@@ -1,67 +1,83 @@
 <template>
   <section class="app-container">
     <div class="tool-bar mb10">
-    <div class="header-platwallet">
-      <h2 class="platwallet-css">平台钱包地址配置</h2>
-      <el-button type="primary" class="addaddr" icon="el-icon-plus" @click="addPlatWalletAddr()" >添加地址</el-button>
-    </div>
+      <div class="header-platwallet">
+        <h2 class="platwallet-css">平台钱包地址配置</h2>
+      </div>
     </div>
 
-    <el-table :data="list" :v-loading="loading" border class="mt10">
-      <el-table-column label="ID" prop="platWalletAddrId"></el-table-column>
-      <el-table-column label="地址名称" prop="platWalletAddrName"></el-table-column>
-      <el-table-column label="钱包地址" prop="platWalletAddr"></el-table-column>
-      <el-table-column label="TOKEN" prop="token"></el-table-column>
-      <el-table-column label="用途" prop="purpost">
-        <template slot-scope="scope">
-        <el-tag v-if="scope.row.purpost == 1">转币</el-tag>
-        <el-tag v-else>手续费</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" prop="state">
-        <template slot-scope="scope">
-        <el-tag v-if="scope.row.state == 1" type="danger">已停用</el-tag>
-        <el-tag v-else type="success">使用中</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" min-width="150px">
-        <template slot-scope="scope"> 
-          <el-button  type="text" icon="el-icon-edit-outline" @click="handleEditPlatWalletAddr(scope.row)">编辑</el-button>
-          <el-button  type="text" v-if="scope.row.state==1" icon="el-icon-edit-outline" @click="handleEditState(scope.row)">启用</el-button>
-          <el-button  type="text" v-if="scope.row.state==0" icon="el-icon-edit-outline" @click="handleEditState(scope.row)">停用</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="turnconin-div">
+      <div class="header-platwallet">
+        <h3 class="platwallet-css">用于转币</h3>
+      </div>
+      <el-form :model="PlatWalletTrunCoinModel">
+        <el-form-item label="地址名称：" >
+            <el-input  class="input-100" v-model.trim="PlatWalletTrunCoinModel.PlatWalletAddrName" placeholder="地址名称" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="钱包地址：">
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.PlatWalletAddr" placeholder="钱包地址" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="Cookie:">
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Cookie" placeholder="Cookie" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="IET钱包ID:">
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="交易密码:">
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Password" placeholder="交易密码" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="电话:">
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Phone" placeholder="电话" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="地址状态：">
+            <el-radio-group v-model="PlatWalletTrunCoinModel.State">
+                <el-radio :label="0">启用</el-radio>
+                <el-radio :label="1">停用</el-radio>
+            </el-radio-group> 
+        </el-form-item>
 
-    <el-dialog title="平台钱包地址信息" :model="PlatWalletData" :visible.sync="PlatWalletInfoFormVisible">
-        <el-form>
-          <el-form-item label="地址名称：" >
-              <el-input  class="input-100" v-model="PlatWalletData.platWalletAddrName" placeholder="地址名称" type="text"></el-input>
-          </el-form-item>
-          <el-form-item  label="钱包地址：">
-              <el-input class="input-100" v-model="PlatWalletData.platWalletAddr" placeholder="钱包地址" type="text"></el-input>
-          </el-form-item>
-          <el-form-item  label="Toekn:">
-              <el-input class="input-101" v-model="PlatWalletData.token" placeholder="Token" type="text"></el-input>
-          </el-form-item>
-          <el-form-item  label="地址状态：">
-              <el-radio-group v-model="PlatWalletData.state">
-                  <el-radio :label="0">启用</el-radio>
-                  <el-radio :label="1">停用</el-radio>
-              </el-radio-group>
-          </el-form-item>
-          <el-form-item label="地址用途：">
-              <el-radio-group v-model="PlatWalletData.purpost">
-                  <el-radio :label="1">转币</el-radio>
-                  <el-radio :label="2">手续费</el-radio>
-              </el-radio-group>
-          </el-form-item>
-        </el-form>
-        <div slot="footer">
-        <el-button type="default" @click="PlatWalletInfoFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit" >提交</el-button>
-        </div>
-    </el-dialog>
+        <el-form-item>
+          <el-button class="baocun-btn" type="primary" @click="handleSubmit(1)">保存</el-button>
+        </el-form-item>
+
+      </el-form>      
+    </div>
+
+     <div class="commissionservice-div">
+      <div class="header-platwallet">
+        <h3 class="platwallet-css">用于手续费</h3>
+      </div>
+      <el-form :model="PlatWalletCommissionServicModel">
+        <el-form-item label="地址名称：" >
+            <el-input  class="input-100" v-model.trim="PlatWalletCommissionServicModel.PlatWalletAddrName" placeholder="地址名称" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="钱包地址：">
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.PlatWalletAddr" placeholder="钱包地址" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="Cookie:">
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Cookie" placeholder="Cookie" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="IET钱包ID:">
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="交易密码:">
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Password" placeholder="交易密码" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="电话:">
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Phone" placeholder="电话" type="text"></el-input>
+        </el-form-item>
+        <el-form-item  label="地址状态：">
+            <el-radio-group v-model="PlatWalletCommissionServicModel.State">
+                <el-radio :label="0">启用</el-radio>
+                <el-radio :label="1">停用</el-radio>
+            </el-radio-group> 
+        </el-form-item>
+
+        <el-form-item>
+          <el-button class="baocun-btn" type="primary" @click="handleSubmit(2)">保存</el-button>
+        </el-form-item>
+      </el-form>      
+    </div>
 
   </section>
 </template>
@@ -79,19 +95,10 @@ export default {
         configValue: "",
         remark: "平台钱包地址配置",
       },
-      PlatWalletInfoFormVisible:false,
-      PlatWalletData:{
-        platWalletAddrId:null,
-        platWalletAddrName:null,
-        platWalletAddr:null,
-        state:null,
-        purpost:null,
-        token:null
-      },
+      PlatWalletTrunCoinModel:{},
+      PlatWalletCommissionServicModel:{},
       editData:[],
-      platData:[],
       itemCount:0,
-      strMsg:null
     }
     
   },    
@@ -104,8 +111,19 @@ export default {
         this.$log("loadPlatWalletAddrConfig Response Result is :", res);
         if (res.success == true) {
           this.list = JSON.parse(res.data.configValue);
+          this.list.forEach(v => {
+            if(v.Purpost==1)
+            {
+              // 转币使用
+              this.PlatWalletTrunCoinModel=v
+            }
+            else{
+              //手续费使用
+              this.PlatWalletCommissionServicModel=v
+            }
+          });
           this.itemCount=this.list.length
-          this.$log("this list is ", this.list)
+
         } else {
           this.$error(res.message);
         }
@@ -113,111 +131,94 @@ export default {
 
     },
 
-    addPlatWalletAddr(value)
+    handleSubmit(purpost)
     {
-        this.PlatWalletInfoFormVisible=true
-        this.PlatWalletData.platWalletAddrId=null
-        this.PlatWalletData.platWalletAddrName=null
-        this.PlatWalletData.platWalletAddr=null
-        this.PlatWalletData.state=null
-        this.PlatWalletData.purpost=null
-        this.PlatWalletData.token=null
-    },
+        this.editData=this.list
 
+        if(purpost==1)
+        {
+          //转币
 
-    handleEditPlatWalletAddr(row)
-    {
-      this.PlatWalletInfoFormVisible=true
-      this.PlatWalletData.platWalletAddrId=row.platWalletAddrId
-      this.PlatWalletData.platWalletAddrName=row.platWalletAddrName
-      this.PlatWalletData.platWalletAddr=row.platWalletAddr
-      this.PlatWalletData.state=row.state
-      this.PlatWalletData.purpost=row.purpost
-      this.PlatWalletData.token=row.token
-    },
+          if(this.PlatWalletTrunCoinModel!=null&&
+           (this.PlatWalletTrunCoinModel.PlatWalletAddrName==null||this.PlatWalletTrunCoinModel.PlatWalletAddrName==''
+          ||this.PlatWalletTrunCoinModel.PlatWalletAddr==null||this.PlatWalletTrunCoinModel.PlatWalletAddr==''
+          ||this.PlatWalletTrunCoinModel.Cookie==null||this.PlatWalletTrunCoinModel.Cookie==''
+          ||this.PlatWalletTrunCoinModel.WalletId==null||this.PlatWalletTrunCoinModel.WalletId==''
+          ||this.PlatWalletTrunCoinModel.Password==null||this.PlatWalletTrunCoinModel.Password==''
+          ||this.PlatWalletTrunCoinModel.Phone==null||this.PlatWalletTrunCoinModel.Phone==''
+          ||this.PlatWalletTrunCoinModel.State==null))
 
-    //停用| 启用
-    handleEditState(row)
-    {
-      this.$log("row" ,row) 
-      this.platData=this.list;
-      this.$log("this list is", this.platData)
-      this.$confirm('是否确定执行该操作？','提示',{
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-      }).then(()=>{
-
-         if(row.state==1)
           {
-            //需要启用
-            this.$set(this.platData[row.platWalletAddrId-1],'state',0)
+            this.$error("信息填写不完整， 请完善信息")
+            return false
+          }
+
+          this.PlatWalletTrunCoinModel.purpost=1
+          if(this.itemCount==0)
+          {
+            this.PlatWalletTrunCoinModel.PlatWalletAddrId=this.itemCount+1
+            this.editData.push(this.PlatWalletTrunCoinModel)
           }
           else
           {
-            //需要停用
-            this.$set(this.platData[row.platWalletAddrId-1],'state',1)
+            if(this.PlatWalletTrunCoinModel.PlatWalletAddrId==null||this.PlatWalletTrunCoinModel.PlatWalletAddrId==''||this.PlatWalletTrunCoinModel.PlatWalletAddrId==undefined)
+            {
+
+              this.PlatWalletTrunCoinModel.PlatWalletAddrId=this.itemCount+1 
+              this.editData.push(this.PlatWalletTrunCoinModel)
+            }
+            else
+            {
+              this.PlatWalletTrunCoinModel.PlatWalletAddrId=this.PlatWalletTrunCoinModel.PlatWalletAddrId
+              this.$set(this.editData,this.PlatWalletTrunCoinModel.PlatWalletAddrId-1,this.PlatWalletTrunCoinModel)
+
+            }
           }
-          this.query.configValue = JSON.stringify(this.platData);    
 
-          configApi.addOrUpdate(this.query).then(res=>{
-              if(res.success=true)
-              {
-                  this.$message({
-                      type: 'success',
-                      message: '操作成功!'
-                  });
-                  this.loadPlatWalletAddrConfig()
-              }
-              else
-              {
-                  this.$error(res.message);
-              }
-          })
-      }).catch(() => {})
-    },
-
-    handleSubmit()
-    {
-        this.editData=this.list
-        if(this.PlatWalletData.platWalletAddrName==null)
-        {
-          this.$error("钱包名称不能为空值， 请重新输入")
-          return false
-        }
-        if(this.PlatWalletData.platWalletAddr==null)
-        {
-          this.$error("钱包地址不能为空值， 请重新输入")
-          return false
-        }
-        if(this.PlatWalletData.token==null)
-        {
-          this.$error("token不能为空值， 请重新输入")
-          return false
-        }
-        if(this.PlatWalletData.state==null)
-        {
-          this.$error("请选择地址状态")
-          return false
-        }
-        if(this.PlatWalletData.purpost==null)
-        {
-          this.$error("请选择地址用途")
-          return false
-        }
-
-        if(this.PlatWalletData.platWalletAddrId==null||this.PlatWalletData.platWalletAddrId==""||this.PlatWalletData.platWalletAddrId==undefined)
-        {
-           this.PlatWalletData.platWalletAddrId=this.itemCount+1
-           this.editData.push(this.PlatWalletData)
         }
         else
         {
-          this.PlatWalletData.platWalletAddrId=this.PlatWalletData.platWalletAddrId
-          this.$set(this.editData,this.PlatWalletData.platWalletAddrId-1,this.PlatWalletData)
+          //服务费
+          if(this.PlatWalletCommissionServicModel!=null
+          && (this.PlatWalletCommissionServicModel.PlatWalletAddrName.trim()===null||this.PlatWalletCommissionServicModel.PlatWalletAddrName==''
+          ||this.PlatWalletCommissionServicModel.PlatWalletAddr===null||this.PlatWalletCommissionServicModel.PlatWalletAddr==''
+          ||this.PlatWalletCommissionServicModel.Cookie===null||this.PlatWalletCommissionServicModel.Cookie==''
+          ||this.PlatWalletCommissionServicModel.WalletId===null||this.PlatWalletCommissionServicModel.WalletId==''
+          ||this.PlatWalletCommissionServicModel.Password===null||this.PlatWalletCommissionServicModel.Password==''
+          ||this.PlatWalletCommissionServicModel.Phone===null||this.PlatWalletCommissionServicModel.Phone==''
+          ||this.PlatWalletCommissionServicModel.State==null))
+
+          {
+            this.$error("信息填写不完整， 请完善信息")
+            return false
+          }
+
+          this.PlatWalletCommissionServicModel.purpost=2
+
+           if(this.itemCount==0)
+          {
+            this.PlatWalletCommissionServicModel.PlatWalletAddrId=this.itemCount+1
+            this.editData.push(this.PlatWalletCommissionServicModel)
+
+          }
+          else
+          {
+            if(this.PlatWalletCommissionServicModel.PlatWalletAddrId==null||this.PlatWalletCommissionServicModel.PlatWalletAddrId==''||this.PlatWalletCommissionServicModel.PlatWalletAddrId==undefined)
+            {
+              this.PlatWalletCommissionServicModel.PlatWalletAddrId=this.itemCount+1
+              this.editData.push(this.PlatWalletCommissionServicModel)
+
+            }
+            else
+            {
+              this.PlatWalletCommissionServicModel.PlatWalletAddrId=this.PlatWalletCommissionServicModel.PlatWalletAddrId
+              this.$set(this.editData,this.PlatWalletCommissionServicModel.PlatWalletAddrId-1,this.PlatWalletCommissionServicModel)
+
+            }
+          }
+
         }
 
-        this.$log("postdata",this.PlatWalletData.platWalletAddrId-1)
         this.query.configValue = JSON.stringify(this.editData);
         this.$log("this query is:",this.query)
         configApi.addOrUpdate(this.query).then(res => {
@@ -261,8 +262,13 @@ export default {
    .input-100{
      width: 400px;
    }
-    .input-101{
-     width: 400px;
-     margin-left:25px;
-   }
+  .turnconin-div{
+    width: 50%;
+    float: left;
+  }
+
+  .commissionservice-div{
+    width: 50%;
+    float: left;
+  }
 </style>

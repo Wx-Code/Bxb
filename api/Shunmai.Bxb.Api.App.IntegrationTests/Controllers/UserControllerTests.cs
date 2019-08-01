@@ -126,7 +126,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
         public async Task Login_Should_ExecuteSuccessfully_While_UserExists()
         {
             _dbContext.Truncate(nameof(User), nameof(SmsVerificationCode));
-            var user = TestSuite.CreateTestUser();
+            var user = TestSuite.GetTestUser();
             _dbContext.User.Add(user);
             var code = _dbContext.SmsVerificationCode.Add(new SmsCode { Phone = user.Phone, VerificationCode = "123456", CreateTime = DateTime.Now }).Entity;
             _dbContext.SaveChanges();
@@ -152,7 +152,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
         public async Task GetInfo_Should_ReturnUserInfo_While_UserHasLogin()
         {
             _dbContext.Truncate(nameof(User), nameof(SmsVerificationCode));
-            var user = TestSuite.CreateTestUser();
+            var user = TestSuite.GetTestUser();
             _dbContext.User.Add(user);
             _dbContext.SaveChanges();
             var token = Guid.NewGuid().ToString("N");
