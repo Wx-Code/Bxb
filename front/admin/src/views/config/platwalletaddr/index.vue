@@ -138,7 +138,6 @@ export default {
         if(purpost==1)
         {
           //转币
-          this.$log("this PlatWalletTrunCoinModel ", this.PlatWalletTrunCoinModel);
 
           if(this.PlatWalletTrunCoinModel!=null&&
            (this.PlatWalletTrunCoinModel.PlatWalletAddrName==null||this.PlatWalletTrunCoinModel.PlatWalletAddrName==''
@@ -176,20 +175,17 @@ export default {
             }
           }
 
-          this.$log("转币提交 ", this.PlatWalletTrunCoinModel);
-
-
         }
         else
         {
           //服务费
-          this.$log("this PlatWalletCommissionServicModel ", this.PlatWalletCommissionServicModel);
-          if(this.PlatWalletCommissionServicModel!=null&& (this.PlatWalletCommissionServicModel.PlatWalletAddrName===null
-          ||this.PlatWalletCommissionServicModel.PlatWalletAddr===null
-          ||this.PlatWalletCommissionServicModel.Cookie===null
-          ||this.PlatWalletCommissionServicModel.WalletId===null
-          ||this.PlatWalletCommissionServicModel.Password===null
-          ||this.PlatWalletCommissionServicModel.Phone===null
+          if(this.PlatWalletCommissionServicModel!=null
+          && (this.PlatWalletCommissionServicModel.PlatWalletAddrName===null||this.PlatWalletCommissionServicModel.PlatWalletAddrName==''
+          ||this.PlatWalletCommissionServicModel.PlatWalletAddr===null||this.PlatWalletCommissionServicModel.PlatWalletAddr==''
+          ||this.PlatWalletCommissionServicModel.Cookie===null||this.PlatWalletCommissionServicModel.Cookie==''
+          ||this.PlatWalletCommissionServicModel.WalletId===null||this.PlatWalletCommissionServicModel.WalletId==''
+          ||this.PlatWalletCommissionServicModel.Password===null||this.PlatWalletCommissionServicModel.Password==''
+          ||this.PlatWalletCommissionServicModel.Phone===null||this.PlatWalletCommissionServicModel.Phone==''
           ||this.PlatWalletCommissionServicModel.State==null))
 
           {
@@ -221,7 +217,6 @@ export default {
             }
           }
 
-          this.$log("手续费提交 ", this.PlatWalletCommissionServicModel);
         }
 
         this.query.configValue = JSON.stringify(this.editData);
