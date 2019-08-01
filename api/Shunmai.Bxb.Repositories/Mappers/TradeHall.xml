@@ -129,7 +129,8 @@
              `Amount`,
              `Price`,
              `ReleaseTime`,
-             `Status`
+             `Status`,
+             `TradeCode`
       FROM `TradeHall`
       <Include RefId="PageGetAdminTradeHallsParams"></Include>
       ORDER BY `ReleaseTime` DESC

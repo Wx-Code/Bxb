@@ -12,7 +12,6 @@
               <van-uploader :after-read="afterRead">
                 <img src="http://static.pinlala.com/bxb/shangchuan.png" alt="" class="ul_icon4">
               </van-uploader>
-
             </div>
           </div>
 

@@ -44,11 +44,11 @@ const whiteList = [
   '/userLogin',
   '/register',
   // '/myCenter',
-  '/customer',
-  '/myAddress',
-  '/changeMyAddress',
-  '/myInformation',
-  '/changeCode',
+  // '/customer',
+  // '/myAddress',
+  // '/changeMyAddress',
+  // '/myInformation',
+  // '/changeCode',
 ].map(p => addPrefix(p))
 
 router.beforeEach(async (to, from, next) => {
