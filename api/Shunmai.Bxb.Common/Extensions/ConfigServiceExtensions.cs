@@ -17,6 +17,13 @@ namespace Shunmai.Bxb.Common.Extensions
             return list.FirstOrDefault(c => c.Purpost == type && c.State == ConfigState.Normal);
         }
 
+        private static CustomerServiceInfo GetCustomerServiceConfig(SystemConfigService service)
+        {
+            var obj = service.GetConfig<CustomerServiceInfo>(SystemConfigNames.CUSTOMER_SERVICE);
+            return obj;
+        }
+
+
         /// <summary>
         /// 获取平台钱包配置
         /// </summary>
@@ -38,6 +45,16 @@ namespace Shunmai.Bxb.Common.Extensions
         public static PlatWalletAddrInfo GetServiceFeeWalletAddr(this SystemConfigService service)
         {
             return GetWalletConfig(service, PurposeType.CommissionCharge);
+        }
+
+        /// <summary>
+        ///获取微信客服信息配置
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public static CustomerServiceInfo GetServiceCustomer(this SystemConfigService service)
+        {
+            return GetCustomerServiceConfig(service);
         }
 
         /// <summary>
