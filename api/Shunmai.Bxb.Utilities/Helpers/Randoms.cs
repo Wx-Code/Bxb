@@ -76,5 +76,14 @@ namespace Shunmai.Bxb.Utilities.Helpers
         {
             return Text(length, Const.Numbers + LETTERS);
         }
+
+        /// <summary>
+        /// 生成随机的移动电话号码
+        /// </summary>
+        /// <returns></returns>
+        public static string Mobile()
+        {
+            return $"1{GetRandomChar("3456789")}{Numbers(9)}";
+        }
     }
 }

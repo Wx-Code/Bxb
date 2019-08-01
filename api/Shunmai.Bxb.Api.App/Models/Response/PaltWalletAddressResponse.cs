@@ -1,4 +1,4 @@
-﻿using Shunmai.Bxb.Entities.Enums;
+﻿using Shunmai.Bxb.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

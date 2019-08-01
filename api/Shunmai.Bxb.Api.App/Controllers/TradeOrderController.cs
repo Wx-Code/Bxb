@@ -5,7 +5,7 @@ using Shunmai.Bxb.Api.App.Constansts;
 using Shunmai.Bxb.Api.App.Models.Request;
 using Shunmai.Bxb.Api.App.Utils;
 using Shunmai.Bxb.Services;
-using Shunmai.Bxb.Services.Constans;
+using Shunmai.Bxb.Common.Constans;
 using Shunmai.Bxb.Services.Enums;
 using Shunmai.Bxb.Services.Models;
 using Shunmai.Bxb.Utilities.Extenssions;
@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Shunmai.Bxb.Common.Extensions;
 
 namespace Shunmai.Bxb.Api.App.Controllers
 {
@@ -52,7 +53,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
             }
 
             // 平台钱包地址
-            var platWalletAddr = configService.GetConfig<string>(SystemConfigNames.PLATFORM_WALLET_ADDRESS);
+            var platWalletAddr = configService.GetPlatformWalletAddr()?.PlatWalletAddr;
             if (platWalletAddr.IsEmpty())
             {
                 _logger.LogError($"Platform wallet address has not filled.");
@@ -60,7 +61,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
             }
 
             // 收取手续费的钱包地址
-            var serviceFeeWalletAddr = configService.GetConfig<string>(SystemConfigNames.SERVICE_FEE_RECEIVE_WALLET_ADDRESS);
+            var serviceFeeWalletAddr = configService.GetServiceFeeWalletAddr()?.PlatWalletAddr;
             if (serviceFeeWalletAddr.IsEmpty())
             {
                 _logger.LogError($"Service fee wallet address has not filled.");

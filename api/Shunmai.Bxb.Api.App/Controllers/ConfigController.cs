@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Shunmai.Bxb.Api.App.Models.Response;
 using Shunmai.Bxb.Common.Attributes;
 using Shunmai.Bxb.Services;
-using Shunmai.Bxb.Services.Constans;
+using Shunmai.Bxb.Common.Constans;
 
 namespace Shunmai.Bxb.Api.App.Controllers
 {
