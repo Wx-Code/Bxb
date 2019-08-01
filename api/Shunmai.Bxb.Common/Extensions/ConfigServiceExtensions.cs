@@ -23,18 +23,6 @@ namespace Shunmai.Bxb.Common.Extensions
             return obj;
         }
 
-        private static OrderTimeLimitInfo GetOrderTimeLimitConfig(SystemConfigService service)
-        {
-            var obj = service.GetConfig<OrderTimeLimitInfo>(SystemConfigNames.ORDER_TIME_LIMIT);
-            return obj;
-        }
-
-        private static TradeFeeInfo GetTradeFeeConfig(SystemConfigService service)
-        {
-            var obj = service.GetConfig<TradeFeeInfo>(SystemConfigNames.TRADE_FEE);
-            return obj;
-        }
-
 
         /// <summary>
         /// 获取平台钱包配置
@@ -67,27 +55,6 @@ namespace Shunmai.Bxb.Common.Extensions
         public static CustomerServiceInfo GetServiceCustomer(this SystemConfigService service)
         {
             return GetCustomerServiceConfig(service);
-        }
-
-        /// <summary>
-        ///获取订单时间配置
-        /// </summary>
-        /// <param name="service"></param>
-        /// <returns></returns>
-        public static OrderTimeLimitInfo GetServiceOrderTimeLimit(this SystemConfigService service)
-        {
-            return GetOrderTimeLimitConfig(service);
-        }
-
-
-        /// <summary>
-        /// 获取手续费配置
-        /// </summary>
-        /// <param name="service"></param>
-        /// <returns></returns>
-        public static TradeFeeInfo GetServiceTradeFee(this SystemConfigService service)
-        {
-            return GetTradeFeeConfig(service);
         }
 
         /// <summary>
