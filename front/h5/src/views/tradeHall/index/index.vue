@@ -1,11 +1,10 @@
 <template>
 
   <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class="integral">
-
     <van-list
       v-model="loading"
       :finished="finished"
-      :immediate-check = 'false'
+      :immediate-check='false'
       finished-text="没有更多了"
       @load="getTradeHallLsit()"
     >
@@ -40,16 +39,16 @@
         </div>
         <!--提示框组件-->
         <dialogTemplete v-model="dialog.dialogShow"
-                        :dialogShow="dialog.dialogShow"
                         :showTitle="dialog.showTitle"
                         :showBtn="dialog.showBtn"
                         :title="dialog.title"
+                        :outoClose="dialog.outoClose"
                         :position="dialog.position"
                         :confirmText="dialog.confirmText"
                         :showCancel="dialog.showCancel"
                         :cancelText="dialog.cancelText"
-                        @cancel="typeof dialog.cancel === 'function' ? typeof dialog.cancel() : ''"
-                        @confirm="typeof dialog.confirm === 'function' ? typeof dialog.confirm() :''">
+                        @cancel="typeof dialog.cancel === 'function' ?  dialog.cancel() : ''"
+                        @confirm="typeof dialog.confirm === 'function' ? dialog.confirm() :''">
           <!--联系人微信-->
           <div class="tH_link" v-if="temp==1">
             <img :src="wxCodePhoto" alt="" class="tH_link_code">
@@ -59,25 +58,30 @@
           <div class="tH_add_address" v-if="temp==2">
             <div class="tH_address_tit">购买前前请完善您的{{moneyType}}钱包地址</div>
             <div class="tH_address_box row jb "><span class="tH_address_span">{{moneyType}}钱包地址：</span>
-              <div class="tH_address_input"><input type="text" v-model="address" class="tH_address_inputs" :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
+              <div class="tH_address_input"><input type="text" v-model="address" class="tH_address_inputs"
+                                                   :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
             </div>
           </div>
           <!--提交订单 -->
           <div class="tH_submit" v-if="temp==3">
             <div class="tH_submit_boxs">
-              <div class="tH_submit_box row jb "><div class="tH_submit_span txt_j">购买数量：</div>
-                <div class="tH_submit_input"><input type="text" v-model="buyNum" class="tH_address_inputs" :placeholder="'当前剩余数量'+ amount"></div>
+              <div class="tH_submit_box row jb ">
+                <div class="tH_submit_span txt_j">购买数量：</div>
+                <div class="tH_submit_input"><input type="number" v-model="buyNum" class="tH_address_inputs"
+                                                    :placeholder="'当前剩余数量'+ amount"></div>
               </div>
-              <div class="tH_submit_box row jb "><div class="tH_submit_span txt_j">交易码：</div>
-                <div class="tH_submit_input"><input type="text" v-model="sellCode" class="tH_address_inputs" placeholder="请输入交易码"></div>
+              <div class="tH_submit_box row jb ">
+                <div class="tH_submit_span txt_j">交易码：</div>
+                <div class="tH_submit_input"><input type="text" v-model="sellCode" class="tH_address_inputs"
+                                                    placeholder="请输入交易码"></div>
               </div>
             </div>
-
-            <div class="tH_tip">*购买数量不能超过xx个，请重新输入</div>
+            <div class="tH_tip_box">
+              <div class="tH_tip" v-show="tipTxt">*{{tipTxt}}</div>
+            </div>
           </div>
         </dialogTemplete>
       </div>
-
     </van-list>
   </van-pull-refresh>
 
@@ -88,6 +92,7 @@
   import dialogTemplete from '@/components/dialogTemplete/dialogTemplete.vue'
   import pageServe from '@/api/page'
   import userServe from '@/api/user'
+
   export default {
     components: {
       dialogTemplete,
@@ -96,48 +101,50 @@
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
-        isHasAddress:false,
-        address:'',
-        buyNum:'',//购买数量
-        sellCode:'',//交易吗
-        amount:'',//交易吗
-        moneyType:'',
+        isHasAddress: false,
+        canClick: true,
+        tipTxt: '',
+        address: '',
+        buyNum: '',//购买数量
+        sellCode: '',//交易吗
+        amount: '',//剩余数量
+        moneyType: '',
         query: {
           page: 1,
           size: 10
         },
         isLoading: false,
-        list:[], //数组
+        list: [], //数组
         loading: false,
         finished: false,
-        temp: false,
-        wxCodePhoto:'',//联系人的二维码图片
+        temp: '',
+        wxCodePhoto: '',//联系人的二维码图片
         dialog: {
           dialogShow: false,
         }
       }
     },
-    async created(){
-      await  this.getUserInfo()
-      await  this.judgeIsHasAddress()
-      await  this.getTradeHallLsit()
+    async created() {
+      await this.getUserInfo()
+      await this.judgeIsHasAddress()
+      await this.getTradeHallLsit()
     },
     methods: {
-     async getTradeHallLsit(){
-       const that = this
-       this.loading = true
-       const { success, data, message } = await pageServe.getTradeHallList(this.query)
-       const { list } = data
-       this.loading = false
-       this.query.page++
-       if (success == false) {
-         that.$toast(message)
-         return
-       }
-       this.list = this.list.concat(list)
-       if (!list || list.length < this.query.size) {
-         that.finished = true
-       }
+      async getTradeHallLsit() {
+        const that = this
+        this.loading = true
+        const {success, data, message} = await pageServe.getTradeHallList(this.query)
+        const {list} = data
+        this.loading = false
+        this.query.page++
+        if (success == false) {
+          that.$toast(message)
+          return
+        }
+        this.list = this.list.concat(list)
+        if (!list || list.length < this.query.size) {
+          that.finished = true
+        }
       },
       // 下拉刷新
       async onRefresh() {
@@ -159,14 +166,12 @@
           showBtn: false,
           dialogShow: true,
           showTitle: false,
-          position: 'center',
-          confirm() {
-          }
+          position: 'center'
         }
       },
       //点击购买按钮
-      goBuy(itemData){
-        if(!this.isHasAddress){
+      goBuy(itemData) {
+        if (!this.isHasAddress) {
           this.showAddAress(itemData)
           return
         }
@@ -174,33 +179,39 @@
 
       },
       // 展示提交订单弹窗
-      showOrderCommit(itemData){
-       const  that =this
+      showOrderCommit(itemData) {
+        const that = this
+        this.clearData()
         this.amount = itemData.amount
         this.temp = 3
         this.dialog = {
-          title:'提交订单',
+          title: '提交订单',
           showCancel: false,
+          outoClose: false,
           confirmText: '提交订单',
           dialogShow: true,
-          confirm() {
+          confirm(fn) {
+
             that.orderCommitRequest(itemData)
-          }
+
+          },
         }
       },
       // 展示添加地址弹窗
-      showAddAress(itemData){
-       const  that =this
+      showAddAress(itemData) {
+        const that = this
+        this.clearData()
         this.moneyType = itemData.bTypeText
         this.temp = 2
         this.dialog = {
           showCancel: false,
           confirmText: '保存',
           dialogShow: true,
+          outoClose: false,
           position: 'bottom',
           confirm() {
             that.addAddressRequest()
-          }
+          },
         }
 
       },
@@ -218,12 +229,48 @@
         }
       },
       // 提交订单的请求
-      orderCommitRequest(itemData){
-
+      async orderCommitRequest(itemData) {
+        const that = this
+        if (!await this.validateRequestData()) return
+        if (!this.canClick) return
+        this.canClick = false
+        setTimeout(function () {
+          that.canClick = true
+        }, 300)
+        const {data, errorCode, message} = await pageServe.submitOrder({
+          tradeId: itemData.tradeId,
+          requiredCount: this.buyNum,
+          tradeCode: this.sellCode
+        })
+        console.log('提交订单后数据', data);
+        if (errorCode == '0000') {
+          const that = this
+          this.$toast({message: '提交成功', duration: '1500'})
+          that.dialog.dialogShow = false
+        } else if (errorCode == '1004') {
+          this.tipTxt = '可交易数量不足'
+        } else {
+          this.$toast({message: message, duration: '1500'})
+        }
+      },
+      // 验证提交订单的内容
+      validateRequestData() {
+        if (!this.buyNum || this.buyNum < 0) {
+          this.tipTxt = `交易数量格式不正确`
+          return false
+        } else if (this.sellCode > this.amount) {
+          this.tipTxt = `购买数量不能超过${this.amount}个，请重新输入`
+          return false
+        } else if (!this.sellCode || this.sellCode.length < 0) {
+          this.tipTxt = '交易码不能为空'
+          return false
+        } else {
+          return true
+        }
       },
       // 获取用户信息
       async getUserInfo() {
-        const { data,errorCode } = await userServe.getUserInfo()
+        const {data, errorCode} = await userServe.getUserInfo()
         if (!data) return false
         if (errorCode == '0000') {
           this.userInfo = data
@@ -235,8 +282,17 @@
         if (this.userInfo.walletAddress && this.userInfo.walletAddress.length > 0) {
           this.isHasAddress = true
         }
-      }
-
+      },
+      //清空弹框数据
+      clearData() {
+        this.temp = ''
+        this.WalletAddress = ''
+        this.moneyType = ''
+        this.buyNum = ''
+        this.sellCode = ''
+        this.temp = ''
+        this.tipTxt = ''
+      },
 
 
     }
@@ -383,56 +439,69 @@
     .tH_address_box {
       padding: 0.63rem 0 0.8rem;
     }
-    .tH_address_input{
+
+    .tH_address_input {
       width: 4.3rem;
       height: 0.56rem;
       padding-bottom: 0.1rem;
       border-bottom: 1px solid #ddd;
     }
-    .tH_address_inputs{
+
+    .tH_address_inputs {
       width: 100%;
       height: 0.4rem;
       color: #333;
       font-size: 0.28rem;
       line-height: 0.4rem;
     }
+
     input::-webkit-input-placeholder {
       font-size: 0.28rem;
       color: #CCC;
     }
 
     /*提交订单弹窗*/
-    .tH_submit{
-        width: 4.8rem;
+    .tH_submit {
+      width: 4.8rem;
       margin: 0 auto;
       padding-top: 0.36rem;
       box-sizing: border-box;
     }
-    .tH_submit_span{
+
+    .tH_submit_span {
       width: 1.6rem;
-      font-size:0.3rem;
-      font-family:PingFangSC-Medium;
-      font-weight:500;
-      color:rgba(51,51,51,1);
+      font-size: 0.3rem;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      color: rgba(51, 51, 51, 1);
     }
-    .tH_submit_box{
+
+    .tH_submit_box {
       margin-bottom: 0.57rem;
     }
-    .tH_submit_box:last-child{
+
+    .tH_submit_box:last-child {
       margin-bottom: 0.1rem;
     }
-    .tH_submit_input{
+
+    .tH_submit_input {
       width: 2.96rem;
       height: 0.56rem;
       padding-bottom: 0.1rem;
       border-bottom: 1px solid #ddd;
     }
-    .tH_tip{
-      font-size:0.24rem;
-      font-family:PingFangSC-Regular;
-      font-weight:400;
-      color:rgba(222,0,0,1);
-      line-height:0.35rem;
+
+    .tH_tip {
+      font-size: 0.24rem;
+      min-height: 0.35rem;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      color: rgba(222, 0, 0, 1);
+      line-height: 0.35rem;
+    }
+
+    .tH_tip_box {
+      min-height: 0.35rem;
     }
 
   }

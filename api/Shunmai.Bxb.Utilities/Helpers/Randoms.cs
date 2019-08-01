@@ -35,6 +35,15 @@ namespace Shunmai.Bxb.Utilities.Helpers
             return _random.Generate(min, max);
         }
 
+        /// <summary>
+        /// 生成 [0,1) 之间的随机小数
+        /// </summary>
+        /// <returns></returns>
+        public static double Next()
+        {
+            return new System.Random(CreateRandomSeed()).NextDouble();
+        }
+
         public static string Text(int length, string from)
         {
             Check.Check.EnsureMoreThanZero(length, nameof(length));

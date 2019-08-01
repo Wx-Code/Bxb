@@ -39,5 +39,14 @@ namespace Shunmai.Bxb.Api.App.Constansts
         /// </summary>
         public static ErrorInfo NotEnoughCount = new ErrorInfo("1004", "可交易数量不足");
 
+        /// <summary>
+        /// 描述订单不存在的错误信息
+        /// </summary>
+        public static ErrorInfo OrderNotExists = new ErrorInfo("1005", "订单不存在");
+
+        /// <summary>
+        /// 描述订单状态异常的错误信息
+        /// </summary>
+        public static ErrorInfo OrderStateException = new ErrorInfo("1006", "订单状态异常");
     }
 }

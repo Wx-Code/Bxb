@@ -86,6 +86,11 @@
         type: Boolean,
         default: true
       },
+      //是否自动关闭
+      outoClose: {
+        type: Boolean,
+        default: true
+      },
 
 
     },
@@ -101,6 +106,7 @@
       //关闭弹窗
       closeMask() {
         this.showMask = false;
+        this.$emit('cancel')
       },
       //暴露取消按钮事件
       cancelBtn() {
@@ -109,7 +115,8 @@
       },
       //暴露确认按钮事件
       confirmBtn() {
-        this.$emit('confirm')
+        this.$emit('confirm',this.closeMask)
+        if(!this.outoClose) return
         this.closeMask();
       }
 
