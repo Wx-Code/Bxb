@@ -186,6 +186,17 @@
         `TradeId`=?id
       ;
     </Statement>
+
+    <!-- 更新交易状态 -->
+    <Statement Id="UpdateState">
+      UPDATE
+        `TradeHall`
+      SET
+        `State`=?state
+      WHERE
+        `TradeId`=?id
+      ;
+    </Statement>
     
   </Statements>
   

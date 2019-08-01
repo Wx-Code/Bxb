@@ -135,13 +135,25 @@ namespace Shunmai.Bxb.Services
                 _logger.LogError($"Insert into `TradeOrderLog` failed.");
                 return false;
             }
-
-            var updateSuccess = _hallRepos.UpdateAmount(data.Hall.TradeId, data.Hall.Amount - data.RequiredCount);
+            // 更新可交易数量
+            var restAmount = data.Hall.Amount - data.RequiredCount;
+            var updateSuccess = _hallRepos.UpdateAmount(data.Hall.TradeId, restAmount);
             if (updateSuccess == false)
             {
                 result = OrderSubmitResult.PersistenceFailed;
                 _logger.LogError($"Update `TradeHall` failed.");
                 return false;
+            }
+            // 当可交易数量为 0 时，将交易信息状态更改为已完成交易
+            if (restAmount == 0)
+            {
+                var failed = _hallRepos.UpdateState(data.Hall.TradeId, TradeHallState.Completed) == false;
+                if (failed)
+                {
+                    result = OrderSubmitResult.PersistenceFailed;
+                    _logger.LogError($"Update `TradeHall` state failed.");
+                    return false;
+                }
             }
 
             result = OrderSubmitResult.Success;

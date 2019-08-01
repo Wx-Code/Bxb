@@ -241,6 +241,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             var hall = dbContext.TradeHall.Find(data.Hall.TradeId);
             Assert.Equal(data.Hall.Amount - data.SubmitRequest.RequiredCount, hall.Amount); // 可交易数量应该减少
             Assert.Equal(data.Hall.TotalAmount, hall.TotalAmount); // 总数应该保持不变
+            data.Hall.State.Should().Be(TradeHallState.Working, "the state should be working");
 
             // 订单信息应该保存正确
             var order = dbContext.TradeOrder.FirstOrDefault(o => o.TradeId == hall.TradeId);
@@ -268,6 +269,21 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             // 应该生成订单日志
             var orderLog = dbContext.TradeOrderLog.FirstOrDefault(log => log.OrderId == order.OrderId);
             orderLog.Should().NotBeNull("the order log should be inserted");
+
+            _contextPool.Return(dbContext);
+        }
+
+        [Fact, TestPriority(1)]
+        public async Task TradeState_Should_BeCompleted_AfterSubmit()
+        {
+            var dbContext = _contextPool.Get();
+            var data = PrepareDataBeforeTestSubmit();
+            data.SubmitRequest.RequiredCount = (int)data.Hall.Amount;
+            var result = await Submit(data);
+            result.success.Should().Be(true, "submit should success");
+
+            var trade = dbContext.TradeHall.Find(data.Hall.TradeId);
+            trade.State.Should().Be(TradeHallState.Completed, "the trade state should be completed after all coins were sold out");
 
             _contextPool.Return(dbContext);
         }
