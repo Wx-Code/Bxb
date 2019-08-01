@@ -12,22 +12,22 @@
       </div>
       <el-form :model="PlatWalletTrunCoinModel">
         <el-form-item label="地址名称：" >
-            <el-input  class="input-100" v-model="PlatWalletTrunCoinModel.PlatWalletAddrName" placeholder="地址名称" type="text"></el-input>
+            <el-input  class="input-100" v-model.trim="PlatWalletTrunCoinModel.PlatWalletAddrName" placeholder="地址名称" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="钱包地址：">
-            <el-input class="input-100" v-model="PlatWalletTrunCoinModel.PlatWalletAddr" placeholder="钱包地址" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.PlatWalletAddr" placeholder="钱包地址" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="Cookie:">
-            <el-input class="input-100" v-model="PlatWalletTrunCoinModel.Cookie" placeholder="Cookie" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Cookie" placeholder="Cookie" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="IET钱包ID:">
-            <el-input class="input-100" v-model="PlatWalletTrunCoinModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="交易密码:">
-            <el-input class="input-100" v-model="PlatWalletTrunCoinModel.Password" placeholder="交易密码" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Password" placeholder="交易密码" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="电话:">
-            <el-input class="input-100" v-model="PlatWalletTrunCoinModel.Phone" placeholder="电话" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Phone" placeholder="电话" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="地址状态：">
             <el-radio-group v-model="PlatWalletTrunCoinModel.State">
@@ -49,22 +49,22 @@
       </div>
       <el-form :model="PlatWalletCommissionServicModel">
         <el-form-item label="地址名称：" >
-            <el-input  class="input-100" v-model="PlatWalletCommissionServicModel.PlatWalletAddrName" placeholder="地址名称" type="text"></el-input>
+            <el-input  class="input-100" v-model.trim="PlatWalletCommissionServicModel.PlatWalletAddrName" placeholder="地址名称" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="钱包地址：">
-            <el-input class="input-100" v-model="PlatWalletCommissionServicModel.PlatWalletAddr" placeholder="钱包地址" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.PlatWalletAddr" placeholder="钱包地址" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="Cookie:">
-            <el-input class="input-100" v-model="PlatWalletCommissionServicModel.Cookie" placeholder="Cookie" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Cookie" placeholder="Cookie" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="IET钱包ID:">
-            <el-input class="input-100" v-model="PlatWalletCommissionServicModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="交易密码:">
-            <el-input class="input-100" v-model="PlatWalletCommissionServicModel.Password" placeholder="交易密码" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Password" placeholder="交易密码" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="电话:">
-            <el-input class="input-100" v-model="PlatWalletCommissionServicModel.Phone" placeholder="电话" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Phone" placeholder="电话" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="地址状态：">
             <el-radio-group v-model="PlatWalletCommissionServicModel.State">
@@ -180,7 +180,7 @@ export default {
         {
           //服务费
           if(this.PlatWalletCommissionServicModel!=null
-          && (this.PlatWalletCommissionServicModel.PlatWalletAddrName===null||this.PlatWalletCommissionServicModel.PlatWalletAddrName==''
+          && (this.PlatWalletCommissionServicModel.PlatWalletAddrName.trim()===null||this.PlatWalletCommissionServicModel.PlatWalletAddrName==''
           ||this.PlatWalletCommissionServicModel.PlatWalletAddr===null||this.PlatWalletCommissionServicModel.PlatWalletAddr==''
           ||this.PlatWalletCommissionServicModel.Cookie===null||this.PlatWalletCommissionServicModel.Cookie==''
           ||this.PlatWalletCommissionServicModel.WalletId===null||this.PlatWalletCommissionServicModel.WalletId==''
