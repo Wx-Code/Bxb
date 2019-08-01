@@ -68,8 +68,11 @@ namespace Shunmai.Bxb.Api.App.Controllers
                 return Failed();
             }
 
-            // 手续费比例
-            var serviceFeeRate = configService.GetConfig<decimal>(SystemConfigNames.TRADE_FEE);
+            // 手续费
+            var tradeFeeConfig = configService.GetTradeFeeConfig();
+            var serviceFee = (tradeFeeConfig == null)
+                ? 0
+                : (request.RequiredCount * tradeFeeConfig.SigleServiceFee) + tradeFeeConfig.SigleTradeFee;
 
             var submitData = new SubmitData
             {
@@ -78,13 +81,24 @@ namespace Shunmai.Bxb.Api.App.Controllers
                 PlatformWalletAddr = platWalletAddr,
                 RequiredCount = request.RequiredCount,
                 Seller = seller,
-                ServiceFeeRate = serviceFeeRate,
+                ServiceFee = serviceFee,
                 ServiceFeeReceiveWalletAddr = serviceFeeWalletAddr,
                 TradeCode = request.TradeCode,
             };
             var success = _orderService.Submit(submitData, out OrderSubmitResult result);
             var errorInfo = ErrorInfoHelper.FromSubmitResult(result);
             return success ? Success() : Failed(errorInfo);
+        }
+
+        /// <summary>
+        /// 确认收款
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPut("{orderId:long}/confirm")]
+        public JsonResult Confirm(long orderId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

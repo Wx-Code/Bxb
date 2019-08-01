@@ -88,7 +88,7 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
                             TestSuite.GetTestWalletConfig(PurposeType.TurnCoin),
                             TestSuite.GetTestWalletConfig(PurposeType.CommissionCharge),
                         });
-                        var rateConfig = CreateConfig(SystemConfigNames.TRADE_FEE, "0.1");
+                        var rateConfig = CreateConfig(SystemConfigNames.TRADE_FEE, new TradeFeeInfo { SigleServiceFee = 0.1M, SigleTradeFee = 1M });
                         dbContext.SystemConfig.AddRange(platformAddrConfig, rateConfig);
                         dbContext.SaveChanges();
 
@@ -253,7 +253,6 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             order.SellerUserId.Should().Be(data.Seller.UserId, "the seller's userId should be right setted");
             order.SellerPhone.Should().Be(data.Seller.Phone, "the seller's phone should be right setted");
             order.SellerWalletAddress.Should().Be(data.Seller.WalletAddress, "the seller's wallet address should be right setted");
-            order.ServiceAmount.Should().Be(data.SubmitRequest.RequiredCount * Convert.ToDecimal(data.RateConfig.ConfigValue), "the service fee should be right calculated");
             order.State.Should().Be(TradeOrderState.SellerOperating, "the order state should be right setted");
             order.TotalAmount.Should().Be(data.SubmitRequest.RequiredCount * data.Hall.Price, "the total amount should be right calculated");
             order.Price.Should().Be(data.Hall.Price, "the price should be right setted");
@@ -266,6 +265,10 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
             var serviceFeeWalletAddr = list.Single(c => c.Purpost == PurposeType.CommissionCharge).PlatWalletAddr;
             order.PlatWalletAddress.Should().Be(platWalletAddr, "the platform wallet address should be right setted");
             order.PlatServiceWalletAddress.Should().Be(serviceFeeWalletAddr, "the wallet address for receiving service fee should be right setted");
+
+            var tradeConf = JsonConvert.DeserializeObject<TradeFeeInfo>(data.RateConfig.ConfigValue);
+            var serviceFee = (data.SubmitRequest.RequiredCount * tradeConf.SigleServiceFee) + tradeConf.SigleTradeFee;
+            order.ServiceAmount.Should().Be(serviceFee, "the service fee should be right calculated");
             // 应该生成订单日志
             var orderLog = dbContext.TradeOrderLog.FirstOrDefault(log => log.OrderId == order.OrderId);
             orderLog.Should().NotBeNull("the order log should be inserted");

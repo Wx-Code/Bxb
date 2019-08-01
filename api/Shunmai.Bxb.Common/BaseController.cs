@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shunmai.Bxb.Common.Models;
 using Shunmai.Bxb.Utilities.Check;
+using System.Net;
 
 namespace Shunmai.Bxb.Common
 {
@@ -29,6 +30,16 @@ namespace Shunmai.Bxb.Common
             Check.Null(errorInfo, nameof(errorInfo));
             var response = ApiResponse.OfFailed(errorInfo);
             return Json(response);
+        }
+
+        protected JsonResult Unautherized(string message = null)
+        {
+            var response = ApiResponse.OfFailed(ErrorInfo.OfUnauthorized(message));
+            var result = new JsonResult(response)
+            {
+                StatusCode = (int)HttpStatusCode.Unauthorized
+            };
+            return result;
         }
     }
 }
