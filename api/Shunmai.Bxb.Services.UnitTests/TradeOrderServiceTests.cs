@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
@@ -26,6 +27,86 @@ namespace Shunmai.Bxb.Services.UnitTests
             _orderRepos = Mock.Of<ITradeOrderRepository>();
             _orderLogRepos = Mock.Of<ITradeOrderLogRepository>();
             _service = new TradeOrderService(_logger, _hallRepos, _orderRepos, _orderLogRepos);
+        }
+
+        [Theory]
+        [InlineData(0, 1)]
+        [InlineData(0, 0)]
+        [InlineData(-1, 1)]
+        [InlineData(-1, 0)]
+        [InlineData(1, -1)]
+        [InlineData(1, 0)]
+        public void ConfirmShouldThrowException_While_ParametersAreIllegal(long orderId, int userId)
+        {
+            Action confirm = () => _service.Confirm(orderId, userId, out _);
+            confirm.Should().Throw<ArgumentException>("confirm should throw exception to avoid nonsence sql query while the parameters are illegal");
+        }
+
+        [Fact]
+        public void ConfirmShouldReturnFalse_While_OrderDoesNotExist()
+        {
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns((TradeOrder)null);
+
+            var success = _service.Confirm(1, 1, out var result);
+            success.Should().BeFalse("confirm should return false while the order does not exist");
+            result.Should().Be(ConfirmResult.OrderNotExists, "ConfirmResult should be OrderNotExists");
+        }
+
+        [Fact]
+        public void ConfirmShouldReturnFalse_While_OperatingUserIsNotSellerHimself()
+        {
+            var order = new TradeOrder { SellerUserId = 1 };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+
+            var success = _service.Confirm(1, 2, out var result);
+            success.Should().BeFalse("confirm should return false while the operating user is not the seller himself");
+            result.Should().Be(ConfirmResult.Unautherized, "ConfirmResult should be Unautherized while the operating user is not the seller himself");
+        }
+
+        [Theory]
+        [InlineData(TradeOrderState.Canceled)]
+        [InlineData(TradeOrderState.Completed)]
+        [InlineData(TradeOrderState.SellerOperating)]
+        [InlineData(TradeOrderState.PlatformOperating)]
+        public void ConfirmShouldReturnFasle_While_OccuringOrderStateException(TradeOrderState state)
+        {
+            var userId = 1;
+            var order = new TradeOrder { SellerUserId = userId, State = state };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+
+            var success = _service.Confirm(1, userId, out var result);
+            success.Should().BeFalse("confirm should return false while occuring order state exception");
+            result.Should().Be(ConfirmResult.OrderStateException, "ConfirmResult should be OrderStateException while occuring order state exception");
+        }
+
+        [Fact]
+        public void ConfirmShouldReturnFalse_While_UpdatingOrderStateFailed()
+        {
+            var userId = 1;
+            var order = new TradeOrder { SellerUserId = userId, State = TradeOrderState.BuyerPaying };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+            // mock insert log succeed to make sure that it is not the reason causes confirm failed
+            Mock.Get(_orderLogRepos).Setup(r => r.Insert(It.IsAny<TradeOrderLog>())).Returns(1);
+            Mock.Get(_orderRepos).Setup(r => r.UpdateState(It.IsAny<long>(), It.IsAny<TradeOrderState>())).Returns(false);
+
+            var success = _service.Confirm(1, userId, out var result);
+            success.Should().BeFalse("confirm should return false while updating order state failed");
+            result.Should().Be(ConfirmResult.PersistenceFailed, "ConfirmResult should be PersistenceFailed while updating order state failed");
+        }
+
+        [Fact]
+        public void ConfirmShouldReturnFalse_While_ItWasFailedToAddOrderLog()
+        {
+            var userId = 1;
+            var order = new TradeOrder { SellerUserId = userId, State = TradeOrderState.BuyerPaying };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+            // mock update order state succeed to make sure that it is not the reason causes confirm failed
+            Mock.Get(_orderRepos).Setup(r => r.UpdateState(It.IsAny<long>(), It.IsAny<TradeOrderState>())).Returns(true);
+            Mock.Get(_orderLogRepos).Setup(r => r.Insert(It.IsAny<TradeOrderLog>())).Returns(0);
+
+            var success = _service.Confirm(1, userId, out var result);
+            success.Should().BeFalse("confirm should return false while it is failed to add order log");
+            result.Should().Be(ConfirmResult.PersistenceFailed, "ConfirmResult should be PersistenceFailed while it is failed to add order log");
         }
     }
 }

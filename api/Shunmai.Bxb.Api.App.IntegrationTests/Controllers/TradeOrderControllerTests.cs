@@ -27,7 +27,7 @@ using Shunmai.Bxb.Common.Enums;
 namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
 {
     [TestCaseOrderer("Shunmai.Bxb.Test.Common.TestPriority.PriorityOrderer", "Shunmai.Bxb.Test.Common")]
-    public class TradeOrderControllerTests : IClassFixture<WebApplicationFactory<Startup>>
+    public partial class TradeOrderControllerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _fixture;
         private readonly HttpClient _client;
@@ -105,8 +105,8 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests.Controllers
         {
             var dbContext = _contextPool.Get();
             dbContext.Database.BeginTransaction();
-            var seller = TestSuite.CreateTestUser();
-            var buyer = TestSuite.CreateTestUser();
+            var seller = TestSuite.GetTestUser();
+            var buyer = TestSuite.GetTestUser();
             if (dbContext.User.Any(u => u.Phone == seller.Phone || u.Phone == buyer.Phone))
             {
                 // 因为 Phone 字段具有唯一索引，为了避免添加用户出错，在添加之前先将已存在的用户删除

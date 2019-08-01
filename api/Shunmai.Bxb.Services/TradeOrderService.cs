@@ -6,6 +6,7 @@ using Shunmai.Bxb.Services.Attributes;
 using Shunmai.Bxb.Services.Enums;
 using Shunmai.Bxb.Services.Models;
 using Shunmai.Bxb.Services.Utils;
+using Shunmai.Bxb.Utilities.Check;
 using Shunmai.Bxb.Utilities.Extenssions;
 using System;
 using System.Collections.Generic;
@@ -160,17 +161,83 @@ namespace Shunmai.Bxb.Services
             return true;
         }
 
+        private bool CanConfirm(long orderId, int operatingUserId, out TradeOrder order, out ConfirmResult result)
+        {
+            order = _orderRepos.Find(orderId);
+            if (order == null)
+            {
+                result = ConfirmResult.OrderNotExists;
+                return false;
+            }
+            if (order.SellerUserId != operatingUserId)
+            {
+                result = ConfirmResult.Unautherized;
+                return false;
+            }
+            if (order.State != TradeOrderState.BuyerPaying)
+            {
+                result = ConfirmResult.OrderStateException;
+                return false;
+            }
+
+            result = default(ConfirmResult);
+            return true;
+        }
+
         /// <summary>
         /// 确认收款操作
         /// </summary>
+        /// <business>
+        /// 业务逻辑：
+        ///     1. 如果 orderId <= 0，则失败（避免无效查询）
+        ///     2. 如果 operatingUserId <= 0，则失败（避免无效查询）
+        ///     3. 如果订单不存在，则失败
+        ///     4. 如果操作人不是卖家，则失败
+        ///     5. 如果订单状态异常（不为待收款），则失败
+        ///     6. 尝试更新订单状态，如果失败，则返回请求失败
+        ///     7. 尝试添加订单操作日志，如果失败，则返回请求失败
+        /// </business>
         /// <param name="orderId"></param>
         /// <param name="operatingUserId"></param>
         /// <param name="result"></param>
         /// <returns></returns>
         [SmartSqlTransaction]
-        public bool Confirm(long orderId, int operatingUserId, out ConfirmResult result)
+        public virtual bool Confirm(long orderId, int operatingUserId, out ConfirmResult result)
         {
-            throw new NotImplementedException();
+            Check.EnsureMoreThanZero(orderId, nameof(orderId));
+            Check.EnsureMoreThanZero(operatingUserId, nameof(operatingUserId));
+
+            var canConfirm = CanConfirm(orderId, operatingUserId, out var order, out result);
+            if (canConfirm == false)
+            {
+                return false;
+            }
+
+            var updateSuccess = _orderRepos.UpdateState(orderId, TradeOrderState.PlatformOperating);
+            if (updateSuccess == false)
+            {
+                _logger.LogError($"Update order state failed.");
+                result = ConfirmResult.PersistenceFailed;
+                return false;
+            }
+
+            var log = new TradeOrderLog
+            {
+                CreateTime = DateTime.Now,
+                OperateId = operatingUserId,
+                OperateLog = "卖家确认收款",
+                OrderId = orderId,
+            };
+            var logId = _orderLogRepos.Insert(log);
+            if (logId <= 0)
+            {
+                _logger.LogInformation($"Insert into `TradeOrderLog` failed.");
+                result = ConfirmResult.PersistenceFailed;
+                return false;
+            }
+
+            result = ConfirmResult.Success;
+            return true;
         }
     }
 }

@@ -98,7 +98,9 @@ namespace Shunmai.Bxb.Api.App.Controllers
         [HttpPut("{orderId:long}/confirm")]
         public JsonResult Confirm(long orderId)
         {
-            throw new NotImplementedException();
+            var success = _orderService.Confirm(orderId, CurrentUser.UserId, out var result);
+            var error = ErrorInfoHelper.FromConfirmResult(result);
+            return success ? Success() : Failed(error);
         }
     }
 }
