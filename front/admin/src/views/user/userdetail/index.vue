@@ -13,7 +13,9 @@
         </div>
         <div class="tab_box_itemIn">
           <div class="item_left">微信二维码图片：</div>
-          <div class="item_right">{{userInfoData.wxCodePhoto}}</div>
+          <div class="item_right">
+            <img :src="userInfoData.wxCodePhoto" class="imgheight50">
+          </div>
         </div>
         <div class="tab_box_itemIn">
           <div class="item_left">头像：</div>
