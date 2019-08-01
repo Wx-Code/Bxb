@@ -14,7 +14,7 @@ namespace Shunmai.Bxb.Common.Extensions
         private static PlatWalletAddrInfo GetWalletConfig(SystemConfigService service, PurposeType type)
         {
             var list = service.GetConfig<List<PlatWalletAddrInfo>>(SystemConfigNames.PLATFORM_WALLET_ADDRESS) ?? new List<PlatWalletAddrInfo>();
-            return list.FirstOrDefault(c => c.Purpost == type);
+            return list.FirstOrDefault(c => c.Purpost == type && c.State == ConfigState.Normal);
         }
 
         private static CustomerServiceInfo GetCustomerServiceConfig(SystemConfigService service)
@@ -88,6 +88,16 @@ namespace Shunmai.Bxb.Common.Extensions
         public static TradeFeeInfo GetServiceTradeFee(this SystemConfigService service)
         {
             return GetTradeFeeConfig(service);
+        }
+
+        /// <summary>
+        /// 获取平台交易手续费配置
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        public static TradeFeeInfo GetTradeFeeConfig(this SystemConfigService service)
+        {
+            return service.GetConfig<TradeFeeInfo>(SystemConfigNames.TRADE_FEE);
         }
     }
 }
