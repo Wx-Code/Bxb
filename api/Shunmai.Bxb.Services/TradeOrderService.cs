@@ -159,5 +159,18 @@ namespace Shunmai.Bxb.Services
             result = OrderSubmitResult.Success;
             return true;
         }
+
+        /// <summary>
+        /// 确认收款操作
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="operatingUserId"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        [SmartSqlTransaction]
+        public bool Confirm(long orderId, int operatingUserId, out ConfirmResult result)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
