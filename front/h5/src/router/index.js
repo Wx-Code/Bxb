@@ -27,16 +27,10 @@ const routerMap = [
     component: () => import('@/views/login/register')
   },
   {
-    path: '/phoneVerify',
-    name: 'phoneVerify',
-    component: () => import('@/components/phoneVerify/phoneVerify')
-  },
-  {
     path: '/myCenter',
     name: 'myCenter',
     meta: { title: '个人中心' },
     component: () => import('@/views/myCenter/index/index')
-
   },
   {
     path: '/customer',
@@ -93,22 +87,34 @@ const routerMap = [
     component: () => import('@/views/tradeHall/publishInformation/publishInformation')
   },
   {
+    path: '/changeMySend',
+    name: 'changeMySend',
+    meta: { title: '编辑信息' },
+    component: () => import('@/views/myCenter/changeMySend/changeMySend')
+  },
+  {
     path: '/mySend',
     name: 'mySend',
     meta: { title: '发布信息' },
-    component: () => import('@/views/myCenter/mySend/mySend')
+    component: () => import('@/views/myCenter/mySend/mySend'),
   },
   {
     path: '/mySell',
     name: 'mySell',
     meta: { title: '我卖出的' },
-    component: () => import('@/views/myCenter/mySell/mySell')
+    component: () => import('@/views/myCenter/mySell/mySell'),
+
   },
   {
     path: '/orderDetail',
     name: 'orderDetail',
     meta: { title: '订单详情' },
     component: () => import('@/views/myCenter/orderDetail/orderDetail')
+  },
+  {
+    path: '/phoneVerify',
+    name: 'phoneVerify',
+    component: () => import('@/components/phoneVerify/phoneVerify')
   },
 
 

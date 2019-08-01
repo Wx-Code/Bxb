@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
+using Shunmai.Bxb.Common.Enums;
+using Shunmai.Bxb.Common.Models.Config;
 using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Models.Wechat;
 using Shunmai.Bxb.Test.Common;
@@ -85,6 +87,22 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
                 Realname = Randoms.Letters(10),
                 CreatedTime = DateTime.Now,
                 WalletAddress = Randoms.String(32),
+            };
+        }
+
+        public static PlatWalletAddrInfo GetTestWalletConfig(PurposeType purpose)
+        {
+            return new PlatWalletAddrInfo
+            {
+                Cookie = Randoms.String(32),
+                Password = Randoms.String(64),
+                Phone = Randoms.Mobile(),
+                PlatWalletAddr = Randoms.String(32),
+                PlatWalletAddrId = Randoms.String(32),
+                PlatWalletAddrName = Randoms.Letters(10),
+                Purpost = purpose,
+                State = ConfigState.Normal,
+                WalletId = Randoms.String(32),
             };
         }
     }

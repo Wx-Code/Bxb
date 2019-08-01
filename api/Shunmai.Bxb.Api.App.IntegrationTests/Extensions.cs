@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using Shunmai.Bxb.Test.Common.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;

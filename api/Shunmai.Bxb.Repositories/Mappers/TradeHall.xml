@@ -129,7 +129,8 @@
              `Amount`,
              `Price`,
              `ReleaseTime`,
-             `Status`
+             `Status`,
+             `TradeCode`
       FROM `TradeHall`
       <Include RefId="PageGetAdminTradeHallsParams"></Include>
       ORDER BY `ReleaseTime` DESC
@@ -181,6 +182,17 @@
         <Include RefId="Fields"></Include>
       FROM
         `TradeHall`
+      WHERE
+        `TradeId`=?id
+      ;
+    </Statement>
+
+    <!-- 更新交易状态 -->
+    <Statement Id="UpdateState">
+      UPDATE
+        `TradeHall`
+      SET
+        `State`=?state
       WHERE
         `TradeId`=?id
       ;

@@ -12,7 +12,6 @@
               <van-uploader :after-read="afterRead">
                 <img src="http://static.pinlala.com/bxb/shangchuan.png" alt="" class="ul_icon4">
               </van-uploader>
-
             </div>
           </div>
 
@@ -102,7 +101,7 @@
         if (!this.validateRequestData()) return
         if (!this.canClick) return
         this.canClick = true
-        const { data ,errorCode ,message} = user.register({
+        const { data ,errorCode ,message} = await user.register({
           wechatCode: this.wechatCode,
           phone: this.phone,
           smsCode: this.code,
@@ -159,6 +158,7 @@
       async showRule() {
         await this.getRule()
         this.$dialog({
+          title:'币小保平台交易规则',
           showBtn: false,
           content_txt: this.content_txt,
         })
