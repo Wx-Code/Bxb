@@ -159,6 +159,7 @@
       async showRule() {
         await this.getRule()
         this.$dialog({
+          title:'币小保平台交易规则',
           showBtn: false,
           content_txt: this.content_txt,
         })
