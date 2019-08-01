@@ -119,7 +119,7 @@ export default {
             }
             else{
               //手续费使用
-              this.PlatWalletCommissionServicModel.push(v)
+              this.PlatWalletCommissionServicModel=v
             }
           });
           this.itemCount=this.list.length
