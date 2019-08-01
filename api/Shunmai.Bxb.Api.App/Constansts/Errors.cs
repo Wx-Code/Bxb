@@ -5,6 +5,11 @@ namespace Shunmai.Bxb.Api.App.Constansts
     public static class Errors
     {
         /// <summary>
+        /// 描述请求参数超出范围的错误信息
+        /// </summary>
+        public static ErrorInfo ParamsOutOfRange = new ErrorInfo("0010", "请求参数输入有误或超出范围");
+
+        /// <summary>
         /// 描述用户尚未注册的错误信息
         /// </summary>
         public static ErrorInfo UserNotRegister = new ErrorInfo("0100", "此用户尚未注册");
@@ -33,5 +38,6 @@ namespace Shunmai.Bxb.Api.App.Constansts
         /// 描述可交易数量不足的错误信息
         /// </summary>
         public static ErrorInfo NotEnoughCount = new ErrorInfo("1004", "可交易数量不足");
+
     }
 }

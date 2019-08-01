@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Shunmai.Bxb.Api.App.Constansts;
 using Shunmai.Bxb.Api.App.Models;
 using Shunmai.Bxb.Common.Attributes;
+using Shunmai.Bxb.Common.Constants;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
 using Shunmai.Bxb.Entities.Views;
@@ -30,6 +32,9 @@ namespace Shunmai.Bxb.Api.App.Controllers
         [HttpPost("user/message")]
         public JsonResult PostMessage([FromBody]TradeHall model)
         {
+            if (!Enum.IsDefined(typeof(CurrencyType), model.BType) || model.Price <= 0m || model.Price >= Defaults.TRADE_MAX_AMOUNT || model.TotalAmount <= 0m || model.TotalAmount >= Defaults.TRADE_MAX_AMOUNT)
+                return Failed(Errors.ParamsOutOfRange);
+
             if (string.IsNullOrWhiteSpace(CurrentUser.Phone))
                 return Failed(Errors.UserNotRegister);
 
@@ -53,6 +58,9 @@ namespace Shunmai.Bxb.Api.App.Controllers
         [HttpPut("user/message")]
         public JsonResult PutMessage([FromBody]TradeHall model)
         {
+            if (!Enum.IsDefined(typeof(CurrencyType), model.BType) || model.Price <= 0m || model.Price >= Defaults.TRADE_MAX_AMOUNT || model.TotalAmount <= 0m || model.TotalAmount >= Defaults.TRADE_MAX_AMOUNT)
+                return Failed(Errors.ParamsOutOfRange);
+
             TradeHall entity = _tradeHallService.GetSingleTradeHallEntity(model.TradeId);
 
             if (entity == null || entity.ReleaseUserId != CurrentUser.UserId)
