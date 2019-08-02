@@ -54,7 +54,16 @@ export default {
       method: 'POST',
       data: data
     })
-  }
+  },
+  // 交易大厅提交订单
+  submitOrder(data){
+    return request({
+      url: '/orders',
+      method: 'POST',
+      data: data
+    })
+  },
+
 
 
 }

@@ -1,9 +1,9 @@
 <template>
   <div class="platformAddress">
     <ul class="pa_content">
-      <li class="pa_item row ac jc" v-for="(item,index) in addressArr" v-if="item.state==0">
+      <li class="pa_item row ac jb" v-for="(item,index) in addressArr" v-if="item.state==0">
         <div class="pa_item_txt1">{{item.platWalletAddrName}}</div>
-        <div class="pa_item_txt2">{{item.platWalletAddr}}</div>
+        <div class="pa_item_txt2 wd">{{item.platWalletAddr}}</div>
         <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(item.platWalletAddr)" class="customer_box_btn">
       </li>
       <p class="pa_tit" v-if="addressArr.length>0">温馨提示：<br>转币时请确保钱包地址的正确，以免影响您的正常交易。</p>
@@ -76,7 +76,7 @@
     }
 
     .pa_item_txt2{
-      width: 4.4rem;
+      width: 4.2rem;
       margin-right: 0.1rem;
       text-align: right;
       font-size:0.28rem;

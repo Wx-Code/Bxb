@@ -30,7 +30,7 @@
               </div>
               <div class="mySend_item_content2 row"><span class="mySend_box1_txt1">交易码：</span><span
                 class="mySend_box1_txt2">{{item.tradeCode}}</span><img src="http://static.pinlala.com/bxb/copy_btn.png"
-                                                                       alt="" @click="copyCode(item.address)"
+                                                                       alt="" @click="copyCode(item.tradeCode)"
                                                                        class="customer_box_btn ml20"></div>
             </div>
             <div class="mySend_item_footer row_r" v-if="item.status==1">
@@ -77,17 +77,15 @@
         this.isLoading = false
       },
       copyCode(txt) {
+        const  that =this
         this.$copyText(txt).then(
           res => {
-            console.log(res)
-            this.$toast("复制成功");
+            that.$toast({message: '复制成功', duration: '1500'})
           },
           err => {
-            this.$toast("复制失败");
+            that.$toast({message: '复制成功', duration: '复制失败'})
           }
         )
-
-
       },
       goSend(itemData) {
         this.$router.push({name: 'changeMySend',query: { pageName: 'mySend', itemData  }})
@@ -121,7 +119,7 @@
         this.loading = false
         this.query.page++
         if (success == false) {
-          that.$toast(message)
+          // that.$toast(message)
           return
         }
         this.list = this.list.concat(list)
