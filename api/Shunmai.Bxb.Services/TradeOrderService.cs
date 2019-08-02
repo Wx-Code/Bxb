@@ -161,27 +161,36 @@ namespace Shunmai.Bxb.Services
             return true;
         }
 
-        private bool CanConfirm(long orderId, int operatingUserId, out TradeOrder order, out ConfirmResult result)
+        private bool IsOrderStateNormal(long orderId, TradeOrderState matchState, out TradeOrder order, out ChangeOrderStateResult result)
         {
             order = _orderRepos.Find(orderId);
             if (order == null)
             {
-                result = ConfirmResult.OrderNotExists;
+                result = ChangeOrderStateResult.OrderNotExists;
                 return false;
             }
-            if (order.SellerUserId != operatingUserId)
+            if (order.State != matchState)
             {
-                result = ConfirmResult.Unautherized;
-                return false;
-            }
-            if (order.State != TradeOrderState.BuyerPaying)
-            {
-                result = ConfirmResult.OrderStateException;
+                result = ChangeOrderStateResult.OrderStateException;
                 return false;
             }
 
-            result = default(ConfirmResult);
+            result = default(ChangeOrderStateResult);
             return true;
+        }
+
+        private bool AddOrderLog(long orderId, string log, int operatingUserId, string operatingUsername = "")
+        {
+            var model = new TradeOrderLog
+            {
+                CreateTime = DateTime.Now,
+                OperateId = operatingUserId,
+                OperateName = operatingUsername,
+                OperateLog = log,
+                OrderId = orderId,
+            };
+            var logId = _orderLogRepos.Insert(model);
+            return logId > 0;
         }
 
         /// <summary>
@@ -202,14 +211,19 @@ namespace Shunmai.Bxb.Services
         /// <param name="result"></param>
         /// <returns></returns>
         [SmartSqlTransaction]
-        public virtual bool Confirm(long orderId, int operatingUserId, out ConfirmResult result)
+        public virtual bool Confirm(long orderId, int operatingUserId, out ChangeOrderStateResult result)
         {
             Check.EnsureMoreThanZero(orderId, nameof(orderId));
             Check.EnsureMoreThanZero(operatingUserId, nameof(operatingUserId));
 
-            var canConfirm = CanConfirm(orderId, operatingUserId, out var order, out result);
+            var canConfirm = IsOrderStateNormal(orderId, TradeOrderState.BuyerPaying, out var order, out result);
             if (canConfirm == false)
             {
+                return false;
+            }
+            if (order.SellerUserId != operatingUserId)
+            {
+                result = ChangeOrderStateResult.Unautherized;
                 return false;
             }
 
@@ -217,26 +231,19 @@ namespace Shunmai.Bxb.Services
             if (updateSuccess == false)
             {
                 _logger.LogError($"Update order state failed.");
-                result = ConfirmResult.PersistenceFailed;
+                result = ChangeOrderStateResult.PersistenceFailed;
                 return false;
             }
 
-            var log = new TradeOrderLog
+            var addSuccess = AddOrderLog(orderId, "买家确认收款", operatingUserId);
+            if (addSuccess == false)
             {
-                CreateTime = DateTime.Now,
-                OperateId = operatingUserId,
-                OperateLog = "卖家确认收款",
-                OrderId = orderId,
-            };
-            var logId = _orderLogRepos.Insert(log);
-            if (logId <= 0)
-            {
-                _logger.LogInformation($"Insert into `TradeOrderLog` failed.");
-                result = ConfirmResult.PersistenceFailed;
+                _logger.LogError($"Add order log failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
                 return false;
             }
 
-            result = ConfirmResult.Success;
+            result = ChangeOrderStateResult.Success;
             return true;
         }
     }

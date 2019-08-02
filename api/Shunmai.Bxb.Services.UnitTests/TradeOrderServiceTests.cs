@@ -49,18 +49,18 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, 1, out var result);
             success.Should().BeFalse("confirm should return false while the order does not exist");
-            result.Should().Be(ConfirmResult.OrderNotExists, "ConfirmResult should be OrderNotExists");
+            result.Should().Be(ChangeOrderStateResult.OrderNotExists, "ChangeOrderStateResult should be OrderNotExists");
         }
 
         [Fact]
         public void ConfirmShouldReturnFalse_While_OperatingUserIsNotSellerHimself()
         {
-            var order = new TradeOrder { SellerUserId = 1 };
+            var order = new TradeOrder { SellerUserId = 1, State = TradeOrderState.BuyerPaying, };
             Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
 
             var success = _service.Confirm(1, 2, out var result);
             success.Should().BeFalse("confirm should return false while the operating user is not the seller himself");
-            result.Should().Be(ConfirmResult.Unautherized, "ConfirmResult should be Unautherized while the operating user is not the seller himself");
+            result.Should().Be(ChangeOrderStateResult.Unautherized, "ChangeOrderStateResult should be Unautherized while the operating user is not the seller himself");
         }
 
         [Theory]
@@ -76,7 +76,7 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, userId, out var result);
             success.Should().BeFalse("confirm should return false while occuring order state exception");
-            result.Should().Be(ConfirmResult.OrderStateException, "ConfirmResult should be OrderStateException while occuring order state exception");
+            result.Should().Be(ChangeOrderStateResult.OrderStateException, "ChangeOrderStateResult should be OrderStateException while occuring order state exception");
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, userId, out var result);
             success.Should().BeFalse("confirm should return false while updating order state failed");
-            result.Should().Be(ConfirmResult.PersistenceFailed, "ConfirmResult should be PersistenceFailed while updating order state failed");
+            result.Should().Be(ChangeOrderStateResult.PersistenceFailed, "ChangeOrderStateResult should be PersistenceFailed while updating order state failed");
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, userId, out var result);
             success.Should().BeFalse("confirm should return false while it is failed to add order log");
-            result.Should().Be(ConfirmResult.PersistenceFailed, "ConfirmResult should be PersistenceFailed while it is failed to add order log");
+            result.Should().Be(ChangeOrderStateResult.PersistenceFailed, "ChangeOrderStateResult should be PersistenceFailed while it is failed to add order log");
         }
     }
 }

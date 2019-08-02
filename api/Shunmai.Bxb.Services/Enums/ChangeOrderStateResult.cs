@@ -1,6 +1,6 @@
 ﻿namespace Shunmai.Bxb.Services.Enums
 {
-    public enum ConfirmResult
+    public enum ChangeOrderStateResult
     {
         PersistenceFailed = -4,
 

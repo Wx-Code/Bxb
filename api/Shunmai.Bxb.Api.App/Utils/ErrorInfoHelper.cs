@@ -33,19 +33,19 @@ namespace Shunmai.Bxb.Api.App.Utils
             }
         }
 
-        public static ErrorInfo FromConfirmResult(ConfirmResult result)
+        public static ErrorInfo FromConfirmResult(ChangeOrderStateResult result)
         {
             switch (result)
             {
-                case ConfirmResult.PersistenceFailed:
+                case ChangeOrderStateResult.PersistenceFailed:
                     return ErrorInfo.OfRequestFailed();
-                case ConfirmResult.OrderStateException:
+                case ChangeOrderStateResult.OrderStateException:
                     return Errors.OrderStateException;
-                case ConfirmResult.Unautherized:
+                case ChangeOrderStateResult.Unautherized:
                     return ErrorInfo.OfUnauthorized();
-                case ConfirmResult.OrderNotExists:
+                case ChangeOrderStateResult.OrderNotExists:
                     return Errors.OrderNotExists;
-                case ConfirmResult.Success:
+                case ChangeOrderStateResult.Success:
                     return ErrorInfo.OfRequestSuccess();
                 default:
                     throw new UnsupportedTypeException(nameof(result), result);
