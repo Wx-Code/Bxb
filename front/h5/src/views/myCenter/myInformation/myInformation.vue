@@ -52,10 +52,11 @@
         this.$router.push({name: 'changeCode'})
       },
       async getMyInfo() {
-        const { data,errorCode } = await user.getUserInfo()
-        if (!data) return false
+        const { data,errorCode ,message} = await user.getUserInfo()
         if (errorCode == '0000') {
           this.userInfo = data
+        }else{
+          this.$toast({message: message, duration: '1500'})
         }
       }
 

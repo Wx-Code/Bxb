@@ -111,8 +111,8 @@ const routerMap = [
   },
   {
     path: '/tradeHall',
-    name: 'tradeHall',
-    // redirect: { name: 'tradeHall' },
+    name: 'tradeHallRoot',
+    redirect: { name: 'tradeHall' },
     component: Empty,
     children:[
       {
