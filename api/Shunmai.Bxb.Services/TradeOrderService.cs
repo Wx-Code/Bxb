@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Entities.Enums;
+using Shunmai.Bxb.Entities.Views;
 using Shunmai.Bxb.Repositories.Interfaces;
 using Shunmai.Bxb.Services.Attributes;
 using Shunmai.Bxb.Services.Enums;
@@ -299,6 +300,33 @@ namespace Shunmai.Bxb.Services
 
             result = ChangeOrderStateResult.Success;
             return true;
+        }
+
+        /// 我卖出的 订单列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public (int count, List<TradeOrderAppResponse> result) PageGetSellerTradeOrders(Trade0rderQuery query)
+        {
+            List<TradeOrderAppResponse> result = _orderRepos.PageGetSellerTradeOrders(query.Offset, query.Size, query.UserId, query.Status);
+
+            int count = _orderRepos.GetSellerTradeOrdersCount(query.UserId, query.Status);
+
+            return (count, result);
+        }
+
+        /// <summary>
+        /// 我买到的订单列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public (int count, List<TradeOrderAppResponse> result) PageGetBuyerTradeOrders(Trade0rderQuery query)
+        {
+            List<TradeOrderAppResponse> result = _orderRepos.PageGetBuyerTradeOrders(query.Offset, query.Size, query.UserId, query.Status);
+
+            int count = _orderRepos.GetBuyerTradeOrdersCount(query.UserId, query.Status);
+
+            return (count, result);
         }
     }
 }
