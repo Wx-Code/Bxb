@@ -161,27 +161,36 @@ namespace Shunmai.Bxb.Services
             return true;
         }
 
-        private bool CanConfirm(long orderId, int operatingUserId, out TradeOrder order, out ConfirmResult result)
+        private bool IsOrderStateNormal(long orderId, TradeOrderState matchState, out TradeOrder order, out ChangeOrderStateResult result)
         {
             order = _orderRepos.Find(orderId);
             if (order == null)
             {
-                result = ConfirmResult.OrderNotExists;
+                result = ChangeOrderStateResult.OrderNotExists;
                 return false;
             }
-            if (order.SellerUserId != operatingUserId)
+            if (order.State != matchState)
             {
-                result = ConfirmResult.Unautherized;
-                return false;
-            }
-            if (order.State != TradeOrderState.BuyerPaying)
-            {
-                result = ConfirmResult.OrderStateException;
+                result = ChangeOrderStateResult.OrderStateException;
                 return false;
             }
 
-            result = default(ConfirmResult);
+            result = default(ChangeOrderStateResult);
             return true;
+        }
+
+        private bool AddOrderLog(long orderId, string log, int operatingUserId, string operatingUsername = "")
+        {
+            var model = new TradeOrderLog
+            {
+                CreateTime = DateTime.Now,
+                OperateId = operatingUserId,
+                OperateName = operatingUsername,
+                OperateLog = log,
+                OrderId = orderId,
+            };
+            var logId = _orderLogRepos.Insert(model);
+            return logId > 0;
         }
 
         /// <summary>
@@ -202,14 +211,19 @@ namespace Shunmai.Bxb.Services
         /// <param name="result"></param>
         /// <returns></returns>
         [SmartSqlTransaction]
-        public virtual bool Confirm(long orderId, int operatingUserId, out ConfirmResult result)
+        public virtual bool Confirm(long orderId, int operatingUserId, out ChangeOrderStateResult result)
         {
             Check.EnsureMoreThanZero(orderId, nameof(orderId));
             Check.EnsureMoreThanZero(operatingUserId, nameof(operatingUserId));
 
-            var canConfirm = CanConfirm(orderId, operatingUserId, out var order, out result);
+            var canConfirm = IsOrderStateNormal(orderId, TradeOrderState.BuyerPaying, out var order, out result);
             if (canConfirm == false)
             {
+                return false;
+            }
+            if (order.SellerUserId != operatingUserId)
+            {
+                result = ChangeOrderStateResult.Unautherized;
                 return false;
             }
 
@@ -217,26 +231,73 @@ namespace Shunmai.Bxb.Services
             if (updateSuccess == false)
             {
                 _logger.LogError($"Update order state failed.");
-                result = ConfirmResult.PersistenceFailed;
+                result = ChangeOrderStateResult.PersistenceFailed;
                 return false;
             }
 
-            var log = new TradeOrderLog
+            var addSuccess = AddOrderLog(orderId, "买家确认收款", operatingUserId);
+            if (addSuccess == false)
             {
-                CreateTime = DateTime.Now,
-                OperateId = operatingUserId,
-                OperateLog = "卖家确认收款",
-                OrderId = orderId,
-            };
-            var logId = _orderLogRepos.Insert(log);
-            if (logId <= 0)
-            {
-                _logger.LogInformation($"Insert into `TradeOrderLog` failed.");
-                result = ConfirmResult.PersistenceFailed;
+                _logger.LogError($"Add order log failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
                 return false;
             }
 
-            result = ConfirmResult.Success;
+            result = ChangeOrderStateResult.Success;
+            return true;
+        }
+
+        /// <summary>
+        /// 取消订单操作
+        /// </summary>
+        /// <business>
+        /// 业务逻辑：
+        ///     1. 如果 orderId <= 0，则失败（避免无效查询）
+        ///     2. 如果 operatingUserId <= 0，则失败（避免无效查询）
+        ///     3. 如果订单不存在，则失败
+        ///     4. 如果操作人不是卖家或者买家，则失败
+        ///     5. 如果订单状态异常（不为待转币），则失败
+        ///     6. 尝试更新订单状态，如果失败，则返回请求失败
+        ///     7. 尝试添加订单操作日志，如果失败，则返回请求失败
+        /// <param name="orderId"></param>
+        /// <param name="operatingUserId"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        [SmartSqlTransaction]
+        public virtual bool Cancel(long orderId, int operatingUserId, out ChangeOrderStateResult result)
+        {
+            Check.EnsureMoreThanZero(orderId, nameof(orderId));
+            Check.EnsureMoreThanZero(operatingUserId, nameof(operatingUserId));
+
+            var canCancel = IsOrderStateNormal(orderId, TradeOrderState.SellerOperating, out var order, out result);
+            if (canCancel == false)
+            {
+                return false;
+            }
+            if (order.SellerUserId != operatingUserId && order.BuyerUserId != operatingUserId)
+            {
+                result = ChangeOrderStateResult.Unautherized;
+                return false;
+            }
+
+            var updateSuccess = _orderRepos.UpdateState(orderId, TradeOrderState.Canceled);
+            if (updateSuccess == false)
+            {
+                _logger.LogError($"Update order state failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
+                return false;
+            }
+
+            var log = operatingUserId == order.SellerUserId ? "卖家取消订单" : "买家取消订单";
+            var addSuccess = AddOrderLog(orderId, log, operatingUserId);
+            if (addSuccess == false)
+            {
+                _logger.LogError($"Add order log failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
+                return false;
+            }
+
+            result = ChangeOrderStateResult.Success;
             return true;
         }
     }
