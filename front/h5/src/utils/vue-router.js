@@ -43,6 +43,8 @@ const whiteList = [
   '/',
   '/userLogin',
   '/register',
+  '/tradeHall/tradeHall',
+
   // '/myCenter',
   // '/customer',
   // '/myAddress',

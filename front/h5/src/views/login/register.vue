@@ -78,14 +78,19 @@
         let config = {
           headers: {'Content-Type': 'multipart/form-data'}
         }; //添加请求头
-        const {data} = await this.$axios.post(this.apiHost + '/common/wechat/qrcode', formData, config)
-        if (!data) return
-        this.imgData = data.data
-        this.imgUploadSuccess = true
-        const that = this
-        setTimeout(function () {
-          that.$toast.clear()
-        }, 300)
+        const {data, errorCode, message} = await this.$axios.post(this.apiHost + '/common/wechat/qrcode', formData, config)
+        // if (!data) return
+        if(errorCode=='0000'){
+          this.imgData = data.data
+          this.imgUploadSuccess = true
+          const that = this
+          setTimeout(function () {
+            that.$toast.clear()
+          }, 300)
+        }else{
+          this.$toast({message: message, duration: '1500'})
+        }
+
       },
       changePhone(phone) {
         // console.log(phone);
@@ -166,9 +171,14 @@
 
       },
       async getRule() {
-        const {data} = await common.getRule()
-        if (!data) return false
-        this.content_txt = data
+        const {data, errorCode, message} = await common.getRule()
+        if (errorCode == '0000') {
+          this.content_txt = data
+        } else {
+          this.$toast({message: message, duration: '1500'})
+        }
+
+
       },
       async showRule() {
         await this.getRule()
