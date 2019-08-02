@@ -246,5 +246,59 @@ namespace Shunmai.Bxb.Services
             result = ChangeOrderStateResult.Success;
             return true;
         }
+
+        /// <summary>
+        /// 取消订单操作
+        /// </summary>
+        /// <business>
+        /// 业务逻辑：
+        ///     1. 如果 orderId <= 0，则失败（避免无效查询）
+        ///     2. 如果 operatingUserId <= 0，则失败（避免无效查询）
+        ///     3. 如果订单不存在，则失败
+        ///     4. 如果操作人不是卖家或者买家，则失败
+        ///     5. 如果订单状态异常（不为待转币），则失败
+        ///     6. 尝试更新订单状态，如果失败，则返回请求失败
+        ///     7. 尝试添加订单操作日志，如果失败，则返回请求失败
+        /// <param name="orderId"></param>
+        /// <param name="operatingUserId"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        [SmartSqlTransaction]
+        public virtual bool Cancel(long orderId, int operatingUserId, out ChangeOrderStateResult result)
+        {
+            Check.EnsureMoreThanZero(orderId, nameof(orderId));
+            Check.EnsureMoreThanZero(operatingUserId, nameof(operatingUserId));
+
+            var canCancel = IsOrderStateNormal(orderId, TradeOrderState.SellerOperating, out var order, out result);
+            if (canCancel == false)
+            {
+                return false;
+            }
+            if (order.SellerUserId != operatingUserId && order.BuyerUserId != operatingUserId)
+            {
+                result = ChangeOrderStateResult.Unautherized;
+                return false;
+            }
+
+            var updateSuccess = _orderRepos.UpdateState(orderId, TradeOrderState.Canceled);
+            if (updateSuccess == false)
+            {
+                _logger.LogError($"Update order state failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
+                return false;
+            }
+
+            var log = operatingUserId == order.SellerUserId ? "卖家取消订单" : "买家取消订单";
+            var addSuccess = AddOrderLog(orderId, log, operatingUserId);
+            if (addSuccess == false)
+            {
+                _logger.LogError($"Add order log failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
+                return false;
+            }
+
+            result = ChangeOrderStateResult.Success;
+            return true;
+        }
     }
 }

@@ -102,5 +102,18 @@ namespace Shunmai.Bxb.Api.App.Controllers
             var error = ErrorInfoHelper.FromConfirmResult(result);
             return success ? Success() : Failed(error);
         }
+
+        /// <summary>
+        /// 取消订单
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPut("{orderId:long}/cancel")]
+        public JsonResult Cancel(long orderId)
+        {
+            var success = _orderService.Cancel(orderId, CurrentUser.UserId, out var result);
+            var error = ErrorInfoHelper.FromConfirmResult(result);
+            return success ? Success() : Failed(error);
+        }
     }
 }
