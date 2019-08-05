@@ -23,8 +23,12 @@
         <el-form-item  label="IET钱包ID:">
             <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
         </el-form-item>
+
+        <el-form-item  label="登陆密码:">
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.LoginPassword" placeholder="登陆密码" type="text"></el-input>
+        </el-form-item>
         <el-form-item  label="交易密码:">
-            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Password" placeholder="交易密码" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.TransactionPassword" placeholder="交易密码" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="电话:">
             <el-input class="input-100" v-model.trim="PlatWalletTrunCoinModel.Phone" placeholder="电话" type="text"></el-input>
@@ -60,8 +64,11 @@
         <el-form-item  label="IET钱包ID:">
             <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.WalletId" placeholder="IET钱包ID" type="text"></el-input>
         </el-form-item>
+        <el-form-item  label="登陆密码:">
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.LoginPassword" placeholder="登陆密码" type="text"></el-input>
+        </el-form-item>
         <el-form-item  label="交易密码:">
-            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Password" placeholder="交易密码" type="text"></el-input>
+            <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.TransactionPassword" placeholder="交易密码" type="text"></el-input>
         </el-form-item>
         <el-form-item  label="电话:">
             <el-input class="input-100" v-model.trim="PlatWalletCommissionServicModel.Phone" placeholder="电话" type="text"></el-input>
@@ -144,7 +151,8 @@ export default {
           ||this.PlatWalletTrunCoinModel.PlatWalletAddr==null||this.PlatWalletTrunCoinModel.PlatWalletAddr==''
           ||this.PlatWalletTrunCoinModel.Cookie==null||this.PlatWalletTrunCoinModel.Cookie==''
           ||this.PlatWalletTrunCoinModel.WalletId==null||this.PlatWalletTrunCoinModel.WalletId==''
-          ||this.PlatWalletTrunCoinModel.Password==null||this.PlatWalletTrunCoinModel.Password==''
+          ||this.PlatWalletTrunCoinModel.LoginPassword==null||this.PlatWalletTrunCoinModel.LoginPassword==''
+          ||this.PlatWalletTrunCoinModel.TransactionPassword==null||this.PlatWalletTrunCoinModel.TransactionPassword==''
           ||this.PlatWalletTrunCoinModel.Phone==null||this.PlatWalletTrunCoinModel.Phone==''
           ||this.PlatWalletTrunCoinModel.State==null))
 
@@ -180,11 +188,12 @@ export default {
         {
           //服务费
           if(this.PlatWalletCommissionServicModel!=null
-          && (this.PlatWalletCommissionServicModel.PlatWalletAddrName.trim()===null||this.PlatWalletCommissionServicModel.PlatWalletAddrName==''
-          ||this.PlatWalletCommissionServicModel.PlatWalletAddr===null||this.PlatWalletCommissionServicModel.PlatWalletAddr==''
-          ||this.PlatWalletCommissionServicModel.Cookie===null||this.PlatWalletCommissionServicModel.Cookie==''
-          ||this.PlatWalletCommissionServicModel.WalletId===null||this.PlatWalletCommissionServicModel.WalletId==''
-          ||this.PlatWalletCommissionServicModel.Password===null||this.PlatWalletCommissionServicModel.Password==''
+          && (this.PlatWalletCommissionServicModel.PlatWalletAddrName == null||this.PlatWalletCommissionServicModel.PlatWalletAddrName==''
+          ||this.PlatWalletCommissionServicModel.PlatWalletAddr==null||this.PlatWalletCommissionServicModel.PlatWalletAddr==''
+          ||this.PlatWalletCommissionServicModel.Cookie==null||this.PlatWalletCommissionServicModel.Cookie==''
+          ||this.PlatWalletCommissionServicModel.WalletId==null||this.PlatWalletCommissionServicModel.WalletId==''
+          ||this.PlatWalletCommissionServicModel.TransactionPassword==null||this.PlatWalletCommissionServicModel.TransactionPassword==''
+          ||this.PlatWalletCommissionServicModel.LoginPassword==null||this.PlatWalletCommissionServicModel.LoginPassword==''
           ||this.PlatWalletCommissionServicModel.Phone===null||this.PlatWalletCommissionServicModel.Phone==''
           ||this.PlatWalletCommissionServicModel.State==null))
 
