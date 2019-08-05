@@ -3,18 +3,20 @@
   <div class="myCenter">
     <div class="mc_header  col ac">
       <div class="my_user_logo">
-        <img :src="userInfo.avatar" alt="" class="my_user_logoImg">
+        <img :src="userInfo.avatar" alt="" class="my_user_logoImg" v-if="userInfo.avatar">
       </div>
-      <div class="mc_user_name tc">{{userInfo.nickname || '游客'}}</div>
+      <div class="mc_user_name tc">{{userInfo.nickname }}</div>
     </div>
     <div class="mc_content col ac">
       <div class="mc_num_box row jb ac">
-        <div class="mc_num_num col ac" @click="goRecord">
+        <!--<div class="mc_num_num col ac" @click="goRecord">-->
+        <div class="mc_num_num col ac" >
           <div class="mc_num tc">{{userInfo.outTotalAmount || 0}}</div>
           <div class="mc_num_txt tc">累计售出</div>
         </div>
         <div class="mc_num_line"></div>
-        <div class="mc_num_num col ac " @click="goRecord">
+        <div class="mc_num_num col ac ">
+        <!--<div class="mc_num_num col ac " @click="goRecord">-->
           <div class="mc_num tc">{{userInfo.inTotalAmount || 0}}</div>
           <div class="mc_num_txt tc">累计购买</div>
         </div>
@@ -36,7 +38,7 @@
             </div>
             <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
           </div>
-          <div class="mc_nav_item row jb ac " @click="goMySell">
+          <div class="mc_nav_item row jb ac " @click="goMyBuy">
             <div class="mc_nav_item1 row ac ">
               <img src="http://static.pinlala.com/bxb/mai-.png" alt="" class="mc_nav_icon3">
               <div class="mc_nav_item2">我买到的</div>
@@ -83,6 +85,7 @@
 <script>
   import store from '@/utils/local-store'
   import user from '@/api/user'
+  import globalData from '@/store/globalData'
 
   export default {
     data() {
@@ -90,27 +93,13 @@
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
         userInfo: '',
-        clidata: '1111'
+
 
       }
     },
     created() {
       // store.setToken('CBA649688043000643C9D0A437A18CDF')
       this.getMyCenterData()
-      // store.setUser({
-      //   "userId":1,
-      //   "nickname":"test_nickname",
-      //   "avatar":"test_avatar",
-      //   "realname":"test_realname",
-      //   "wxCodePhoto":"test_qrcode",
-      //   "wxUnionId":"test_unionId",
-      //   "wxOpenId":"test_openId",
-      //   "phone":"13521942500",
-      //   "walletAddress":null,
-      //   "outTotalAmount":0,
-      //   "inTotalAmount":0,
-      //   "createdTime":"0001-01-01 00:00:00"
-      // })
     },
 
     methods: {
@@ -135,7 +124,13 @@
 
       },
       goMySell() {
+        this.initPageState()
         this.$router.push({name: 'mySell'})
+
+      },
+      goMyBuy() {
+        this.initPageState()
+        this.$router.push({name: 'myBuy'})
 
       },
       async getMyCenterData() {
@@ -145,6 +140,9 @@
           this.userInfo = data
           store.setUser(this.userInfo)
         }
+      },
+      initPageState(){ //进入我买的和我买的列表时初始化页面类型
+        globalData.pageState = 0
       }
 
     }
@@ -167,7 +165,7 @@
       margin-top: 0.65rem;
       overflow: hidden;
       border-radius: 50%;
-      background: pink;
+      /*background: pink;*/
     }
     .my_user_logoImg{
       width: 100%;

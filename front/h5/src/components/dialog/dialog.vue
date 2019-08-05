@@ -125,8 +125,9 @@
         font-size:0.26rem;
         font-family:PingFangSC-Regular;
         font-weight:400;
+        text-align: center;
         color:rgba(51,51,51,1);
-        text-indent: 2em;
+        /*text-indent: 2em;*/
         line-height:0.4rem;
       }
       .dialog_title {

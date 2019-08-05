@@ -104,7 +104,6 @@
         const that = this
         this.loading = true
         const {success, data, errorCode, message} = await pageServe.putOffMySend({tradeId: tradeId})
-        if (!data) return
         if (errorCode == '0000') {
           that.$toast({message: '下架成功', duration: '1500'})
         } else {

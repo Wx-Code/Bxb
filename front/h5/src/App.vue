@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <!--<transition :name="animate">-->
-      <router-view class="Router" v-wechat-title="$route.meta.title"></router-view>
+      <!--<router-view class="Router" v-wechat-title="$route.meta.title"></router-view>-->
+      <router-view  v-wechat-title="$route.meta.title"></router-view>
     <!--</transition>-->
   </div>
 </template>
@@ -429,6 +430,16 @@
     background:rgba(197,197,197,1);
     border-radius:0.11rem;
   }
+  .btn_type6{
+    height:0.88rem;
+    background:linear-gradient(62deg,rgba(215,2,2,1) 0%,rgba(251,120,120,1) 100%);
+    box-shadow:0px 0.07rem 0.28rem 0px rgba(223,28,28,0.47);
+    border-radius:0.44rem;
+    color: #fff;
+    font-size:0.34rem;
+    text-align: center;
+    line-height: 0.88rem;
+  }
 
 
  /*路由动画*/
@@ -481,6 +492,11 @@
     margin-left: 0.2rem;
 
   }
+
+  .van-tab{
+    font-size: 0.3rem !important;
+  }
+
 
 
 

@@ -30,27 +30,24 @@
 
     methods: {
       copyCode(txt) {
+        const that =this
         this.$copyText(txt).then(
           res => {
-            console.log(res)
-            this.$toast("复制成功");
+            that.$toast({message: "复制成功", duration: '1500'})
           },
           err => {
-            this.$toast("复制失败");
+            that.$toast({message: "复制失败", duration: '1500'})
           }
         )
-
-
-
       },
       async getPlatformAddress(){
-        const  { data } =  await pageServe.getPlatformAddress()
-        if(!data) return
-        this.addressArr = data
-
-
+        const  { data , errorCode, message} =  await pageServe.getPlatformAddress()
+        if(errorCode == '0000') {
+          this.addressArr = data
+        }else{
+          this.$toast({message: message, duration: '1500'})
+        }
       }
-
     }
   }
 </script>

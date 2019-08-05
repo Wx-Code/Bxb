@@ -97,7 +97,7 @@ export default {
         smsCode: this.code,
       })
       console.log(data);
-      if (!data) return
+      // if (!data) return
       if (errorCode == '0000') {
         store.setToken(data.token)
         this.$toast({message: '登录成功', duration: '1500'})

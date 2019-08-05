@@ -48,6 +48,69 @@
         `OrderId`=?orderId
       ;
     </Statement>
+
+
+    <!-- APP 我卖出的  列表 -->
+    <Statement Id="PageGetSellerTradeOrders">
+      SELECT
+      o.`TradeId`,
+      o.`OrderId`,
+      o.`Price`,
+      o.`Amount`,
+      CONCAT(o.`Price`,'元/个') AS  'PriceTxt',
+      CONCAT(o.`Amount`,'个') AS 'AmountTxt',
+      u.`Nickname`,
+      o.`CreateTime`,
+      o.`ReceivedTime`,
+      o.`State`,
+      o.`TradeCode`,
+      o.`BuyerPhone`as 'Phone',
+      o.`Btype`,
+      o.`CompleteTime`
+      FROM `tradeorder` AS o
+      INNER JOIN `user` AS u ON u.`UserId` = o.`BuyerUserId` AND u.`Deleted` =0
+      WHERE o.`SellerUserId` =?userId AND o.`State` = ?status AND o.`TradeType` =0
+      ORDER BY o.`CreateTime` DESC
+      LIMIT ?offset, ?size
+    </Statement>
+
+    <!--   APP 我卖出的  总条数 -->
+    <Statement Id="GetSellerTradeOrdersCount">
+      SELECT COUNT(1)
+      FROM `TradeOrder`
+      WHERE `SellerUserId` =?userId AND `State` = ?status AND `TradeType` =0
+    </Statement>
+
+    <!-- APP 我买到的  列表 -->
+    <Statement Id="PageGetBuyerTradeOrders">
+      SELECT
+      o.`TradeId`,
+      o.`OrderId`,
+      o.`Price`,
+      o.`Amount`,
+      CONCAT(o.`Price`,'元/个') AS  'PriceTxt',
+      CONCAT(o.`Amount`,'个') AS 'AmountTxt',
+      u.`Nickname`,
+      o.`CreateTime`,
+      o.`ReceivedTime`,
+      o.`State`,
+      o.`TradeCode`,
+      o.`SellerPhone` as 'Phone',
+      o.`Btype`,
+      o.`CompleteTime`
+      FROM `tradeorder` AS o
+      INNER JOIN `user` AS u ON u.`UserId` = o.`SellerUserId` AND u.`Deleted` =0
+      WHERE o.`BuyerUserId` =?userId AND o.`State` = ?status AND o.`TradeType` =1
+      ORDER BY o.`CreateTime` DESC
+      LIMIT ?offset, ?size
+    </Statement>
+
+    <!--   APP 我卖出的  总条数 -->
+    <Statement Id="GetBuyerTradeOrdersCount">
+      SELECT COUNT(1)
+      FROM `TradeOrder`
+      WHERE `BuyerUserId` =?userId AND `State` = ?status AND `TradeType` =1
+    </Statement>
     
   </Statements>
 </SmartSqlMap>
