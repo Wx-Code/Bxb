@@ -63,6 +63,35 @@ export default {
       data: data
     })
   },
+  // 我卖出的确认收款
+  confirmReceipts(orderId){
+    return request({
+      url: `/orders/${orderId}/confirm`,
+      method: 'PUT',
+      data: {
+        orderId:orderId
+      }
+    })
+  },
+  // 我买到的取消订单
+  cancelOrder(orderId){
+    return request({
+      url: `/orders/${orderId}/cancel`,
+      method: 'PUT',
+      data: {
+        orderId:orderId
+      }
+    })
+  },
+  // 我买到的订单列表
+  myBuyList(data){
+    return request({
+      url: `/orders/sellertradeorders`,
+      method: 'GET',
+      params: data
+    })
+  }
+
 
 
 

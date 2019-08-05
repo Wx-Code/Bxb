@@ -2,18 +2,15 @@
   <div class="customer col ac">
     <img src="http://static.pinlala.com/bxb/customer.png" alt="" class="customer_img">
     <div class="customer_content" v-for="item in weiXinCustomerList" v-if="item.isChecked">
-      <div class="customer_box1 row ac">
+      <div class="customer_box1 row">
         <p class="customer_box_txt1 txt_j">客服微信号</p>
         <span class="customer_box_txt2 wd">{{item.wxCustomerNumber}}</span>
         <img src="http://static.pinlala.com/bxb/copy_btn.png" alt="" @click="copyCode(item.wxCustomerNumber)"
              class="customer_box_btn">
-
       </div>
-
-
     </div>
     <div class="customer_box1 row ac">
-      <p class="customer_box_txt1 txt_j">客服电话</p>
+      <p class="customer_box_txt1 txt_j" v-if="phone">客服电话</p>
       <a class="customer_box_txt2 wd" :href="'tel:'+ phone">{{phone}}</a>
     </div>
 
@@ -55,7 +52,7 @@
       async getCustomerInfo() {
         const {data, errorCode, message} = await pageServe.getCustomerInfo()
         if (errorCode == '0000') {
-          this.weiXinCustomerList = data.weiXinCustomerList
+          this.weiXinCustomerList = data.wxCustomerList
           this.phone = data.customerTel
         }else{
           this.$toast({message: message, duration: '1500'})
@@ -94,13 +91,13 @@
     .customer_box_txt2 {
       font-size: 0.3rem;
       /*width: 4rem;*/
-      max-width: 4rem;
+      max-width: 2.8rem;
       color: rgba(51, 51, 51, 1);
 
     }
 
     .customer_box1 {
-      max-width: 5.7rem;
+      width: 3.7rem;
       margin-bottom: 0.32rem;
     }
 
