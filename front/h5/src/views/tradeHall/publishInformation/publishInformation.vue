@@ -1,11 +1,13 @@
 <template>
   <div class="publishInformation">
     <ul class="pa_content">
-      <li class="pa_item row ac jb" alt="" @click="goChange">
+      <!--<li class="pa_item row ac jb" alt="" @click="goChange">-->
+      <li class="pa_item row ac jb" alt="">
         <div class="pa_item_txt1">币 种</div>
         <div class="pa_item_r row ac">
-          <div class="pa_item_txt2 wd">{{moneyType}}</div>
-          <img src="http://static.pinlala.com/bxb/ic_nav_back.png" class="next_btn">
+          <!--<div class="pa_item_txt2 wd">{{moneyType}}</div>-->
+          <div class="pa_item_txt2 wd">{{columns[moneyTypeIndex-1]}}</div>
+          <!--<img src="http://static.pinlala.com/bxb/ic_nav_back.png" class="next_btn">-->
         </div>
       </li>
       <li class="pa_item row ac jb">
@@ -52,16 +54,16 @@
       </div>
     </dialogTemplete>
     <!--pick组件-->
-    <van-popup v-model="pickShow" position="bottom">
-      <van-picker
-        show-toolbar
-        position="bottom"
-        :columns="columns"
-        :default-index="initIndex"
-        @cancel="onCancel"
-        @confirm="onConfirm"
-      />
-    </van-popup>
+    <!--<van-popup v-model="pickShow" position="bottom">-->
+      <!--<van-picker-->
+        <!--show-toolbar-->
+        <!--position="bottom"-->
+        <!--:columns="columns"-->
+        <!--:default-index="initIndex"-->
+        <!--@cancel="onCancel"-->
+        <!--@confirm="onConfirm"-->
+      <!--/>-->
+    <!--</van-popup>-->
   </div>
 
 </template>
@@ -92,7 +94,7 @@
         moneyType: 'GRT',
         initIndex: '0', //设置的默认选择的币种索引
         userInfo: '',
-        columns: ['GRT', 'GDT', 'VIT', 'CDT'],
+        columns: ['GRT', 'GDT','VIT ','CDT'],
         dialog: {
           dialogShow: false,
         }
@@ -204,7 +206,7 @@
           position: 'center',
           confirm() {
             // that.$router.go(-1)
-            that.$router.push({name: 'mySend'})
+            that.$router.replace({name: 'mySend'})
           }
         }
       },
@@ -215,16 +217,9 @@
         }
       },
       change() {
-        const { pageName, itemData } = this.$route.query
-        if ( pageName != 'mySend' ) return
-        this.moneyType = itemData.bTypeText
-        this.moneyTypeIndex = itemData.bType
-        this.initIndex = this.columns.findIndex(value => value === itemData.bTypeText)
-        this.price = itemData.price
-        this.totalAmount = itemData.amount
-        this.transactionCode = itemData.tradeCode
-
-
+        console.log(this.$route.query);
+        if(!this.$route.query.bType) return
+        this.moneyTypeIndex = this.$route.query.bType
       }
     }
   }

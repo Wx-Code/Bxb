@@ -31,6 +31,14 @@ export default {
       data: data
     })
   },
+  // 发布消息
+  changeInformation(data){
+    return request({
+      url: '/TradeHall/user/message',
+      method: 'PUT',
+      data: data
+    })
+  },
   // 获取交易大厅列表
   getTradeHallList(data){
     return request({

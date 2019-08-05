@@ -1,90 +1,90 @@
 <template>
-
-  <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class="integral">
-    <van-list
-      v-model="loading"
-      :finished="finished"
-      :immediate-check='false'
-      finished-text="没有更多了"
-      @load="getTradeHallLsit()"
-    >
-      <div class="tradeHall">
-        <div class="tH_content">
-          <div class="tH_item" v-for="(item,index) in list">
-            <div class="tH_item_box row jb">
-              <img :src="item.avatar" alt="" class="tH_user_logo">
-              <div class="tH_item_r">
-                <div class="tH_item_title">{{item.nickname}}</div>
-                <div class="tH_item_time">{{item.releaseTime}}</div>
-                <div class="tH_item_info row spa">
-                  <div class="tH_item_info1"><span class="tH_info1_txt">可售数量</span><span class="tH_info1_num">{{item.amount}}个</span>
+  <div class="tH">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class="integral">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        :immediate-check='false'
+        finished-text="没有更多了"
+        @load="getTradeHallLsit()"
+      >
+        <div class="tradeHall">
+          <div class="tH_content">
+            <div class="tH_item" v-for="(item,index) in list">
+              <div class="tH_item_box row jb">
+                <img :src="item.avatar" alt="" class="tH_user_logo">
+                <div class="tH_item_r">
+                  <div class="tH_item_title">{{item.nickname}}</div>
+                  <div class="tH_item_time">{{item.releaseTime}}</div>
+                  <div class="tH_item_info row spa">
+                    <div class="tH_item_info1"><span class="tH_info1_txt">可售数量</span><span class="tH_info1_num">{{item.amount}}个</span>
+                    </div>
+                    <div class="tH_item_info2"><span class="tH_info1_txt">单价</span><span class="tH_info1_num">{{item.price}}元</span>
+                    </div>
+                    <div class="tH_item_info3"><span class="tH_info1_txt">币种</span><span class="tH_info1_num">{{item.bTypeText}}</span>
+                    </div>
                   </div>
-                  <div class="tH_item_info2"><span class="tH_info1_txt">单价</span><span class="tH_info1_num">{{item.price}}元</span>
-                  </div>
-                  <div class="tH_item_info3"><span class="tH_info1_txt">币种</span><span class="tH_info1_num">{{item.bTypeText}}</span>
+                  <div class="tH_item_btnBox row_r ">
+                    <div class="tH_btn_sty btn_type3" @click="goBuy(item)">购买</div>
+                    <div class="tH_btn_sty btn_type4" @click="goLink(item.wxCodePhoto)">去沟通</div>
                   </div>
                 </div>
-                <div class="tH_item_btnBox row_r ">
-                  <div class="tH_btn_sty btn_type3" @click="goBuy(item)">购买</div>
-                  <div class="tH_btn_sty btn_type4" @click="goLink(item.wxCodePhoto)">去沟通</div>
+
+              </div>
+            </div>
+          </div>
+
+          <!--提示框组件-->
+          <dialogTemplete v-model="dialog.dialogShow"
+                          :showTitle="dialog.showTitle"
+                          :showBtn="dialog.showBtn"
+                          :title="dialog.title"
+                          :outoClose="dialog.outoClose"
+                          :position="dialog.position"
+                          :confirmText="dialog.confirmText"
+                          :showCancel="dialog.showCancel"
+                          :cancelText="dialog.cancelText"
+                          @cancel="typeof dialog.cancel === 'function' ?  dialog.cancel() : ''"
+                          @confirm="typeof dialog.confirm === 'function' ? dialog.confirm() :''">
+            <!--联系人微信-->
+            <div class="tH_link" v-if="temp==1">
+              <img :src="wxCodePhoto" alt="" class="tH_link_code">
+              <div class="tH_link_tip">长按扫描二维码添加联系人</div>
+            </div>
+            <!--填写钱包地址-->
+            <div class="tH_add_address" v-if="temp==2">
+              <div class="tH_address_tit">购买前前请完善您的{{moneyType}}钱包地址</div>
+              <div class="tH_address_box row jb "><span class="tH_address_span">{{moneyType}}钱包地址：</span>
+                <div class="tH_address_input"><input type="text" v-model="address" class="tH_address_inputs"
+                                                     :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
+              </div>
+            </div>
+            <!--提交订单 -->
+            <div class="tH_submit" v-if="temp==3">
+              <div class="tH_submit_boxs">
+                <div class="tH_submit_box row jb ">
+                  <div class="tH_submit_span txt_j">购买数量：</div>
+                  <div class="tH_submit_input"><input type="number" v-model="buyNum" class="tH_address_inputs"
+                                                      :placeholder="'当前剩余数量'+ amount"></div>
+                </div>
+                <div class="tH_submit_box row jb ">
+                  <div class="tH_submit_span txt_j">交易码：</div>
+                  <div class="tH_submit_input"><input type="text" v-model="sellCode" class="tH_address_inputs"
+                                                      placeholder="请输入交易码"></div>
                 </div>
               </div>
-
-            </div>
-          </div>
-
-        </div>
-        <div class="tH_go_send">
-          <img src="http://static.pinlala.com/bxb/goSend.png" alt="" @click="goSend" class="tH_go_send">
-        </div>
-        <!--提示框组件-->
-        <dialogTemplete v-model="dialog.dialogShow"
-                        :showTitle="dialog.showTitle"
-                        :showBtn="dialog.showBtn"
-                        :title="dialog.title"
-                        :outoClose="dialog.outoClose"
-                        :position="dialog.position"
-                        :confirmText="dialog.confirmText"
-                        :showCancel="dialog.showCancel"
-                        :cancelText="dialog.cancelText"
-                        @cancel="typeof dialog.cancel === 'function' ?  dialog.cancel() : ''"
-                        @confirm="typeof dialog.confirm === 'function' ? dialog.confirm() :''">
-          <!--联系人微信-->
-          <div class="tH_link" v-if="temp==1">
-            <img :src="wxCodePhoto" alt="" class="tH_link_code">
-            <div class="tH_link_tip">长按扫描二维码添加联系人</div>
-          </div>
-          <!--填写钱包地址-->
-          <div class="tH_add_address" v-if="temp==2">
-            <div class="tH_address_tit">购买前前请完善您的{{moneyType}}钱包地址</div>
-            <div class="tH_address_box row jb "><span class="tH_address_span">{{moneyType}}钱包地址：</span>
-              <div class="tH_address_input"><input type="text" v-model="address" class="tH_address_inputs"
-                                                   :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
-            </div>
-          </div>
-          <!--提交订单 -->
-          <div class="tH_submit" v-if="temp==3">
-            <div class="tH_submit_boxs">
-              <div class="tH_submit_box row jb ">
-                <div class="tH_submit_span txt_j">购买数量：</div>
-                <div class="tH_submit_input"><input type="number" v-model="buyNum" class="tH_address_inputs"
-                                                    :placeholder="'当前剩余数量'+ amount"></div>
-              </div>
-              <div class="tH_submit_box row jb ">
-                <div class="tH_submit_span txt_j">交易码：</div>
-                <div class="tH_submit_input"><input type="text" v-model="sellCode" class="tH_address_inputs"
-                                                    placeholder="请输入交易码"></div>
+              <div class="tH_tip_box">
+                <div class="tH_tip" v-show="tipTxt">*{{tipTxt}}</div>
               </div>
             </div>
-            <div class="tH_tip_box">
-              <div class="tH_tip" v-show="tipTxt">*{{tipTxt}}</div>
-            </div>
-          </div>
-        </dialogTemplete>
-      </div>
-    </van-list>
-  </van-pull-refresh>
-
+          </dialogTemplete>
+        </div>
+      </van-list>
+    </van-pull-refresh>
+    <div class="tH_go_send">
+      <img src="http://static.pinlala.com/bxb/goSend.png" alt="" @click="goSend" class="tH_go_send">
+    </div>
+  </div>
 </template>
 
 <script>
@@ -111,7 +111,8 @@
         moneyType: '',
         query: {
           page: 1,
-          size: 10
+          size: 10,
+          bType:0
         },
         isLoading: false,
         list: [], //数组
@@ -121,10 +122,12 @@
         wxCodePhoto: '',//联系人的二维码图片
         dialog: {
           dialogShow: false,
-        }
+        },
+
       }
     },
     async created() {
+      this.getWitchMoney()
       await this.getTradeHallLsit()
       if(! await this.isLogin()) return
       await this.getUserInfo()
@@ -151,14 +154,17 @@
       async onRefresh() {
         this.query.page = 1
         this.list = []
-        await this.getUserInfo()
         await this.getTradeHallLsit()
         this.isLoading = false
+        if(! await this.isLogin()) return
+        await this.getUserInfo()
+        await this.judgeIsHasAddress()
       },
       //跳转到发送消息界面
       async goSend() {
+        const  that =this
         if(! await  this.isGoLogin()) return
-        this.$router.push({name: 'publishInformation'})
+        this.$router.push({name: 'publishInformation',query:{bType:that.query.bType}})
       },
       //展示去沟通弹窗
       async goLink(src) {
@@ -287,6 +293,7 @@
           this.isHasAddress = true
         }
       },
+
       //清空弹框数据
       clearData() {
         this.temp = ''
@@ -317,20 +324,42 @@
           return true
         }
 
+      },
+      getWitchMoney(){
+        if(!this.$route.query.bType) return
+        this.query.bType = this.$route.query.bType
+
       }
     }
   }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .tH_go_send {
+    width: 1.34rem;
+    height: 1.34rem;
+    position: fixed;
+    right: 0.13rem;
+    bottom: 2rem;
+  }
+
+  .tH_link_code {
+    width: 4.2rem;
+    height: 4.2rem;
+    margin: 0 auto;
+  }
+  .tH{
+    min-height: 100%;
+    height: 100%;
+    .van-pull-refresh{
+      min-height: 100%;
+    }
+  }
   .tradeHall {
     background: #F9F9F9;
     min-height: 100%;
 
-    .tH_content {
 
-
-    }
 
     .tH_item {
       margin-bottom: 0.2rem;
@@ -417,19 +446,7 @@
       width: 1.31rem;
     }
 
-    .tH_go_send {
-      width: 1.34rem;
-      height: 1.34rem;
-      position: fixed;
-      right: 0.13rem;
-      bottom: 2rem;
-    }
 
-    .tH_link_code {
-      width: 4.2rem;
-      height: 4.2rem;
-      margin: 0 auto;
-    }
 
     .tH_link_tip {
       width: 100%;

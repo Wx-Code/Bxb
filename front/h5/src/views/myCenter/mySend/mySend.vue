@@ -88,7 +88,7 @@
         )
       },
       goSend(itemData) {
-        this.$router.push({name: 'changeMySend',query: { pageName: 'mySend', itemData  }})
+        this.$router.push({name: 'changeMySend',query: { pageName: 'mySend', itemData:JSON.stringify(itemData)  }})
       },
       goDown(arg) {
         const that = this

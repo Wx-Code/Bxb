@@ -72,12 +72,17 @@
     /*max-width: 750px;*/
     /*overflow: hidden;*/
     margin: 0 auto;
+    height: 100%;
+  }
+  #app{
+    height: 100%;
   }
 
   body {
     width: 100%;
     /*max-width: 750px;*/
     min-height: 100% !important;
+    height: 100%;
     margin: 0 auto;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
