@@ -81,7 +81,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         /// </summary>
         [HttpGet("message")]
         [SkipLoginVerification]
-        public JsonResult GetMessage([FromQuery]Pager query)
+        public JsonResult GetMessage([FromQuery]TradeHallQuery query)
         {
             (int num, List<TradeHallAppResponse> data) = _tradeHallService.PagedGetAppTradeHalls(query);
 

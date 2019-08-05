@@ -32,16 +32,18 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         /// <summary>
         /// 分页获取APP首页交易大厅的交易信息
         /// </summary>
+        /// <param name="bType">货币类型</param>
         /// <param name="offset">偏移量</param>
         /// <param name="size">每页条数</param>
         /// <returns>当前页交易大厅中的交易信息</returns>
-        List<TradeHallAppResponse> PagedGetAppTradeHalls(int offset, int size);
+        List<TradeHallAppResponse> PagedGetAppTradeHalls(CurrencyType? bType, int offset, int size);
 
         /// <summary>
         /// 获取APP首页交易大厅的交易信息总条数
         /// </summary>
+        /// <param name="bType">货币类型</param>
         /// <returns>交易信息总条数</returns>
-        int GetAppTradeHallsCount();
+        int GetAppTradeHallsCount(CurrencyType? bType);
 
         /// <summary>
         /// 获取APP交易信息详情

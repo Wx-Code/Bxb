@@ -75,6 +75,9 @@
       FROM `TradeHall` AS t
       INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
       <Include RefId="TradeNormalStatusParams"></Include>
+      <IsNotNull Prepend="AND" Property="bType">
+        t.`BType` = ?bType
+      </IsNotNull>
       ORDER BY t.`ReleaseTime` DESC
       LIMIT ?offset, ?size
     </Statement>
@@ -85,6 +88,9 @@
       FROM `TradeHall` AS t
       INNER JOIN `User` AS u ON t.`ReleaseUserId` = u.`UserId`
       <Include RefId="TradeNormalStatusParams"></Include>
+      <IsNotNull Prepend="AND" Property="bType">
+        t.`BType` = ?bType
+      </IsNotNull>
     </Statement>
 
     <!--APP 正常状态下的交易信息 查询参数-->

@@ -95,11 +95,11 @@ namespace Shunmai.Bxb.Services
             return log.LogId <= 0 ? (500, "添加交易日志信息失败") : (200, "修改成功");
         }
 
-        public (int num, List<TradeHallAppResponse> result) PagedGetAppTradeHalls(Pager query)
+        public (int num, List<TradeHallAppResponse> result) PagedGetAppTradeHalls(TradeHallQuery query)
         {
-            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppTradeHalls(query.Offset, query.Size);
+            List<TradeHallAppResponse> result = _tradeHallRepository.PagedGetAppTradeHalls(query.BType, query.Offset, query.Size);
 
-            int count = _tradeHallRepository.GetAppTradeHallsCount();
+            int count = _tradeHallRepository.GetAppTradeHallsCount(query.BType);
 
             int num = count % query.Size == 0 ? count / query.Size : count / query.Size + 1;
 
