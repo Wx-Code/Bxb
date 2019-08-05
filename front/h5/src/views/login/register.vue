@@ -78,14 +78,19 @@
         let config = {
           headers: {'Content-Type': 'multipart/form-data'}
         }; //添加请求头
-        const { data } = await this.$axios.post(this.apiHost + '/common/wechat/qrcode', formData, config)
-        if (!data) return
-        this.imgData = data.data
-        this.imgUploadSuccess = true
-        const that = this
-        setTimeout(function () {
-          that.$toast.clear()
-        }, 300)
+        const {data, errorCode, message} = await this.$axios.post(this.apiHost + '/common/wechat/qrcode', formData, config)
+        // if (!data) return
+        if(errorCode=='0000'){
+          this.imgData = data.data
+          this.imgUploadSuccess = true
+          const that = this
+          setTimeout(function () {
+            that.$toast.clear()
+          }, 300)
+        }else{
+          this.$toast({message: message, duration: '1500'})
+        }
+
       },
       changePhone(phone) {
         // console.log(phone);
@@ -98,25 +103,42 @@
         console.log(this.phone);
         if (!this.validateRequestData()) return
         if (!this.canClick) return
-        this.canClick = true
-        const { data ,errorCode ,message} = await user.register({
+        this.canClick = false
+        this.$toast.loading({
+          duration: 0,       // 持续展示 toast
+          forbidClick: true, // 禁用背景点击
+          loadingType: 'spinner',
+          message: '操作中'
+        })
+        const {data, errorCode, message} = await user.register({
           wechatCode: this.wechatCode,
           phone: this.phone,
           smsCode: this.code,
           qrCodeUrl: this.imgData
         })
         if (errorCode == '0000') {
-          const  that =this
+          const that = this
           that.$toast({message: '注册成功', duration: '1500'})
           setTimeout(function () {
-            that.redirect()
-          },1500)
+            that.canClick = true
+            that.$toast.clear()
+            that.goLogin()
+          }, 1500)
         } else if (errorCode == '0001') {
+          const that = this
           this.$toast({message: message, duration: '1500'})
+          setTimeout(function () {
+            that.$toast.clear()
+            that.canClick = true
+          }, 1500)
         } else {
+          const that = this
+          setTimeout(function () {
+            that.$toast.clear()
+            that.canClick = true
+          }, 1500)
           this.$toast({message: '注册失败', duration: '1500'})
         }
-
       },
       validateRequestData() {
         //手机号正则式
@@ -128,13 +150,13 @@
         } else if (!regCode.test(this.code)) {
           this.$toast({message: '请填写正确的验证码', duration: '1500'})
           return false
-        } else if ( this.imgData.length <= 0 || !this.imgUploadSuccess) {
+        } else if (this.imgData.length <= 0 || !this.imgUploadSuccess) {
           this.$toast({message: '请上传您的图片二维码', duration: '1500'})
           return false
         } else if (!this.checked) {
           this.$toast({message: '您还未未同意《币小保平台交易规则》喔~', duration: '1500'})
           return false
-        }else{
+        } else {
           return true
           console.log(this.checked);
         }
@@ -149,18 +171,27 @@
 
       },
       async getRule() {
-        const {data} = await common.getRule()
-        if (!data) return false
-        this.content_txt = data
+        const {data, errorCode, message} = await common.getRule()
+        if (errorCode == '0000') {
+          this.content_txt = data
+        } else {
+          this.$toast({message: message, duration: '1500'})
+        }
+
+
       },
       async showRule() {
         await this.getRule()
         this.$dialog({
-          title:'币小保平台交易规则',
+          title: '币小保平台交易规则',
           showBtn: false,
           content_txt: this.content_txt,
         })
       },
+      goLogin() {
+        const that = this
+        that.$router.go(-1)
+      }
     }
   }
 </script>
@@ -174,16 +205,17 @@
   .userLogin_li_box {
     width: 100%;
   }
+
   /*.goLoginBtn{*/
-    /*width: 100%;*/
-    /*font-size: 0.5rem;*/
-    /*position: fixed;*/
-    /*left: 0.2rem;*/
-    /*top: 0.2rem;*/
-    /*height: 0.8rem ;*/
+  /*width: 100%;*/
+  /*font-size: 0.5rem;*/
+  /*position: fixed;*/
+  /*left: 0.2rem;*/
+  /*top: 0.2rem;*/
+  /*height: 0.8rem ;*/
   /*}*/
   /*.goLoginTxt{*/
-    /*font-size: 0.28rem;*/
+  /*font-size: 0.28rem;*/
   /*}*/
 
   .ul_sty1 {

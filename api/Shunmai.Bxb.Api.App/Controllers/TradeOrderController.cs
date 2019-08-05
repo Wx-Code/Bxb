@@ -14,6 +14,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Shunmai.Bxb.Common.Extensions;
+using Shunmai.Bxb.Entities.Views;
+using Shunmai.Bxb.Api.App.Models;
+using Util.Helpers;
+using Shunmai.Bxb.Api.App.Constants;
 
 namespace Shunmai.Bxb.Api.App.Controllers
 {
@@ -101,6 +105,94 @@ namespace Shunmai.Bxb.Api.App.Controllers
             var success = _orderService.Confirm(orderId, CurrentUser.UserId, out var result);
             var error = ErrorInfoHelper.FromConfirmResult(result);
             return success ? Success() : Failed(error);
+        }
+
+        /// <summary>
+        /// 取消订单
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [HttpPut("{orderId:long}/cancel")]
+        public JsonResult Cancel(long orderId)
+        {
+            var success = _orderService.Cancel(orderId, CurrentUser.UserId, out var result);
+            var error = ErrorInfoHelper.FromConfirmResult(result);
+            return success ? Success() : Failed(error);
+        }
+
+        /// <summary>
+        /// 我卖出的订单 列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("sellertradeorders")]
+        public JsonResult GetSellerTradeOrders([FromQuery]Trade0rderQuery query)
+        {
+            query.UserId = CurrentUser.UserId;
+
+            (int num, List<TradeOrderAppResponse> data) = _orderService.PageGetSellerTradeOrders(query);
+
+            var startTime = DateTime.Now;
+            foreach (TradeOrderAppResponse item in data)
+            {
+                ///待转币剩余时间
+                if (item.State == Entities.Enums.TradeOrderState.SellerOperating)
+                {
+                    item.SurplusTime = Regex.Replace((Defaults.SellerOperating_EXPIRES - (startTime - item.CreateTime)).ToString(), @"\.\d+$", string.Empty);
+                }
+
+                ////待收款剩余时间
+                if (item.State == Entities.Enums.TradeOrderState.BuyerPaying)
+                {
+                    item.SurplusTime = Regex.Replace((Defaults.BuyerPaying_EXPIRES - (startTime - item.CreateTime)).ToString(), @"\.\d+$", string.Empty);
+                }
+
+                item.BtypeTxt = item.Btype.GetDescription();
+            }
+            ListResponse<TradeOrderAppResponse> result = new ListResponse<TradeOrderAppResponse>
+            {
+                Total = num,
+                List = data
+            };
+            return Success(result);
+        }
+
+        /// <summary>
+        /// 我买到的订单 列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        [HttpGet("buyertradeorders")]
+        public JsonResult GetBuyerTradeOrders([FromQuery]Trade0rderQuery query)
+        {
+            query.UserId = CurrentUser.UserId;
+
+            (int num, List<TradeOrderAppResponse> data) = _orderService.PageGetBuyerTradeOrders(query);
+
+            var startTime = DateTime.Now;
+            foreach (TradeOrderAppResponse item in data)
+            {
+                ///待转币剩余时间
+                if (item.State == Entities.Enums.TradeOrderState.SellerOperating)
+                {
+                    item.SurplusTime = Regex.Replace((Defaults.SellerOperating_EXPIRES - (startTime - item.CreateTime)).ToString(), @"\.\d+$", string.Empty);
+                }
+
+                ////待收款剩余时间
+                if (item.State == Entities.Enums.TradeOrderState.BuyerPaying)
+                {
+                    item.SurplusTime = Regex.Replace((Defaults.BuyerPaying_EXPIRES - (startTime - item.CreateTime)).ToString(), @"\.\d+$", string.Empty);
+                }
+
+                item.BtypeTxt = item.Btype.GetDescription();
+            }
+
+            ListResponse<TradeOrderAppResponse> result = new ListResponse<TradeOrderAppResponse>
+            {
+                Total = num,
+                List = data
+            };
+            return Success(result);
         }
     }
 }

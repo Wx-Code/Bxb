@@ -55,7 +55,13 @@ const routerMap = [
         meta: {title: '编辑信息'},
         component: () => import('@/views/myCenter/changeMySend/changeMySend')
       },
+      {
+        path: 'myBuy',
+        name: 'myBuy',
+        meta: {title: '我买到的'},
+        component: () => import('@/views/myCenter/myBuy/myBuy'),
 
+      },
       {
         path: 'mySell',
         name: 'mySell',
@@ -111,8 +117,8 @@ const routerMap = [
   },
   {
     path: '/tradeHall',
-    name: 'tradeHall',
-    // redirect: { name: 'tradeHall' },
+    name: 'tradeHallRoot',
+    redirect: { name: 'tradeHall' },
     component: Empty,
     children:[
       {

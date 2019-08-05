@@ -50,6 +50,7 @@ namespace Shunmai.Bxb.Api.App
             services.AddSingleton<TradeHallService>();
             services.AddSingleton<SystemConfigService>();
             services.AddSingleton<TradeOrderService>();
+            services.AddSingleton<IETService>();
         }
 
         public Startup(IConfiguration configuration)

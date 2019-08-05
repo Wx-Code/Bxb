@@ -46,9 +46,15 @@ namespace Shunmai.Bxb.Common.Models.Config
         /// </summary>
         public string WalletId { get; set; }
         /// <summary>
-        /// 交易密码
+        /// 用于登陆的密码
         /// </summary>
-        public string Password { get; set; }
+        public string LoginPassword { get; set; }
+
+        /// <summary>
+        /// 用于支付的交易密码
+        /// </summary>
+        public string TransactionPassword { get; set; }
+
         /// <summary>
         /// 电话
         /// </summary>

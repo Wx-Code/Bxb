@@ -1,6 +1,3 @@
 export default{
-  userInfo:'',
-  openid: '',
-  code:'',
-  userType:''
+ pageState:0
 }

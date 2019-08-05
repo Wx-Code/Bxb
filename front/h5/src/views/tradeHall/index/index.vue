@@ -125,9 +125,10 @@
       }
     },
     async created() {
+      await this.getTradeHallLsit()
+      if(! await this.isLogin()) return
       await this.getUserInfo()
       await this.judgeIsHasAddress()
-      await this.getTradeHallLsit()
     },
     methods: {
       async getTradeHallLsit() {
@@ -155,11 +156,13 @@
         this.isLoading = false
       },
       //跳转到发送消息界面
-      goSend() {
+      async goSend() {
+        if(! await  this.isGoLogin()) return
         this.$router.push({name: 'publishInformation'})
       },
       //展示去沟通弹窗
-      goLink(src) {
+      async goLink(src) {
+        if(! await  this.isGoLogin()) return
         this.temp = 1
         this.wxCodePhoto = src
         this.dialog = {
@@ -170,13 +173,13 @@
         }
       },
       //点击购买按钮
-      goBuy(itemData) {
+      async goBuy(itemData) {
+        if(! await  this.isGoLogin()) return
         if (!this.isHasAddress) {
           this.showAddAress(itemData)
           return
         }
         this.showOrderCommit(itemData)
-
       },
       // 展示提交订单弹窗
       showOrderCommit(itemData) {
@@ -191,7 +194,6 @@
           confirmText: '提交订单',
           dialogShow: true,
           confirm(fn) {
-
             that.orderCommitRequest(itemData)
 
           },
@@ -217,15 +219,17 @@
       },
       // 添加地址请求
       async addAddressRequest() {
-        const {data, errorCode} = await userServe.editwalletaddr({
+        const {data, errorCode,message} = await userServe.editwalletaddr({
           WalletAddress: this.address,
           UserId: this.userInfo.userId
         })
         console.log('钱包地址更新后数据', data);
-        if (!data) return
+        // if (!data) return
         if (errorCode == '0000') {
           this.isHasAddress = true
           this.$toast({message: '钱包地址更新成功', duration: '1500'})
+        }else{
+          this.$toast({message: message, duration: '1500'})
         }
       },
       // 提交订单的请求
@@ -293,8 +297,27 @@
         this.temp = ''
         this.tipTxt = ''
       },
+      // 判断是否登录
+      isLogin() {
+        const token = store.getToken()
+        if (!!token) {
+          return true
+        } else {
+          return false
+        }
+      },
+      // 判断是否跳转登录界面
+      isGoLogin(){
+        const  that =this
+        console.log(111);
+        if(! this.isLogin()){
+          this.$router.push({name: 'userLogin',query: {redirect: that.$route.fullPath, action: 'login'}})
+          return false
+        }else{
+          return true
+        }
 
-
+      }
     }
   }
 </script>

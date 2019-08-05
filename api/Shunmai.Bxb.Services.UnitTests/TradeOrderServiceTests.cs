@@ -29,6 +29,7 @@ namespace Shunmai.Bxb.Services.UnitTests
             _service = new TradeOrderService(_logger, _hallRepos, _orderRepos, _orderLogRepos);
         }
 
+        #region Tests for method Confirm
         [Theory]
         [InlineData(0, 1)]
         [InlineData(0, 0)]
@@ -49,18 +50,18 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, 1, out var result);
             success.Should().BeFalse("confirm should return false while the order does not exist");
-            result.Should().Be(ConfirmResult.OrderNotExists, "ConfirmResult should be OrderNotExists");
+            result.Should().Be(ChangeOrderStateResult.OrderNotExists, "ChangeOrderStateResult should be OrderNotExists");
         }
 
         [Fact]
         public void ConfirmShouldReturnFalse_While_OperatingUserIsNotSellerHimself()
         {
-            var order = new TradeOrder { SellerUserId = 1 };
+            var order = new TradeOrder { SellerUserId = 1, State = TradeOrderState.BuyerPaying, };
             Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
 
             var success = _service.Confirm(1, 2, out var result);
             success.Should().BeFalse("confirm should return false while the operating user is not the seller himself");
-            result.Should().Be(ConfirmResult.Unautherized, "ConfirmResult should be Unautherized while the operating user is not the seller himself");
+            result.Should().Be(ChangeOrderStateResult.Unautherized, "ChangeOrderStateResult should be Unautherized while the operating user is not the seller himself");
         }
 
         [Theory]
@@ -76,7 +77,7 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, userId, out var result);
             success.Should().BeFalse("confirm should return false while occuring order state exception");
-            result.Should().Be(ConfirmResult.OrderStateException, "ConfirmResult should be OrderStateException while occuring order state exception");
+            result.Should().Be(ChangeOrderStateResult.OrderStateException, "ChangeOrderStateResult should be OrderStateException while occuring order state exception");
         }
 
         [Fact]
@@ -91,7 +92,7 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, userId, out var result);
             success.Should().BeFalse("confirm should return false while updating order state failed");
-            result.Should().Be(ConfirmResult.PersistenceFailed, "ConfirmResult should be PersistenceFailed while updating order state failed");
+            result.Should().Be(ChangeOrderStateResult.PersistenceFailed, "ChangeOrderStateResult should be PersistenceFailed while updating order state failed");
         }
 
         [Fact]
@@ -106,7 +107,90 @@ namespace Shunmai.Bxb.Services.UnitTests
 
             var success = _service.Confirm(1, userId, out var result);
             success.Should().BeFalse("confirm should return false while it is failed to add order log");
-            result.Should().Be(ConfirmResult.PersistenceFailed, "ConfirmResult should be PersistenceFailed while it is failed to add order log");
+            result.Should().Be(ChangeOrderStateResult.PersistenceFailed, "ChangeOrderStateResult should be PersistenceFailed while it is failed to add order log");
         }
+        #endregion
+
+        #region Tests for method Cancel
+        [Theory]
+        [InlineData(0, 1)]
+        [InlineData(0, 0)]
+        [InlineData(-1, 1)]
+        [InlineData(-1, 0)]
+        [InlineData(1, -1)]
+        [InlineData(1, 0)]
+        public void CancelShouldThrowException_While_ParametersAreIllegal(long orderId, int userId)
+        {
+            Action cancel = () => _service.Cancel(orderId, userId, out _);
+            cancel.Should().Throw<ArgumentException>("cancel should throw exception to avoid nonsence sql query while the parameters are illegal");
+        }
+
+        [Fact]
+        public void CancelShouldReturnFalse_While_OrderDoesNotExist()
+        {
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns((TradeOrder)null);
+
+            var success = _service.Cancel(1, 1, out var result);
+            success.Should().BeFalse("cancel should return false while the order does not exist");
+            result.Should().Be(ChangeOrderStateResult.OrderNotExists, "ChangeOrderStateResult should be OrderNotExists");
+        }
+
+        [Fact]
+        public void CancelShouldReturnFalse_While_OperatingUserIsNeitherTheSellerNorTheBuyer()
+        {
+            var order = new TradeOrder { SellerUserId = 1, BuyerUserId = 2, State = TradeOrderState.SellerOperating, };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+
+            var success = _service.Cancel(1, 3, out var result);
+            success.Should().BeFalse("cancel should return false while the operating user is not the seller himself");
+            result.Should().Be(ChangeOrderStateResult.Unautherized, "ChangeOrderStateResult should be Unautherized while the operating user is not the seller himself");
+        }
+
+        [Theory]
+        [InlineData(TradeOrderState.Canceled)]
+        [InlineData(TradeOrderState.Completed)]
+        [InlineData(TradeOrderState.BuyerPaying)]
+        [InlineData(TradeOrderState.PlatformOperating)]
+        public void CancelShouldReturnFasle_While_OccuringOrderStateException(TradeOrderState state)
+        {
+            var userId = 1;
+            var order = new TradeOrder { SellerUserId = userId, State = state };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+
+            var success = _service.Cancel(1, userId, out var result);
+            success.Should().BeFalse("cancel should return false while occuring order state exception");
+            result.Should().Be(ChangeOrderStateResult.OrderStateException, "ChangeOrderStateResult should be OrderStateException while occuring order state exception");
+        }
+
+        [Fact]
+        public void CancelShouldReturnFalse_While_UpdatingOrderStateFailed()
+        {
+            var userId = 1;
+            var order = new TradeOrder { SellerUserId = userId, State = TradeOrderState.SellerOperating };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+            // mock insert log succeed to make sure that it is not the reason causes cancel failed
+            Mock.Get(_orderLogRepos).Setup(r => r.Insert(It.IsAny<TradeOrderLog>())).Returns(1);
+            Mock.Get(_orderRepos).Setup(r => r.UpdateState(It.IsAny<long>(), It.IsAny<TradeOrderState>())).Returns(false);
+
+            var success = _service.Cancel(1, userId, out var result);
+            success.Should().BeFalse("cancel should return false while updating order state failed");
+            result.Should().Be(ChangeOrderStateResult.PersistenceFailed, "ChangeOrderStateResult should be PersistenceFailed while updating order state failed");
+        }
+
+        [Fact]
+        public void CancelShouldReturnFalse_While_ItWasFailedToAddOrderLog()
+        {
+            var userId = 1;
+            var order = new TradeOrder { SellerUserId = userId, State = TradeOrderState.SellerOperating };
+            Mock.Get(_orderRepos).Setup(r => r.Find(It.IsAny<long>())).Returns(order);
+            // mock update order state succeed to make sure that it is not the reason causes cancel failed
+            Mock.Get(_orderRepos).Setup(r => r.UpdateState(It.IsAny<long>(), It.IsAny<TradeOrderState>())).Returns(true);
+            Mock.Get(_orderLogRepos).Setup(r => r.Insert(It.IsAny<TradeOrderLog>())).Returns(0);
+
+            var success = _service.Cancel(1, userId, out var result);
+            success.Should().BeFalse("cancel should return false while it is failed to add order log");
+            result.Should().Be(ChangeOrderStateResult.PersistenceFailed, "ChangeOrderStateResult should be PersistenceFailed while it is failed to add order log");
+        }
+        #endregion
     }
 }

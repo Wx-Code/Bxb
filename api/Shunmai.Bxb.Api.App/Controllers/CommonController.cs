@@ -74,20 +74,17 @@ namespace Shunmai.Bxb.Api.App.Controllers
 
         [SkipLoginVerification]
         [HttpGet("iet/test")]
-        public async Task<IActionResult> TestIETApi()
+        public async Task<IActionResult> TestIETApi([FromServices]IETService service)
         {
-            var config = new IETConfig
+            var wallet = new IETWallet
             {
-                Cookie = "WEBID=7c476f81-7d54-4ab8-94d8-3978218e9c11",
-                Password = "Jp2d\\/9Wb6YNGCxnJAWInpA==",
                 Phone = "15041113056",
-                ServiceFeeRate = 0.05m,
-                ServiceFeeReceiveAddr = "jn2P895ePPzQXSwaXn7y7hUuT9YSJ5fb1w",
-                WalletId = "6da2540dadbe46d5b8eb6ad7d6c6944b"
+                LoginPassword = "6lPuDI+ByQNmDdaa1REdBg==",
+                TradePassword = "Jp2d\\/9Wb6YNGCxnJAWInpA==",
+                WalletId = "6da2540dadbe46d5b8eb6ad7d6c6944b",
             };
-            var service = new IETService(config);
-            var payRes = await service.PayAsync("jn2P895ePPzQXSwaXn7y7hUuT9YSJ5fb1w", 0.001m, "测试 linux 环境转账");
-            var queryRes = await service.QueryTradeRecordsAsync();
+            var payRes = await service.PayAsync(wallet, "jn2P895ePPzQXSwaXn7y7hUuT9YSJ5fb1w", 0.000001M, "测试 linux 环境转账");
+            var queryRes = await service.QueryTradeRecordsAsync(wallet);
             return Success(new
             {
                 payRes,

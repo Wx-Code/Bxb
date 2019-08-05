@@ -165,15 +165,17 @@
         }
       },
       async addAddressRequest() {
-        const {data, errorCode} = await userServe.editwalletaddr({
+        const {data, errorCode,message} = await userServe.editwalletaddr({
           WalletAddress: this.address,
           UserId: this.userInfo.userId
         })
         console.log('钱包地址更新后数据', data);
-        if (!data) return
+        // if (!data) return
         if (errorCode == '0000') {
           this.isHasAddress = true
           this.$toast({message: '钱包地址更新成功', duration: '1500'})
+        }else{
+          this.$toast({message: message, duration: '1500'})
         }
       },
       async publishInformationRequest() {
@@ -183,7 +185,7 @@
           price: this.price,
         })
         console.log('发布信息后数据', data);
-        if (!data) return
+        // if (!data) return
         if (errorCode == '0000') {
           this.transactionCode = data
           this.showOrder()
