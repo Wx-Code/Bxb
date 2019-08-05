@@ -81,8 +81,12 @@ namespace Shunmai.Bxb.Api.App.Controllers
         /// </summary>
         [HttpGet("message")]
         [SkipLoginVerification]
-        public JsonResult GetMessage([FromQuery]Pager query)
+        public JsonResult GetMessage([FromQuery]TradeHallQuery query)
         {
+            if (query.BType < 0 || query.BType > 4) return Failed("系统不存在该类型的币种");
+
+            if (query.BType == 0) query.BType = null;
+
             (int num, List<TradeHallAppResponse> data) = _tradeHallService.PagedGetAppTradeHalls(query);
 
             ListResponse<TradeHallAppResponse> result = new ListResponse<TradeHallAppResponse>

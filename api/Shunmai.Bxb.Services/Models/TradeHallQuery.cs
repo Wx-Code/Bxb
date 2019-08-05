@@ -12,7 +12,7 @@ namespace Shunmai.Bxb.Services.Models
         /// <summary>
         /// 货币类型
         /// </summary>
-        public CurrencyType? BType { get; set; }
+        public int? BType { get; set; }
 
         /// <summary>
         /// 状态

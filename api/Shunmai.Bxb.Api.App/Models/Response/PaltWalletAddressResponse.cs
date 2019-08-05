@@ -26,11 +26,6 @@ namespace Shunmai.Bxb.Api.App.Models.Response
         public ConfigState State { get; set; }
 
         /// <summary>
-        /// TOKEN
-        /// </summary>
-        public string Token { get; set; }
-
-        /// <summary>
         /// 用途  1、  转币    2、 手续费
         /// </summary>
         public PurposeType Purpost { get; set; }

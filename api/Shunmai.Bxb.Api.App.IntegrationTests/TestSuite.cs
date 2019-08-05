@@ -96,7 +96,8 @@ namespace Shunmai.Bxb.Api.App.IntegrationTests
             return new PlatWalletAddrInfo
             {
                 Cookie = Randoms.String(32),
-                Password = Randoms.String(64),
+                LoginPassword = Randoms.String(64),
+                TransactionPassword = Randoms.String(64),
                 Phone = Randoms.Mobile(),
                 PlatWalletAddr = Randoms.String(32),
                 PlatWalletAddrId = Randoms.String(32),
