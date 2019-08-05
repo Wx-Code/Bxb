@@ -23,7 +23,7 @@
                 </div>
                 <div class="mySell_item_content">
                   <div class="mySell_item_content1 row">
-                    <div class="mySell_item_box1"><span class="mySell_box1_txt1">卖方:</span><span
+                    <div class="mySell_item_box1"><span class="mySell_box1_txt1">买方:</span><span
                       class="mySell_box1_txt2">{{itemData.nickname}}</span>
                     </div>
                     <div class="mySell_item_box3 row_r"><span
@@ -131,7 +131,7 @@
       async getMyBuyLsit() {
         const that = this
         this.arr[this.active].loading = true
-        const {success, data, message} = await pageServe.myBuyList(this.arr[this.active].query)
+        const {success, data, message} = await pageServe.mySellList(this.arr[this.active].query)
         const {list} = data
         this.arr[this.active].loading = false
         this.arr[this.active].query.page++

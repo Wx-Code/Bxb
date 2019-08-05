@@ -94,6 +94,13 @@ export default {
   // 我买到的订单列表
   myBuyList(data){
     return request({
+      url: `/orders/buyertradeorders`,
+      method: 'GET',
+      params: data
+    })
+  },
+  mySellList(data){
+    return request({
       url: `/orders/sellertradeorders`,
       method: 'GET',
       params: data
