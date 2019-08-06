@@ -57,7 +57,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
             }
 
             // 平台钱包地址
-            var platWalletAddr = configService.GetPlatformWalletAddr()?.PlatWalletAddr;
+            var platWalletAddr = configService.GetPlatformWalletConfig()?.PlatWalletAddr;
             if (platWalletAddr.IsEmpty())
             {
                 _logger.LogError($"Platform wallet address has not filled.");
@@ -65,7 +65,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
             }
 
             // 收取手续费的钱包地址
-            var serviceFeeWalletAddr = configService.GetServiceFeeWalletAddr()?.PlatWalletAddr;
+            var serviceFeeWalletAddr = configService.GetServiceFeeWalletConfig()?.PlatWalletAddr;
             if (serviceFeeWalletAddr.IsEmpty())
             {
                 _logger.LogError($"Service fee wallet address has not filled.");
@@ -102,7 +102,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         [HttpPut("{orderId:long}/confirm")]
         public JsonResult Confirm(long orderId)
         {
-            var success = _orderService.Confirm(orderId, CurrentUser.UserId, out var result);
+            var success = _orderService.SetConfirmed(orderId, CurrentUser.UserId, out var result);
             var error = ErrorInfoHelper.FromConfirmResult(result);
             return success ? Success() : Failed(error);
         }
@@ -115,7 +115,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         [HttpPut("{orderId:long}/cancel")]
         public JsonResult Cancel(long orderId)
         {
-            var success = _orderService.Cancel(orderId, CurrentUser.UserId, out var result);
+            var success = _orderService.SetCanceled(orderId, CurrentUser.UserId, out var result);
             var error = ErrorInfoHelper.FromConfirmResult(result);
             return success ? Success() : Failed(error);
         }

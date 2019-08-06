@@ -27,5 +27,12 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         /// <param name="orderId"></param>
         /// <returns></returns>
         bool Confirm(long orderId);
+
+        /// <summary>
+        /// 将订单状态修改为已完成，并记录完成时间。当订单状态不为“待转币”时，将返回 false。
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        bool Complete(long orderId);
     }
 }
