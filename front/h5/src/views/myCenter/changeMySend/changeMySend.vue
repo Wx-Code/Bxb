@@ -23,7 +23,8 @@
                                                                   class="pa_item_input" v-model="totalAmount"></div>
         </div>
       </li>
-      <li class="pi_btn btn_type2" @click="goSend">修改</li>
+      <li class="pi_btn  btn_type6" v-if="(totalAmount && totalAmount > 0)  && (price && price>0) " @click="goSend">发布</li>
+      <li class="pi_btn  btn_type7" v-else >发布</li>
     </ul>
     <!--提示框组件-->
     <dialogTemplete v-model="dialog.dialogShow"
@@ -97,7 +98,8 @@
         columns: ['GRT', 'GDT', 'VIT', 'CDT'],
         dialog: {
           dialogShow: false,
-        }
+        },
+        canClick:true
       }
     },
     async created() {
@@ -108,12 +110,19 @@
       this.change()
     },
     methods: {
+
       goChange() {
         this.pickShow = true
       },
-      goSend() {
-        if (!this.validateRequestData()) return
-        this.publishInformationRequest()
+      async goSend() {
+        const  that =this
+        if (!await this.validateRequestData()) return
+        if(!this.canClick) return
+        this.canClick = false
+        await this.publishInformationRequest()
+        setTimeout(await function () {
+          that.canClick = true
+        },500)
       },
       onConfirm(value, index) {
         this.moneyType = value
@@ -190,13 +199,12 @@
         if (errorCode == '0000') {
           // this.transactionCode = data
           // this.showOrder()
-          this.$toast({message: '修改成功', duration: '1500'})
+          this.$toast({message: '发布成功', duration: '1500'})
           setTimeout(function () {
             that.$router.go(-1)
           },1500)
-
         } else {
-          this.$toast({message: '修改失败', duration: '1500'})
+          this.$toast({message: message, duration: '1500'})
         }
       },
       showOrder() {
@@ -222,12 +230,13 @@
       },
       change() {
         const {  itemData } = this.$route.query
-        console.log(itemData);
+        // console.log(itemData);
         const  itemDataNew = JSON.parse(itemData)
         // if ( pageName != 'mySend' ) return
         // this.moneyType = itemData.bTypeText
         this.moneyTypeIndex = itemDataNew.bType
         // this.initIndex = this.columns.findIndex(value => value === itemData.bTypeText)
+        console.log(itemDataNew);
         this.price = itemDataNew.price
         this.tradeId = itemDataNew.tradeId
         this.totalAmount = itemDataNew.amount
@@ -288,8 +297,8 @@
 
     .pi_btn {
       width: 3.64rem;
-      background: linear-gradient(62deg, rgba(118, 119, 123, 1) 0%, rgba(200, 200, 200, 1) 100%);
-      box-shadow: 0px 0.07rem 0.28rem 0px rgba(184, 184, 184, 1);
+      /*background: linear-gradient(62deg, rgba(118, 119, 123, 1) 0%, rgba(200, 200, 200, 1) 100%);*/
+      /*box-shadow: 0px 0.07rem 0.28rem 0px rgba(184, 184, 184, 1);*/
       margin: 0.93rem auto;
     }
 

@@ -445,6 +445,16 @@
     text-align: center;
     line-height: 0.88rem;
   }
+  .btn_type7{
+    height:0.88rem;
+    background: linear-gradient(62deg, rgba(118, 119, 123, 1) 0%, rgba(200, 200, 200, 1) 100%);
+    box-shadow: 0px 0.07rem 0.28rem 0px rgba(184, 184, 184, 1);
+    border-radius:0.44rem;
+    color: #fff;
+    font-size:0.34rem;
+    text-align: center;
+    line-height: 0.88rem;
+  }
 
 
  /*路由动画*/
