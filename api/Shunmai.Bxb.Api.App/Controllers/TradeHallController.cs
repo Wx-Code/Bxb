@@ -143,7 +143,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         {
             if (model.TradeId <= 0) return Failed();
 
-            TradeHall entity = _tradeHallService.GetSingleTradeHallEntity(model.TradeId);
+            TradeHall entity = _tradeHallService.GetById(model.TradeId);
 
             if (entity == null || entity.ReleaseUserId != CurrentUser.UserId)
                 return Failed();
