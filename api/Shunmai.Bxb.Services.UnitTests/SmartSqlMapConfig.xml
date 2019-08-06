@@ -7,7 +7,7 @@
   <Database>
     <!--ParameterPrefix:[SqlServer:@ | MySQL:? |Oracle::] -->
     <DbProvider Name="MySqlClientFactory" ParameterPrefix="?" Type="MySql.Data.MySqlClient.MySqlClientFactory,MySql.Data"/>
-    <Write Name="WriteDB" ConnectionString="server=39.107.75.109;port=8706;database=game;uid=root;pwd=sa;CharSet=utf8;Allow Zero DateTime=true; Allow User Variables=true;"/>
+    <Write Name="WriteDB" ConnectionString="server=39.107.75.109;port=8706;database=bxb;uid=root;pwd=sa;CharSet=utf8;Allow Zero DateTime=true; Allow User Variables=true;"/>
   </Database>
   <SmartSqlMaps>
     <SmartSqlMap Path="Mappers" Type="Directory"></SmartSqlMap>
