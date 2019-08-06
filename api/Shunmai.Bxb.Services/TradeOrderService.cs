@@ -228,7 +228,7 @@ namespace Shunmai.Bxb.Services
                 return false;
             }
 
-            var updateSuccess = _orderRepos.UpdateState(orderId, TradeOrderState.PlatformOperating);
+            var updateSuccess = _orderRepos.Confirm(orderId);
             if (updateSuccess == false)
             {
                 _logger.LogError($"Update order state failed.");
