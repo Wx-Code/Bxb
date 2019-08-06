@@ -1,6 +1,6 @@
 <template>
 
-  <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class="integral">
+  <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class="mySend_box">
 
     <van-list
       v-model="loading"
@@ -77,7 +77,7 @@
         this.isLoading = false
       },
       copyCode(txt) {
-        const  that =this
+        const that = this
         this.$copyText(txt).then(
           res => {
             that.$toast({message: '复制成功', duration: '1500'})
@@ -88,7 +88,7 @@
         )
       },
       goSend(itemData) {
-        this.$router.push({name: 'changeMySend',query: { pageName: 'mySend', itemData:JSON.stringify(itemData)  }})
+        this.$router.push({name: 'changeMySend', query: {pageName: 'mySend', itemData: JSON.stringify(itemData)}})
       },
       goDown(arg) {
         const that = this
@@ -136,6 +136,13 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .mySend_box {
+    min-height: 100%;
+    .van-list {
+      min-height: 100vh;
+    }
+  }
+
   .mySend {
     background: #F9F9F9;
     min-height: 100%;

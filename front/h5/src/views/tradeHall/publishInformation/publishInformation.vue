@@ -24,7 +24,8 @@
                                                                   class="pa_item_input" v-model="totalAmount"></div>
         </div>
       </li>
-      <li class="pi_btn btn_type2" @click="goSend">发布</li>
+      <li class="pi_btn  btn_type6" v-if="(totalAmount && totalAmount > 0)  && (price && price>0) " @click="goSend">发布</li>
+      <li class="pi_btn  btn_type7" v-else>发布</li>
     </ul>
     <!--提示框组件-->
     <dialogTemplete v-model="dialog.dialogShow"
@@ -40,10 +41,10 @@
                     @confirm="typeof dialog.confirm === 'function' ? typeof dialog.confirm() :''">
       <!--填写钱包地址-->
       <div class="tH_add_address" v-if="temp==1">
-        <div class="tH_address_tit">购买前请完善您的{{moneyType}}钱包地址</div>
-        <div class="tH_address_box row jb "><span class="tH_address_span">{{moneyType}}钱包地址：</span>
+        <div class="tH_address_tit">购买前请完善您的{{columns[moneyTypeIndex-1]}}钱包地址</div>
+        <div class="tH_address_box row jb "><span class="tH_address_span">{{columns[moneyTypeIndex-1]}}钱包地址：</span>
           <div class="tH_address_input"><input type="text" class="tH_address_inputs" v-model="address"
-                                               :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
+                                               :placeholder="'请输入您的'+columns[moneyTypeIndex-1]+'钱包地址'"></div>
         </div>
       </div>
       <div class="tH_add_success" v-if="temp==2">
@@ -97,7 +98,8 @@
         columns: ['GRT', 'GDT','VIT ','CDT'],
         dialog: {
           dialogShow: false,
-        }
+        },
+        canClick:true
       }
     },
     async created() {
@@ -111,10 +113,15 @@
       goChange() {
         this.pickShow = true
       },
-      goSend() {
-        if (!this.validateRequestData()) return
-
-        this.publishInformationRequest()
+     async goSend() {
+        const  that =this
+        if (!await this.validateRequestData()) return
+        if(!this.canClick) return
+        this.canClick = false
+       await this.publishInformationRequest()
+       setTimeout(await function () {
+         that.canClick = true
+        },500)
       },
       onConfirm(value, index) {
         this.moneyType = value
@@ -274,8 +281,6 @@
 
     .pi_btn {
       width: 3.64rem;
-      background: linear-gradient(62deg, rgba(118, 119, 123, 1) 0%, rgba(200, 200, 200, 1) 100%);
-      box-shadow: 0px 0.07rem 0.28rem 0px rgba(184, 184, 184, 1);
       margin: 0.93rem auto;
     }
 

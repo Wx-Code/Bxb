@@ -96,8 +96,6 @@
         appId: process.env.WECHAT_APP_ID,
         userInfo: '',
         isLoading: false,
-
-
       }
     },
     created() {
@@ -119,21 +117,17 @@
       },
       goRecord() {
         this.$router.push({name: 'record'})
-
       },
       goMySend() {
         this.$router.push({name: 'mySend'})
-
       },
       goMySell() {
         this.initPageState()
         this.$router.push({name: 'mySell'})
-
       },
       goMyBuy() {
         this.initPageState()
         this.$router.push({name: 'myBuy'})
-
       },
       async getMyCenterData() {
         const {data, errorCode} = await user.getUserInfo()
@@ -150,7 +144,6 @@
         await this.getMyCenterData()
         this.isLoading = false
       },
-
     }
   }
 </script>

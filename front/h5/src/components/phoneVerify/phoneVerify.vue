@@ -61,13 +61,13 @@
         }
       },
       async getCode() {
-        if (this.validate()) {
+        if (await this.validate()) {
           if (this.send === 1) {
+            this.send = 0
             await this.getCodeRequest()
             console.log('发送验证码')
             //倒计时
             this.disable = 1
-            this.send = 0
             let that = this
             that.codeText = '60s后重新发送'
             let timer = setInterval(function () {
@@ -87,8 +87,10 @@
         }
       },
       async getCodeRequest() {
+        const  that =this
         const {data, errorCode} = await userService.sendCode({phone: this.phone})
         if (errorCode != '0000') {
+          that.send = 0
           this.$toast({message: '发送失败', duration: '1500'})
         }
       },

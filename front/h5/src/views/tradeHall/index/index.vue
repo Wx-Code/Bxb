@@ -241,38 +241,54 @@
       // 提交订单的请求
       async orderCommitRequest(itemData) {
         const that = this
-        if (!await this.validateRequestData()) return
+        if (!this.validateRequestData()) return
+        console.log(this.canClick);
         if (!this.canClick) return
         this.canClick = false
-        setTimeout(function () {
-          that.canClick = true
-        }, 300)
         const {data, errorCode, message} = await pageServe.submitOrder({
           tradeId: itemData.tradeId,
           requiredCount: this.buyNum,
           tradeCode: this.sellCode
         })
         console.log('提交订单后数据', data);
+        setTimeout( function () {
+          that.canClick = true
+        }, 500)
         if (errorCode == '0000') {
           const that = this
-          this.$toast({message: '提交成功', duration: '1500'})
+          that.$toast({message: '提交成功', duration: '1500'})
           that.dialog.dialogShow = false
         } else if (errorCode == '1004') {
           this.tipTxt = '可交易数量不足'
+          setTimeout(function () {
+            that.tipTxt = ''
+          },1500)
         } else {
-          this.$toast({message: message, duration: '1500'})
+          console.log(that);
+          that.$toast({message: message, duration: '1500'})
         }
       },
       // 验证提交订单的内容
       validateRequestData() {
+        const  that =this
+
         if (!this.buyNum || this.buyNum < 0) {
           this.tipTxt = `交易数量格式不正确`
+          setTimeout(function () {
+            that.tipTxt = ''
+          },1500)
           return false
-        } else if (this.sellCode > this.amount) {
+        } else if (this.buyNum > this.amount) {
           this.tipTxt = `购买数量不能超过${this.amount}个，请重新输入`
+          setTimeout(function () {
+            that.tipTxt = ''
+          },1500)
           return false
         } else if (!this.sellCode || this.sellCode.length < 0) {
           this.tipTxt = '交易码不能为空'
+          setTimeout(function () {
+            that.tipTxt = ''
+          },1500)
           return false
         } else {
           return true
@@ -355,9 +371,13 @@
       min-height: 100%;
     }
   }
+   .van-list{
+    min-height: 100vh;
+  }
   .tradeHall {
     background: #F9F9F9;
     min-height: 100%;
+
 
 
 
