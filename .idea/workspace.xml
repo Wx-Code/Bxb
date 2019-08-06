@@ -90,11 +90,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/orderDetail/orderDetail.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
+            <state relative-caret-position="359">
+              <caret line="121" column="34" lean-forward="true" selection-start-line="121" selection-start-column="34" selection-end-line="121" selection-end-column="34" />
               <folding>
                 <element signature="n#li#6;n#ul#0;n#div#1;n#div#0;n#div#0;n#template#0;n#!!top" />
                 <element signature="n#div#2;n#div#0;n#div#0;n#template#0;n#!!top" />
@@ -122,11 +122,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/myBuy/myBuy.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="284">
-              <caret line="26" column="72" lean-forward="true" selection-start-line="26" selection-start-column="72" selection-end-line="26" selection-end-column="72" />
+            <state relative-caret-position="309">
+              <caret line="27" column="26" lean-forward="true" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
               <folding>
                 <element signature="e#2926#2960#0" expanded="true" />
                 <element signature="e#3053#4287#0" />
@@ -166,8 +166,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mc_user_name</find>
-      <find>data</find>
       <find>mySellList</find>
       <find>getCode</find>
       <find>validate</find>
@@ -190,12 +188,14 @@
       <find>btn_type6</find>
       <find>surplusTime</find>
       <find>validateRequestData</find>
-      <find>timeFinished</find>
       <find>orderCommitRequest</find>
       <find>onRefresh</find>
       <find>showOrderCommit</find>
       <find>goBuy</find>
       <find>amount</find>
+      <find>time</find>
+      <find>timeFinished</find>
+      <find>btnShow</find>
     </findStrings>
     <replaceStrings>
       <replace>mySell</replace>
@@ -376,15 +376,15 @@
       <workItem from="1564105213005" duration="22404000" />
       <workItem from="1564363661163" duration="33427000" />
       <workItem from="1564473248092" duration="39523000" />
-      <workItem from="1565056793365" duration="14551000" />
+      <workItem from="1565056793365" duration="14837000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="284539000" />
+    <option name="totallyTimeSpent" value="284825000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="848" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19550858" />
@@ -842,19 +842,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/orderDetail/orderDetail.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
-          <folding>
-            <element signature="n#li#6;n#ul#0;n#div#1;n#div#0;n#div#0;n#template#0;n#!!top" />
-            <element signature="n#div#2;n#div#0;n#div#0;n#template#0;n#!!top" />
-            <element signature="n#div#3;n#div#0;n#div#0;n#template#0;n#!!top" />
-            <element signature="e#4900#5113#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="403">
@@ -872,8 +859,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/myBuy/myBuy.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="26" column="72" lean-forward="true" selection-start-line="26" selection-start-column="72" selection-end-line="26" selection-end-column="72" />
+        <state relative-caret-position="309">
+          <caret line="27" column="26" lean-forward="true" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
           <folding>
             <element signature="e#2926#2960#0" expanded="true" />
             <element signature="e#3053#4287#0" />
@@ -884,6 +871,19 @@
             <element signature="e#5775#6065#0" />
             <element signature="e#6093#6154#0" />
             <element signature="e#6257#6529#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/orderDetail/orderDetail.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="121" column="34" lean-forward="true" selection-start-line="121" selection-start-column="34" selection-end-line="121" selection-end-column="34" />
+          <folding>
+            <element signature="n#li#6;n#ul#0;n#div#1;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#2;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#div#3;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="e#4900#5113#0" />
           </folding>
         </state>
       </provider>
