@@ -1,11 +1,12 @@
 <template>
   <div class="orderDetail">
     <div class="od_content">
-      <div class="od_time_header row ac" v-if="pageData.surplusTime>0">
+      <div class="od_time_header row ac" v-if="(pageData.surplusTime && pageData.surplusTime>0) && (pageData.state== 0 || pageData.state== 10)">
         <img class="od_time_log" src="http://static.pinlala.com/bxb/time_icon.png" alt="">
-        <span class="od_time_txt">剩余收款时间：</span>
+        <span class="od_time_txt" v-if="pageType==1">剩余转币时间：</span>
+        <span class="od_time_txt" v-if="pageType==2">剩余收款时间：</span>
         <div class="od_time_num">
-          <van-count-down :time="pageData.pageData.surplusTime"/>
+          <van-count-down :time="pageData.surplusTime" @finish="timeFinished"/>
         </div>
       </div>
       <div class="od_body">
@@ -71,7 +72,6 @@
           </li>
         </ul>
       </div>
-
       <!--提示信息模块-->
       <div class="od_tip_box" v-if="pageType==1">
         <div class="od_tips" v-if="pageData.state!=30">温馨提示：</div>
@@ -85,12 +85,15 @@
         <div class="od_tip" v-if="pageData.state== 10">{{tipTxt[4]}}</div>
       </div>
       <div class="od_tip_btnBox">
-        <div class="od_tip_btn btn_type6" v-if="pageType==1 && pageData.state==0"
+        <!--确认转币按钮-->
+        <div class="od_tip_btn btn_type6" v-if="pageType==1 && pageData.state==0 && btnShow"
              @click="cancelOrder(pageData.orderId)">{{benTxt[0]}}
         </div>
-        <div class="od_tip_btn btn_type2" v-if="pageType==2 && pageData.state==10"
+        <!--确认收款按钮-->
+        <div class="od_tip_btn btn_type2" v-if="pageType==2 && pageData.state==10 && btnShow"
              @click="confirmReceipts(pageData.orderId)">{{benTxt[1]}}
         </div>
+        <!--订单异常按钮-->
         <div class="od_tip_btn btn_type6" v-if="pageType==1 && pageData.state==-1" @click="goCustomer">{{benTxt[2]}}
         </div>
       </div>
@@ -109,6 +112,7 @@
         appId: process.env.WECHAT_APP_ID,
         time: 30 * 60 * 60 * 1000,
         pageData: {},
+        btnShow:true,//是否展示按钮
         pageType: '', // 1.我买的跳转进入 2.我卖的跳转进入
         benTxt: ['取消订单', '确认收款', '订单异常'],
         tipTxt: [
@@ -139,6 +143,10 @@
           }
         )
 
+
+      },
+      timeFinished(){
+        this.btnShow= false
 
       },
       cancelOrder(orderId) {

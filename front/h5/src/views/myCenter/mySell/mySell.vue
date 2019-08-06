@@ -35,10 +35,10 @@
                 </div>
                 <div class="mySell_item_footer row">
                   <div class="mySell_time_show row">
-                    <div class="mySell_time_txt1" v-if="inx==0 && itemData.surplusTime>0">剩余收款时间：</div>
-                    <div class="mySell_time_txt2" v-if="inx==0 && itemData.surplusTime>0">
+                    <div class="mySell_time_txt1" v-if="inx==1 && itemData.surplusTime>0">剩余收款时间：</div>
+                    <div class="mySell_time_txt2" v-if="inx==1 && itemData.surplusTime>0">
                       <!--<van-count-down :time="itemData.surplusTime" @finish="timeFinished(index)" />-->
-                      <van-count-down :time="10000" @finish="timeFinished(index)"/>
+                      <van-count-down :time="itemData.surplusTime" v-if="inx==1 && itemData.surplusTime>0" @finish="timeFinished(index)"/>
                     </div>
                   </div>
                   <div class="mySell_btn_box row_r">

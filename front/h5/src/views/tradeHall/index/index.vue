@@ -25,7 +25,7 @@
                     </div>
                   </div>
                   <div class="tH_item_btnBox row_r ">
-                    <div class="tH_btn_sty btn_type3" @click="goBuy(item)">购买</div>
+                    <div class="tH_btn_sty btn_type3" @click="goBuy(item,index)">购买</div>
                     <div class="tH_btn_sty btn_type4" @click="goLink(item.wxCodePhoto)">去沟通</div>
                   </div>
                 </div>
@@ -179,16 +179,16 @@
         }
       },
       //点击购买按钮
-      async goBuy(itemData) {
+      async goBuy(itemData,index) {
         if(! await  this.isGoLogin()) return
         if (!this.isHasAddress) {
           this.showAddAress(itemData)
           return
         }
-        this.showOrderCommit(itemData)
+        this.showOrderCommit(itemData,index)
       },
       // 展示提交订单弹窗
-      showOrderCommit(itemData) {
+      showOrderCommit(itemData,index) {
         const that = this
         this.clearData()
         this.amount = itemData.amount
@@ -200,7 +200,7 @@
           confirmText: '提交订单',
           dialogShow: true,
           confirm(fn) {
-            that.orderCommitRequest(itemData)
+            that.orderCommitRequest(itemData,index)
 
           },
         }
@@ -239,10 +239,9 @@
         }
       },
       // 提交订单的请求
-      async orderCommitRequest(itemData) {
+      async orderCommitRequest(itemData,index) {
         const that = this
         if (!this.validateRequestData()) return
-        console.log(this.canClick);
         if (!this.canClick) return
         this.canClick = false
         const {data, errorCode, message} = await pageServe.submitOrder({
@@ -258,6 +257,7 @@
           const that = this
           that.$toast({message: '提交成功', duration: '1500'})
           that.dialog.dialogShow = false
+          this.list[index].amount =  this.list[index].amount - this.buyNum
         } else if (errorCode == '1004') {
           this.tipTxt = '可交易数量不足'
           setTimeout(function () {
