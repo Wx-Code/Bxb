@@ -89,17 +89,13 @@
       async getCodeRequest() {
         const {data, errorCode} = await userService.sendCode({phone: this.phone})
         if (errorCode != '0000') {
-          this.$toast({message: '发送成功', duration: '1500'})
-        } else {
           this.$toast({message: '发送失败', duration: '1500'})
         }
       },
       watchPhone() {
-        // console.log(111);
         this.$emit('changePhone', this.phone)
       },
       watchCode() {
-        // console.log(111);
         this.$emit('changeCode', this.code)
       }
     },
