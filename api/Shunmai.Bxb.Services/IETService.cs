@@ -92,6 +92,7 @@ namespace Shunmai.Bxb.Services
             };
             var headers = BuildIETRequestHeaders(loginInfo.Token);
             var response = await PostAsync<IETResponse<string>>(PAY_API_URL, Serialize(postData), headers);
+            _logger.LogInformation($"Payment finished, the response is: {response.ToLogFormatString()}");
             if (response.Success == false)
             {
                 _logger.LogError($"Failed to pay to the specified wallet. Response: {response.ToLogFormatString()}");

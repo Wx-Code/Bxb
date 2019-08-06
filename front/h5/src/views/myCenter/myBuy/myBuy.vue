@@ -180,9 +180,12 @@
         this.arr[this.active].list.splice(index, 1)
       },
       goCustomer() {
-        this.$router.push({name: 'customer'})
+        const  that =this
+        globalData.pageState = that.active
+        that.$router.push({name: 'customer'})
       },
-      goDetail(itemData) {  // pageType 1.为我买到的2. 为我卖出的    pageStatus： 为页面内的几种状态值
+      // pageType 1.为我买到的2. 为我卖出的    pageStatus： 为页面内的几种状态值
+      goDetail(itemData) {
         const  that =this
         globalData.pageState = that.active
         console.log(itemData);

@@ -19,7 +19,8 @@
             </div>
           </li>
           <li class="od_body_li row jb ac">
-            <span class="od_li_title">买方</span>
+            <span class="od_li_title" v-if="pageType==1">卖方</span>
+            <span class="od_li_title" v-else>买方</span>
             <div class="od_li_r row ac">
               <span lass="od_li_txt">{{pageData.nickname}}</span>
 
@@ -61,7 +62,7 @@
                    class="customer_box_btn ml20">
             </div>
           </li>
-          <li class="od_body_li row jb ac">
+          <li class="od_body_li row jb ac" v-if="pageData.state== -1">
             <span class="od_li_title">关闭原因</span>
             <div class="od_li_r row ac">
               <!--<span lass="od_li_txt">{{pageData.tradeCode}}</span>-->
@@ -79,7 +80,7 @@
         <div class="od_tip" v-if="pageData.state== -1">{{tipTxt[2]}}</div>
       </div>
       <div class="od_tip_box" v-if=" pageType==2">
-        <div class="od_tips" v-if="pageData.state!=30 && pageData.status!=-1">温馨提示：</div>
+        <div class="od_tips" v-if="pageData.state!=30 && pageData.state!=-1">温馨提示：</div>
         <div class="od_tip" v-if=" pageData.state== 0">{{tipTxt[3]}}</div>
         <div class="od_tip" v-if="pageData.state== 10">{{tipTxt[4]}}</div>
       </div>

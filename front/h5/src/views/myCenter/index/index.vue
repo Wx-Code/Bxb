@@ -1,84 +1,86 @@
 <template>
-
-  <div class="myCenter">
-    <div class="mc_header  col ac">
-      <div class="my_user_logo">
-        <img :src="userInfo.avatar" alt="" class="my_user_logoImg" v-if="userInfo.avatar">
+  <van-pull-refresh v-model="isLoading" @refresh="onRefresh" class="myCenter_box">
+    <div class="myCenter">
+      <div class="mc_header  col ac">
+        <div class="my_user_logo">
+          <img :src="userInfo.avatar" alt="" class="my_user_logoImg" v-if="userInfo.avatar">
+        </div>
+        <div class="mc_user_name tc">{{userInfo.nickname }}</div>
       </div>
-      <div class="mc_user_name tc">{{userInfo.nickname }}</div>
+      <div class="mc_content col ac">
+        <div class="mc_num_box row jb ac">
+          <!--<div class="mc_num_num col ac" @click="goRecord">-->
+          <div class="mc_num_num col ac">
+            <div class="mc_num tc">{{userInfo.outTotalAmount || 0}}</div>
+            <div class="mc_num_txt tc">累计售出</div>
+          </div>
+          <div class="mc_num_line"></div>
+          <div class="mc_num_num col ac ">
+            <!--<div class="mc_num_num col ac " @click="goRecord">-->
+            <div class="mc_num tc">{{userInfo.inTotalAmount || 0}}</div>
+            <div class="mc_num_txt tc">累计购买</div>
+          </div>
+
+        </div>
+        <div class="mc_nav">
+          <div class="mc_nav_content col ">
+            <div class="mc_nav_item row jb ac " @click="goMySend">
+              <div class="mc_nav_item1 row ac ">
+                <img src="http://static.pinlala.com/bxb/send.png" alt="" class="mc_nav_icon1">
+                <div class="mc_nav_item2">我发布的</div>
+              </div>
+              <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
+            </div>
+            <div class="mc_nav_item row jb ac " @click="goMySell">
+              <div class="mc_nav_item1 row ac ">
+                <img src="http://static.pinlala.com/bxb/sell.png" alt="" class="mc_nav_icon2">
+                <div class="mc_nav_item2">我卖出的</div>
+              </div>
+              <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
+            </div>
+            <div class="mc_nav_item row jb ac " @click="goMyBuy">
+              <div class="mc_nav_item1 row ac ">
+                <img src="http://static.pinlala.com/bxb/mai-.png" alt="" class="mc_nav_icon3">
+                <div class="mc_nav_item2">我买到的</div>
+              </div>
+              <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
+            </div>
+            <div class="mc_nav_item row jb ac " @click="goMyAddress">
+              <div class="mc_nav_item1 row ac ">
+                <img src="http://static.pinlala.com/bxb/money.png" alt="" class="mc_nav_icon4">
+                <div class="mc_nav_item2">我的钱包地址</div>
+              </div>
+              <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
+            </div>
+            <div class="mc_nav_item row jb ac " @click="goPlatformAddress">
+              <div class="mc_nav_item1 row ac ">
+                <img src="http://static.pinlala.com/bxb/money.png" alt="" class="mc_nav_icon4">
+                <div class="mc_nav_item2">平台钱包地址</div>
+              </div>
+              <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
+            </div>
+            <div class="mc_nav_item row jb ac " @click="goMyInformation">
+              <div class="mc_nav_item1 row ac ">
+                <img src="http://static.pinlala.com/bxb/my.png" alt="" class="mc_nav_icon5">
+                <div class="mc_nav_item2">我的资料</div>
+              </div>
+              <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
+            </div>
+            <div class="mc_nav_item row jb ac " @click="goCustomer">
+              <div class="mc_nav_item1 row ac ">
+                <img src="http://static.pinlala.com/bxb/weixinkefu.png" alt="" class="mc_nav_icon6">
+                <div class="mc_nav_item2">微信客服</div>
+              </div>
+              <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
-    <div class="mc_content col ac">
-      <div class="mc_num_box row jb ac">
-        <!--<div class="mc_num_num col ac" @click="goRecord">-->
-        <div class="mc_num_num col ac" >
-          <div class="mc_num tc">{{userInfo.outTotalAmount || 0}}</div>
-          <div class="mc_num_txt tc">累计售出</div>
-        </div>
-        <div class="mc_num_line"></div>
-        <div class="mc_num_num col ac ">
-        <!--<div class="mc_num_num col ac " @click="goRecord">-->
-          <div class="mc_num tc">{{userInfo.inTotalAmount || 0}}</div>
-          <div class="mc_num_txt tc">累计购买</div>
-        </div>
+  </van-pull-refresh>
 
-      </div>
-      <div class="mc_nav">
-        <div class="mc_nav_content col ">
-          <div class="mc_nav_item row jb ac " @click="goMySend">
-            <div class="mc_nav_item1 row ac ">
-              <img src="http://static.pinlala.com/bxb/send.png" alt="" class="mc_nav_icon1">
-              <div class="mc_nav_item2">我发布的</div>
-            </div>
-            <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
-          </div>
-          <div class="mc_nav_item row jb ac " @click="goMySell">
-            <div class="mc_nav_item1 row ac ">
-              <img src="http://static.pinlala.com/bxb/sell.png" alt="" class="mc_nav_icon2">
-              <div class="mc_nav_item2">我卖出的</div>
-            </div>
-            <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
-          </div>
-          <div class="mc_nav_item row jb ac " @click="goMyBuy">
-            <div class="mc_nav_item1 row ac ">
-              <img src="http://static.pinlala.com/bxb/mai-.png" alt="" class="mc_nav_icon3">
-              <div class="mc_nav_item2">我买到的</div>
-            </div>
-            <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
-          </div>
-          <div class="mc_nav_item row jb ac " @click="goMyAddress">
-            <div class="mc_nav_item1 row ac ">
-              <img src="http://static.pinlala.com/bxb/money.png" alt="" class="mc_nav_icon4">
-              <div class="mc_nav_item2">我的钱包地址</div>
-            </div>
-            <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
-          </div>
-          <div class="mc_nav_item row jb ac " @click="goPlatformAddress">
-            <div class="mc_nav_item1 row ac ">
-              <img src="http://static.pinlala.com/bxb/money.png" alt="" class="mc_nav_icon4">
-              <div class="mc_nav_item2">平台钱包地址</div>
-            </div>
-            <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
-          </div>
-          <div class="mc_nav_item row jb ac " @click="goMyInformation">
-            <div class="mc_nav_item1 row ac ">
-              <img src="http://static.pinlala.com/bxb/my.png" alt="" class="mc_nav_icon5">
-              <div class="mc_nav_item2">我的资料</div>
-            </div>
-            <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
-          </div>
-          <div class="mc_nav_item row jb ac " @click="goCustomer">
-            <div class="mc_nav_item1 row ac ">
-              <img src="http://static.pinlala.com/bxb/weixinkefu.png" alt="" class="mc_nav_icon6">
-              <div class="mc_nav_item2">微信客服</div>
-            </div>
-            <img src="http://static.pinlala.com/bxb/ic_nav_back.png" alt="" class="mc_nav_next">
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
 
 </template>
 
@@ -93,12 +95,10 @@
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
         userInfo: '',
-
-
+        isLoading: false,
       }
     },
     created() {
-      // store.setToken('CBA649688043000643C9D0A437A18CDF')
       this.getMyCenterData()
     },
 
@@ -117,39 +117,41 @@
       },
       goRecord() {
         this.$router.push({name: 'record'})
-
       },
       goMySend() {
         this.$router.push({name: 'mySend'})
-
       },
       goMySell() {
         this.initPageState()
         this.$router.push({name: 'mySell'})
-
       },
       goMyBuy() {
         this.initPageState()
         this.$router.push({name: 'myBuy'})
-
       },
       async getMyCenterData() {
-        const { data,errorCode } = await user.getUserInfo()
+        const {data, errorCode} = await user.getUserInfo()
         if (!data) return false
         if (errorCode == '0000') {
           this.userInfo = data
           store.setUser(this.userInfo)
         }
       },
-      initPageState(){ //进入我买的和我买的列表时初始化页面类型
+      initPageState() { //进入我买的和我买的列表时初始化页面类型
         globalData.pageState = 0
-      }
-
+      },
+      async onRefresh() {
+        await this.getMyCenterData()
+        this.isLoading = false
+      },
     }
   }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .myCenter_box{
+    height: 100%;
+  }
   .myCenter {
 
     .mc_header {
@@ -167,7 +169,8 @@
       border-radius: 50%;
       /*background: pink;*/
     }
-    .my_user_logoImg{
+
+    .my_user_logoImg {
       width: 100%;
       height: 100%;
     }

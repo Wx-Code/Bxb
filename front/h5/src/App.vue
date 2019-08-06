@@ -72,12 +72,17 @@
     /*max-width: 750px;*/
     /*overflow: hidden;*/
     margin: 0 auto;
+    height: 100%;
+  }
+  #app{
+    height: 100%;
   }
 
   body {
     width: 100%;
     /*max-width: 750px;*/
     min-height: 100% !important;
+    height: 100%;
     margin: 0 auto;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
@@ -434,6 +439,16 @@
     height:0.88rem;
     background:linear-gradient(62deg,rgba(215,2,2,1) 0%,rgba(251,120,120,1) 100%);
     box-shadow:0px 0.07rem 0.28rem 0px rgba(223,28,28,0.47);
+    border-radius:0.44rem;
+    color: #fff;
+    font-size:0.34rem;
+    text-align: center;
+    line-height: 0.88rem;
+  }
+  .btn_type7{
+    height:0.88rem;
+    background: linear-gradient(62deg, rgba(118, 119, 123, 1) 0%, rgba(200, 200, 200, 1) 100%);
+    box-shadow: 0px 0.07rem 0.28rem 0px rgba(184, 184, 184, 1);
     border-radius:0.44rem;
     color: #fff;
     font-size:0.34rem;
