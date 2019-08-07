@@ -68,8 +68,8 @@
       o.`Btype`,
       o.`CompleteTime`
       FROM `tradeorder` AS o
-      INNER JOIN `user` AS u ON u.`UserId` = o.`BuyerUserId` AND u.`Deleted` =0
-      WHERE o.`SellerUserId` =?userId AND o.`State` = ?status AND o.`TradeType` =0
+      INNER JOIN `user` AS u ON u.`UserId` = o.`SellerUserId` AND u.`Deleted` =0
+      WHERE o.`SellerUserId` =?userId AND o.`State` = ?status
       ORDER BY o.`CreateTime` DESC
       LIMIT ?offset, ?size
     </Statement>
@@ -78,7 +78,7 @@
     <Statement Id="GetSellerTradeOrdersCount">
       SELECT COUNT(1)
       FROM `TradeOrder`
-      WHERE `SellerUserId` =?userId AND `State` = ?status AND `TradeType` =0
+      WHERE `SellerUserId` =?userId AND `State` = ?status  
     </Statement>
 
     <!-- APP 我买到的  列表 -->
@@ -99,8 +99,8 @@
       o.`Btype`,
       o.`CompleteTime`
       FROM `tradeorder` AS o
-      INNER JOIN `user` AS u ON u.`UserId` = o.`SellerUserId` AND u.`Deleted` =0
-      WHERE o.`BuyerUserId` =?userId AND o.`State` = ?status AND o.`TradeType` =1
+      INNER JOIN `user` AS u ON u.`UserId` = o.`BuyerUserId` AND u.`Deleted` =0
+      WHERE o.`BuyerUserId` =?userId AND o.`State` = ?status
       ORDER BY o.`CreateTime` DESC
       LIMIT ?offset, ?size
     </Statement>
@@ -109,7 +109,91 @@
     <Statement Id="GetBuyerTradeOrdersCount">
       SELECT COUNT(1)
       FROM `TradeOrder`
-      WHERE `BuyerUserId` =?userId AND `State` = ?status AND `TradeType` =1
+      WHERE `BuyerUserId` =?userId AND `State` = ?status  
+    </Statement>
+
+
+
+    <!-- 查询参数 -->
+    <Statement Id="QueryParams">
+      <Where>
+         1=1 
+        <IsNotEmpty Prepend="AND" Property="TradeCode">
+          o.`TradeCode`=?TradeCode
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="SellerNickname">
+          u1.`Nickname` LIKE Concat('%',$SellerNickname,'%')
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="BuyerNickname">
+          u2.`Nickname` LIKE Concat('%',$BuyerNickname,'%')
+        </IsNotEmpty>
+
+
+        <IsNotEmpty Prepend="AND" Property="SellerWalletAddress">
+          o.`SellerWalletAddress` LIKE Concat('%',$SellerWalletAddress,'%')
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="BuyerWalletAddress">
+          o.`BuyerWalletAddress` LIKE Concat('%',$BuyerWalletAddress,'%')
+        </IsNotEmpty>
+        
+        <IsNotEmpty Prepend="AND" Property="SellerPhone">
+          o.`SellerPhone`=?SellerPhone
+        </IsNotEmpty> 
+        <IsNotEmpty Prepend="AND" Property="BuyerPhone">
+          o.`BuyerPhone`=?BuyerPhone
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="adminStatu">
+           o.`State` in ?adminStatu
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="StartTime">
+          o.`CreateTime` > ?StartTime
+        </IsNotEmpty>
+        <IsNotEmpty Prepend="AND" Property="EndTime">
+          <![CDATA[o.`CreateTime` <= ?EndTime]]>
+        </IsNotEmpty>
+      </Where>
+    </Statement>
+
+    <!-- 查询列表 -->
+    <Statement Id="QueryList">
+      SELECT
+      o.`OrderId`, -- 订单号
+      u1.`Nickname` as 'SellerNickname',  -- 卖家名称
+      o.SellerPhone, -- 卖家手机号码
+      o.`SellerWalletAddress` ,-- 卖家钱包地址
+      o.Btype ,-- 交易币种
+      o.TradeCode,-- 交易码
+      o.Amount , -- 购买数量
+      o.Price ,-- 卖家设置单价
+
+      u2.`Nickname` as 'BuyerNickname', -- 买家名称
+
+      o.`BuyerPhone`, -- 买家手机号码
+      o.`CreateTime`, -- 交易时间
+      o.`BuyerWalletAddress` ,-- 买家钱包地址
+      o.`State`
+      FROM tradeorder o
+      LEFT JOIN `user` u1 ON  u1.`UserId` = o.`SellerUserId`
+      LEFT JOIN `user` u2 ON u2.`UserId` = o.`BuyerUserId`
+
+      <Include RefId="QueryParams"></Include>
+      <Switch Prepend="ORDER BY" Property="OrderBy">
+        <Default>
+          o.CreateTime DESC
+        </Default>
+      </Switch>
+      <IsNotEmpty Prepend="LIMIT" Property="Page">
+        ?Offset, ?Size
+      </IsNotEmpty>
+    </Statement>
+
+    <!-- 数据数据条数 -->
+    <Statement Id="Count">
+      SELECT COUNT(*)
+      FROM tradeorder o
+      LEFT JOIN `user` u1 ON  u1.`UserId` = o.`SellerUserId`
+      LEFT JOIN `user` u2 ON u2.`UserId` = o.`BuyerUserId`
+      <Include RefId="QueryParams"></Include>
     </Statement>
     
   </Statements>

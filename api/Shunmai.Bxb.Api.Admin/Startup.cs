@@ -67,7 +67,7 @@ namespace Shunmai.Bxb.Api.Admin
             services.AddSingleton<SystemConfigService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<TradeHallService>();
-
+            services.AddSingleton<TradeOrderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

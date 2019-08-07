@@ -22,6 +22,12 @@
       ;
       SELECT LAST_INSERT_ID();
     </Statement>
+
+    <Statement Id="Query">
+      SELECT  o.`CreateTime`,o.`OperateLog` , IFNULL(u.`Username`,'买家') AS 'OperateName' FROM tradeorderlog AS  o
+      LEFT JOIN adminuser u ON u.`AdminUserId` = o.`OperateId`
+      WHERE o.`OrderId` = ?orderId  ORDER BY o.`CreateTime` DESC
+    </Statement>
     
   </Statements>
 </SmartSqlMap>

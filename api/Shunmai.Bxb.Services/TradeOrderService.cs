@@ -328,5 +328,63 @@ namespace Shunmai.Bxb.Services
 
             return (count, result);
         }
+
+
+        public int Count(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            return _orderRepos.Count(condition);
+        }
+
+        public (int Total, List<TradeOrderResponse> List) QueryPage(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            var count = Count(condition);
+            var list = QueryList(condition);
+            return (count, list);
+        }
+
+        public List<TradeOrderResponse> QueryList(object condition)
+        {
+            Check.Null(condition, nameof(condition));
+            return _orderRepos.QueryList(condition);
+        }
+
+        public bool ConfirmShouBi(long orderId, TradeOrderState state, out ChangeOrderStateResult result)
+        {
+            Check.EnsureMoreThanZero(orderId, nameof(orderId));
+
+            var canCancel = IsOrderStateNormal(orderId, TradeOrderState.SellerOperating, out var order, out result);
+            if (canCancel == false)
+            {
+                return false;
+            }
+
+            var updateSuccess = _orderRepos.UpdateState(orderId, state);
+            if (updateSuccess == false)
+            {
+                _logger.LogError($"Update order state failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
+                return false;
+            }
+
+            var log = state == TradeOrderState.BuyerPaying ? "平台确认收币" : state == TradeOrderState.Completed ? "平台确认转币，交易完成" : "";
+            var addSuccess = AddOrderLog(orderId, log, 1);
+            if (addSuccess == false)
+            {
+                _logger.LogError($"Add order log failed.");
+                result = ChangeOrderStateResult.PersistenceFailed;
+                return false;
+            }
+
+            result = ChangeOrderStateResult.Success;
+            return true;
+
+        }
+
+        public List<TradeOrderLog> GetTradeOrderLogList(long orderId)
+        {
+            return _orderLogRepos.Query(orderId);
+        }
     }
 }

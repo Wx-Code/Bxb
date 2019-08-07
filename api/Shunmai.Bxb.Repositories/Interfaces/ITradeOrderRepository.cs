@@ -20,5 +20,8 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         List<TradeOrderAppResponse> PageGetBuyerTradeOrders(int offset, int size, int? userId, TradeOrderState? status);
 
         int GetBuyerTradeOrdersCount(int? userId, TradeOrderState? status);
+
+        int Count(object condition);
+        List<TradeOrderResponse> QueryList(object condition);
     }
 }
