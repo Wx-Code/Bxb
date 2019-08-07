@@ -15,8 +15,8 @@
             <div class="mySend_item_header row jb ac">
               <div class="mySend_header_l row"><span class="mySend_l_time">发布时间</span> <span class="mySend_l_times">{{item.releaseTime}}</span>
               </div>
-              <span class="mySend_header_r1">{{item.statusText}}</span>
-              <!--<span class="mySend_header_r2">已下架</span>-->
+              <span class="mySend_header_r1" v-if="item.status==1">发布中</span>
+              <span class="mySend_header_r2" v-else>已下架</span>
 
             </div>
             <div class="mySend_item_content">
@@ -93,12 +93,11 @@
       goDown(arg) {
         const that = this
         this.$dialog({
-          title: '确认取消该订单？'
+          title: '确认下架该消息？'
         }).then(async function () {
           await that.putOffMySendRequest(arg)
           await that.init()
         })
-
       },
       async putOffMySendRequest(tradeId) {
         const that = this
