@@ -1,6 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Shunmai.Bxb.Abstractions;
+using Shunmai.Bxb.Services.Exceptions;
 using Shunmai.Bxb.Services.Models.IET;
+using Shunmai.Bxb.Utilities.Check;
 using Shunmai.Bxb.Utilities.Extenssions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -13,25 +20,41 @@ namespace Shunmai.Bxb.Services
     /// </summary>
     public class IETService
     {
-        private const string PAY_API_URL = "https://gdt.huaxuec.com/customer/api/payment.json";
-        private const string QUERY_API_URL = "https://gdt.huaxuec.com/customer/api/getpayments.json";
+        private const string API_BASE = "https://gdt.huaxuec.com";
+        private const string LOGIN_URL = API_BASE + "/customer/login.json";
+        private const string PAY_API_URL = API_BASE + "/customer/api/payment.json";
+        private const string QUERY_API_URL = API_BASE + "/customer/api/getpayments.json";
         private const string HOST = "gdt.huaxuec.com";
+        private const string JSON_MIME_TYPE = "application/json";
+        private const SecurityProtocolType HTTPS_PROTOCOL_TYPE = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+        private const int MAX_RETRY_CNT = 5;
+        private const string COOKIE_NAME_OF_LOGIN_TOKEN = "WEBID";
+        private const string CACHE_PREFIX = "IETService:";
+        private const int CACHE_EXPIRE_SECONDS = 30 * 24 * 3600;
 
-        private readonly IETConfig _config;
+        private readonly ICache _cache;
+        private readonly ILogger _logger;
 
-        public IETService(IETConfig config)
+        public IETService(ILogger<IETService> logger, ICache cache)
         {
-            _config = config;
+            _cache = cache;
+            _logger = logger;
         }
 
-        private async Task<T> Post<T>(string url, string json, string cookie)
+        private async Task<T> PostAsync<T>(string url, string json, Dictionary<string, string> headers = null)
         {
-            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            using (var content = new StringContent(json, Encoding.UTF8, JSON_MIME_TYPE))
             using (var client = new HttpClient())
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-                client.DefaultRequestHeaders.Add("Host", HOST);
-                client.DefaultRequestHeaders.Add("Cookie", cookie);
+                ServicePointManager.SecurityProtocol = HTTPS_PROTOCOL_TYPE;
+                if (headers != null)
+                {
+                    foreach (var key in headers.Keys)
+                    {
+                        client.DefaultRequestHeaders.Add(key, headers[key]);
+                    }
+                }
+
                 using (var response = await client.PostAsync(url, content))
                 {
                     var result = await response.Content.ReadAsStringAsync();
@@ -46,30 +69,146 @@ namespace Shunmai.Bxb.Services
             return json.Replace(@"\\", @"\");
         }
 
-        public async Task<IETResponse<string>> PayAsync(string destAddress, decimal amount, string remark)
-         {
+        private Dictionary<string, string> BuildIETRequestHeaders(string loginToken = null)
+        {
+            return new Dictionary<string, string>
+            {
+                { "Host", HOST },
+                { "Cookie", $"{COOKIE_NAME_OF_LOGIN_TOKEN}={loginToken}" },
+            };
+        }
+
+        public async Task<bool> PayAsync(IETWallet wallet, string destAddress, decimal amount, string remark)
+        {
+            var loginInfo = await GetEffctiveLoginInfoAsync(wallet.Phone, wallet.LoginPassword);
             var postData = new PaymentData
             {
                 Amount = amount,
                 DestAddress = destAddress,
-                Password = _config.Password,
-                Phone = _config.Phone,
+                Password = wallet.TradePassword,
+                Phone = wallet.Phone,
                 Remark = remark,
-                WalletId = _config.WalletId,
+                WalletId = wallet.WalletId,
             };
-            return await Post<IETResponse<string>>(PAY_API_URL, Serialize(postData), _config.Cookie);
+            var headers = BuildIETRequestHeaders(loginInfo.Token);
+            var response = await PostAsync<IETResponse<string>>(PAY_API_URL, Serialize(postData), headers);
+            _logger.LogInformation($"Payment finished, the response is: {response.ToLogFormatString()}");
+            if (response.Success == false)
+            {
+                _logger.LogError($"Failed to pay to the specified wallet. Response: {response.ToLogFormatString()}");
+            }
+            return response.Success;
         }
 
-        public async Task<IETResponse<QueryResponse>> QueryTradeRecordsAsync()
+        public async Task<IETResponse<QueryResponse>> QueryTradeRecordsAsync(IETWallet wallet, long? ledger = null, int? seq = null)
         {
-            return await QueryTradeRecordsAsync(null, null);
-        }
-
-        public async Task<IETResponse<QueryResponse>> QueryTradeRecordsAsync(long? ledger, int? seq)
-        {
+            Check.Null(wallet, nameof(wallet));
             var marker = (ledger == null || seq == null) ? null : new Marker(ledger.Value, seq.Value);
-            var query = new QueryRequest(_config.WalletId, marker);
-            return await Post<IETResponse<QueryResponse>>(QUERY_API_URL, Serialize(query), _config.Cookie);
+            var loginInfo = await GetEffctiveLoginInfoAsync(wallet.Phone, wallet.LoginPassword);
+            var headers = BuildIETRequestHeaders(loginInfo.Token);
+            var query = new QueryRequest(wallet.WalletId, marker);
+            return await PostAsync<IETResponse<QueryResponse>>(QUERY_API_URL, Serialize(query), headers);
+        }
+
+        private string GetCacheKey(string key)
+        {
+            return $"{CACHE_PREFIX}{key}";
+        }
+
+        /// <summary>
+        /// 通过执行一次交易记录查询，来确定给定的登录信息是否有效
+        /// </summary>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        private async Task<bool> IsLoginInfoEffective(LoginResponse loginInfo)
+        {
+            var query = new QueryRequest(loginInfo.CusId, null);
+            var headers = BuildIETRequestHeaders(loginInfo.Token);
+            var response = await PostAsync<IETResponse<QueryResponse>>(QUERY_API_URL, Serialize(query), headers);
+            return response.Success;
+        }
+
+        /// <summary>
+        /// 获取有效的登录信息。此方法将尝试从缓存中获取登录信息，并验证登录信息是否有效。
+        /// 若失败，则会尝试重新登录以获取新的登录信息。
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public async Task<LoginResponse> GetEffctiveLoginInfoAsync(string account, string password)
+        {
+            var key = GetCacheKey(account);
+            var loginInfo = _cache.Get<LoginResponse>(key);
+            if (loginInfo != null)
+            {
+                // 判断当前缓存的登录信息是否依然有效
+                var effective = await IsLoginInfoEffective(loginInfo);
+                if (effective)
+                {
+                    return loginInfo;
+                }
+            }
+
+            loginInfo = await LoginForTokenAsync(account, password);
+            if (loginInfo.Token.IsEmpty())
+            {
+                throw new IETLoginException("Cannot get token after logging in.");
+            }
+
+            if (_cache.Set(key, loginInfo, TimeSpan.FromSeconds(CACHE_EXPIRE_SECONDS)) == false)
+            {
+                throw new CacheException();
+            }
+            return loginInfo;
+        }
+
+        private async Task<LoginResponse> LoginForTokenAsync(string account, string loginPwd)
+        {
+            Check.Empty(account, nameof(account));
+            Check.Empty(loginPwd, nameof(loginPwd));
+
+            var retryCnt = 1;
+            do
+            {
+                var loginRes = await LoginAsync(new LoginRequest { Acount = account, Password = loginPwd });
+                if (loginRes.Success)
+                {
+                    return loginRes.Data;
+                }
+                if (loginRes.Code == ApiCode.PWD_ERROR || loginRes.Code == ApiCode.PWD_EXCEPTION)
+                {
+                    throw new IETLoginException("Password error detected on logging in IET.");
+                }
+                _logger.LogError($"Login failed for the account {account}. Retry: {retryCnt}, Response: {loginRes.ToLogFormatString()}");
+
+            } while (retryCnt++ < MAX_RETRY_CNT);
+
+            throw new IETLoginException($"Failed to log in.");
+        }
+
+        private async Task<IETResponse<LoginResponse>> LoginAsync(LoginRequest request)
+        {
+            var cookieContainer = new CookieContainer();
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var content = new StringContent(Serialize(request), Encoding.UTF8, JSON_MIME_TYPE))
+            using (var client = new HttpClient(handler))
+            {
+                ServicePointManager.SecurityProtocol = HTTPS_PROTOCOL_TYPE;
+                var headers = BuildIETRequestHeaders();
+                foreach (var key in headers.Keys)
+                {
+                    client.DefaultRequestHeaders.Add(key, headers[key]);
+                }
+                using (var response = await client.PostAsync(LOGIN_URL, content))
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var loginRes = JsonConvert.DeserializeObject<IETResponse<LoginResponse>>(json);
+                    var cookies = cookieContainer.GetCookies(new Uri(API_BASE)).Cast<Cookie>();
+                    var token = cookies.FirstOrDefault(c => c.Name == COOKIE_NAME_OF_LOGIN_TOKEN)?.Value;
+                    if (loginRes.Data != null) loginRes.Data.Token = token;
+                    return loginRes;
+                }
+            }
         }
     }
 }

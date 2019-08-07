@@ -23,7 +23,7 @@
                 </div>
                 <div class="mySell_item_content">
                   <div class="mySell_item_content1 row">
-                    <div class="mySell_item_box1"><span class="mySell_box1_txt1">买方:</span><span
+                    <div class="mySell_item_box1"><span class="mySell_box1_txt1">卖方:</span><span
                       class="mySell_box1_txt2">{{itemData.nickname}}</span>
                     </div>
                     <div class="mySell_item_box3 row_r"><span
@@ -35,15 +35,15 @@
                 </div>
                 <div class="mySell_item_footer row">
                   <div class="mySell_time_show row">
-                    <div class="mySell_time_txt1" v-if="inx==1 && itemData.surplusTime>0">剩余收款时间：</div>
-                    <div class="mySell_time_txt2" v-if="inx==1 && itemData.surplusTime>0">
+                    <div class="mySell_time_txt1" v-if="inx==0 && itemData.surplusTime>0">剩余转币时间：</div>
+                    <div class="mySell_time_txt2" v-if="inx==0 && itemData.surplusTime>0">
                       <!--<van-count-down :time="itemData.surplusTime" @finish="timeFinished(index)" />-->
-                      <van-count-down :time="itemData.surplusTime" v-if="inx==1 && itemData.surplusTime>0" @finish="timeFinished(index)"/>
+                      <van-count-down :time="itemData.surplusTime" v-if="inx==0 && itemData.surplusTime>0" @finish="timeFinished(index)"/>
                     </div>
                   </div>
                   <div class="mySell_btn_box row_r">
                     <div class="tH_btn_sty btn_type3" v-if="inx==3" @click="goCustomer">订单异常</div>
-                    <div class="tH_btn_sty btn_type3" v-if="inx==1" @click="confirmReceipts(itemData.orderId,index)">确认收款
+                    <div class="tH_btn_sty btn_type3" v-if="inx==0" @click="cancelOrder(itemData.orderId,index)">取消订单
                     </div>
                     <div class="tH_btn_sty btn_type4" @click="goDetail(itemData)">详情</div>
                   </div>
@@ -83,7 +83,7 @@
             finished: false,
           },
           {
-            title: '待收款',
+            title: '待付款',
             query: {
               page: 1,
               size: 10,
@@ -131,7 +131,7 @@
       async getMyBuyLsit() {
         const that = this
         this.arr[this.active].loading = true
-        const {success, data, message} = await pageServe.mySellList(this.arr[this.active].query)
+        const {success, data, message} = await pageServe.myBuyList(this.arr[this.active].query)
         const {list} = data
         this.arr[this.active].loading = false
         this.arr[this.active].query.page++
@@ -146,22 +146,22 @@
         }
 
       },
-      confirmReceipts(orderId, index) {
+      cancelOrder(orderId, index) {
         const that = this
         this.$dialog({
           title: '确认取消该订单？'
         }).then(res => {
-            that.confirmReceiptsRequest(orderId, index)
+            that.cancelOrderRequest(orderId, index)
           },
           err => {
 
           })
       },
-      async confirmReceiptsRequest(orderId, index) {
-        const {data, errorCode, message} = await pageServe.confirmReceipts(orderId)
-        console.log('确认收款成功数据', data);
+      async cancelOrderRequest(orderId, index) {
+        const {data, errorCode, message} = await pageServe.cancelOrder(orderId)
+        console.log('取消订单', data);
         if (errorCode == '0000') {
-          this.$toast({message: '确认收款成功，订单完成', duration: '1500'})
+          this.$toast({message: '订单已取消', duration: '1500'})
           this.arr[this.active].list.splice(index, 1)
         } else {
           this.$toast({message: message, duration: '1500'})
@@ -184,11 +184,12 @@
         globalData.pageState = that.active
         that.$router.push({name: 'customer'})
       },
-      goDetail(itemData) {  // pageType 1.为我买到的2. 为我卖出的    pageStatus： 为页面内的几种状态值
+      // pageType 1.为我买到的2. 为我卖出的    pageStatus： 为页面内的几种状态值
+      goDetail(itemData) {
         const  that =this
         globalData.pageState = that.active
         console.log(itemData);
-        that.$router.push({name: 'orderDetail', query: { pageType: 2, pageData: JSON.stringify(itemData)}})
+        this.$router.push({name: 'orderDetail', query: { pageType: 1, pageData: JSON.stringify(itemData)}})
       },
     }
   }

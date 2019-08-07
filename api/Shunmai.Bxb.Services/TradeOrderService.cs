@@ -107,7 +107,7 @@ namespace Shunmai.Bxb.Services
         /// <param name="buyerId"></param>
         /// <returns></returns>
         [SmartSqlTransaction]
-        public bool Submit(SubmitData data, out OrderSubmitResult result)
+        public virtual bool Submit(SubmitData data, out OrderSubmitResult result)
         {
             if (CanSubmit(data, out result) == false)
             {
@@ -212,7 +212,7 @@ namespace Shunmai.Bxb.Services
         /// <param name="result"></param>
         /// <returns></returns>
         [SmartSqlTransaction]
-        public virtual bool Confirm(long orderId, int operatingUserId, out ChangeOrderStateResult result)
+        public virtual bool SetConfirmed(long orderId, int operatingUserId, out ChangeOrderStateResult result)
         {
             Check.EnsureMoreThanZero(orderId, nameof(orderId));
             Check.EnsureMoreThanZero(operatingUserId, nameof(operatingUserId));
@@ -228,7 +228,7 @@ namespace Shunmai.Bxb.Services
                 return false;
             }
 
-            var updateSuccess = _orderRepos.UpdateState(orderId, TradeOrderState.PlatformOperating);
+            var updateSuccess = _orderRepos.Confirm(orderId);
             if (updateSuccess == false)
             {
                 _logger.LogError($"Update order state failed.");
@@ -265,7 +265,7 @@ namespace Shunmai.Bxb.Services
         /// <param name="result"></param>
         /// <returns></returns>
         [SmartSqlTransaction]
-        public virtual bool Cancel(long orderId, int operatingUserId, out ChangeOrderStateResult result)
+        public virtual bool SetCanceled(long orderId, int operatingUserId, out ChangeOrderStateResult result)
         {
             Check.EnsureMoreThanZero(orderId, nameof(orderId));
             Check.EnsureMoreThanZero(operatingUserId, nameof(operatingUserId));
@@ -299,6 +299,54 @@ namespace Shunmai.Bxb.Services
             }
 
             result = ChangeOrderStateResult.Success;
+            return true;
+        }
+
+        /// <summary>
+        /// 确认转币操作，将订单状态修改为已完成并记录订单日志
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="operatorId"></param>
+        /// <param name="operator"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        [SmartSqlTransaction]
+        public virtual bool SetPayed(long orderId, int operatorId, string @operator, out TradeOrder order)
+        {
+            order = _orderRepos.Find(orderId);
+            if (order == null)
+            {
+                _logger.LogError($"The order whose id is {orderId} does not exist.");
+                return false;
+            }
+            if (order.State != TradeOrderState.PlatformOperating)
+            {
+                _logger.LogError($"Cannot set order's state to 'Completed' while it's current state is not 'PlatformOperating'. [OrderId={orderId}, State={order.State}]");
+                return false;
+            }
+
+            var success = _orderRepos.Complete(orderId);
+            if (success == false)
+            {
+                _logger.LogError($"Setting the order state to 'Completed' failed.");
+                return false;
+            }
+
+            var orderLog = new TradeOrderLog
+            {
+                CreateTime = DateTime.Now,
+                OperateId = operatorId,
+                OperateName = @operator,
+                OperateLog = "平台向用户转币",
+                OrderId = orderId,
+            };
+            var logId = _orderLogRepos.Insert(orderLog);
+            if (logId <= 0)
+            {
+                _logger.LogError($"Failed to add order log.");
+                return false;
+            }
+
             return true;
         }
 

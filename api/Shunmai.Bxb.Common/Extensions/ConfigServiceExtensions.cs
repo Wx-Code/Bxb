@@ -23,18 +23,16 @@ namespace Shunmai.Bxb.Common.Extensions
             return obj;
         }
 
-
         /// <summary>
         /// 获取平台钱包配置
         /// </summary>
         /// <param name="service"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        public static PlatWalletAddrInfo GetPlatformWalletAddr(this SystemConfigService service)
+        public static PlatWalletAddrInfo GetPlatformWalletConfig(this SystemConfigService service)
         {
             return GetWalletConfig(service, PurposeType.TurnCoin);
         }
-
 
         /// <summary>
         /// 获取平台收取手续费钱包配置
@@ -42,7 +40,7 @@ namespace Shunmai.Bxb.Common.Extensions
         /// <param name="service"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        public static PlatWalletAddrInfo GetServiceFeeWalletAddr(this SystemConfigService service)
+        public static PlatWalletAddrInfo GetServiceFeeWalletConfig(this SystemConfigService service)
         {
             return GetWalletConfig(service, PurposeType.CommissionCharge);
         }

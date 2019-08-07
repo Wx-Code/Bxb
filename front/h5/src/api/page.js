@@ -31,6 +31,14 @@ export default {
       data: data
     })
   },
+  // 发布消息
+  changeInformation(data){
+    return request({
+      url: '/TradeHall/user/message',
+      method: 'PUT',
+      data: data
+    })
+  },
   // 获取交易大厅列表
   getTradeHallList(data){
     return request({
@@ -63,6 +71,42 @@ export default {
       data: data
     })
   },
+  // 我卖出的确认收款
+  confirmReceipts(orderId){
+    return request({
+      url: `/orders/${orderId}/confirm`,
+      method: 'PUT',
+      data: {
+        orderId:orderId
+      }
+    })
+  },
+  // 我买到的取消订单
+  cancelOrder(orderId){
+    return request({
+      url: `/orders/${orderId}/cancel`,
+      method: 'PUT',
+      data: {
+        orderId:orderId
+      }
+    })
+  },
+  // 我买到的订单列表
+  myBuyList(data){
+    return request({
+      url: `/orders/buyertradeorders`,
+      method: 'GET',
+      params: data
+    })
+  },
+  mySellList(data){
+    return request({
+      url: `/orders/sellertradeorders`,
+      method: 'GET',
+      params: data
+    })
+  }
+
 
 
 

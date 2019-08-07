@@ -63,10 +63,12 @@ namespace Shunmai.Bxb.Api.Admin
 
         private void AddServices(IServiceCollection services)
         {
+            services.AddSingleton<ICache, AdminRedisCache>();
             services.AddSingleton<AdminUserService>();
             services.AddSingleton<SystemConfigService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<TradeHallService>();
+            services.AddSingleton<IETService>();
             services.AddSingleton<TradeOrderService>();
         }
 

@@ -32,16 +32,18 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         /// <summary>
         /// 分页获取APP首页交易大厅的交易信息
         /// </summary>
+        /// <param name="bType">货币类型</param>
         /// <param name="offset">偏移量</param>
         /// <param name="size">每页条数</param>
         /// <returns>当前页交易大厅中的交易信息</returns>
-        List<TradeHallAppResponse> PagedGetAppTradeHalls(int offset, int size);
+        List<TradeHallAppResponse> PagedGetAppTradeHalls(int? bType, int offset, int size);
 
         /// <summary>
         /// 获取APP首页交易大厅的交易信息总条数
         /// </summary>
+        /// <param name="bType">货币类型</param>
         /// <returns>交易信息总条数</returns>
-        int GetAppTradeHallsCount();
+        int GetAppTradeHallsCount(int? bType);
 
         /// <summary>
         /// 获取APP交易信息详情
@@ -68,7 +70,7 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         /// <param name="startTime">开始时间</param>
         /// <param name="endTime">结束时间</param>
         /// <returns></returns>
-        List<TradeHallAppResponse> PageGetAdminTradeHalls(int offset, int size, int? userId, CurrencyType? bType, TradeHallShelfStatus? status, string startTime, string endTime);
+        List<TradeHallAppResponse> PageGetAdminTradeHalls(int offset, int size, int? userId, int? bType, TradeHallShelfStatus? status, string startTime, string endTime);
 
         /// <summary>
         /// 后台获取交易信息总条数
@@ -79,7 +81,7 @@ namespace Shunmai.Bxb.Repositories.Interfaces
         /// <param name="startTime">开始时间</param>
         /// <param name="endTime">结束时间</param>
         /// <returns>用户发布的交易信息总条数</returns>
-        int GetAdminTradeHallsCount(int? userId, CurrencyType? bType, TradeHallShelfStatus? status, string startTime, string endTime);
+        int GetAdminTradeHallsCount(int? userId, int? bType, TradeHallShelfStatus? status, string startTime, string endTime);
 
         /// <summary>
         /// 更新可交易数量

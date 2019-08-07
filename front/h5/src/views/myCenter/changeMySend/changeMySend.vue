@@ -1,11 +1,12 @@
 <template>
   <div class="publishInformation">
     <ul class="pa_content">
-      <li class="pa_item row ac jb" alt="" @click="goChange">
+      <!--<li class="pa_item row ac jb" alt="" @click="goChange">-->
+      <li class="pa_item row ac jb" alt="">
         <div class="pa_item_txt1">币 种</div>
         <div class="pa_item_r row ac">
-          <div class="pa_item_txt2 wd">{{moneyType}}</div>
-          <img src="http://static.pinlala.com/bxb/ic_nav_back.png" class="next_btn">
+          <div class="pa_item_txt2 wd">{{columns[moneyTypeIndex-1]}}</div>
+          <!--<img src="http://static.pinlala.com/bxb/ic_nav_back.png" class="next_btn">-->
         </div>
       </li>
       <li class="pa_item row ac jb">
@@ -22,7 +23,8 @@
                                                                   class="pa_item_input" v-model="totalAmount"></div>
         </div>
       </li>
-      <li class="pi_btn btn_type2" @click="goSend">发布</li>
+      <li class="pi_btn  btn_type6" v-if="(totalAmount && totalAmount > 0)  && (price && price>0) " @click="goSend">发布</li>
+      <li class="pi_btn  btn_type7" v-else >发布</li>
     </ul>
     <!--提示框组件-->
     <dialogTemplete v-model="dialog.dialogShow"
@@ -38,10 +40,10 @@
                     @confirm="typeof dialog.confirm === 'function' ? typeof dialog.confirm() :''">
       <!--填写钱包地址-->
       <div class="tH_add_address" v-if="temp==1">
-        <div class="tH_address_tit">购买前请完善您的{{moneyType}}钱包地址</div>
-        <div class="tH_address_box row jb "><span class="tH_address_span">{{moneyType}}钱包地址：</span>
+        <div class="tH_address_tit">购买前请完善您的{{columns[moneyTypeIndex-1]}}钱包地址</div>
+        <div class="tH_address_box row jb "><span class="tH_address_span">{{columns[moneyTypeIndex-1]}}钱包地址：</span>
           <div class="tH_address_input"><input type="text" class="tH_address_inputs" v-model="address"
-                                               :placeholder="'请输入您的'+moneyType+'钱包地址'"></div>
+                                               :placeholder="'请输入您的'+columns[moneyTypeIndex-1]+'钱包地址'"></div>
         </div>
       </div>
       <div class="tH_add_success" v-if="temp==2">
@@ -52,16 +54,16 @@
       </div>
     </dialogTemplete>
     <!--pick组件-->
-    <van-popup v-model="pickShow" position="bottom">
-      <van-picker
-        show-toolbar
-        position="bottom"
-        :columns="columns"
-        :default-index="initIndex"
-        @cancel="onCancel"
-        @confirm="onConfirm"
-      />
-    </van-popup>
+    <!--<van-popup v-model="pickShow" position="bottom">-->
+      <!--<van-picker-->
+        <!--show-toolbar-->
+        <!--position="bottom"-->
+        <!--:columns="columns"-->
+        <!--:default-index="initIndex"-->
+        <!--@cancel="onCancel"-->
+        <!--@confirm="onConfirm"-->
+      <!--/>-->
+    <!--</van-popup>-->
   </div>
 
 </template>
@@ -88,6 +90,7 @@
         price: '',
         moneyTypeIndex: '1',//币种请求的数据
         pickShow: false,
+        tradeId:'',
         transactionCode: '',
         moneyType: 'GRT',
         initIndex: '0', //设置的默认选择的币种索引
@@ -95,7 +98,8 @@
         columns: ['GRT', 'GDT', 'VIT', 'CDT'],
         dialog: {
           dialogShow: false,
-        }
+        },
+        canClick:true
       }
     },
     async created() {
@@ -106,12 +110,19 @@
       this.change()
     },
     methods: {
+
       goChange() {
         this.pickShow = true
       },
-      goSend() {
-        if (!this.validateRequestData()) return
-        this.publishInformationRequest()
+      async goSend() {
+        const  that =this
+        if (!await this.validateRequestData()) return
+        if(!this.canClick) return
+        this.canClick = false
+        await this.publishInformationRequest()
+        setTimeout(await function () {
+          that.canClick = true
+        },500)
       },
       onConfirm(value, index) {
         this.moneyType = value
@@ -122,13 +133,15 @@
         this.pickShow = false
       },
       copyCode(txt) {
+        const  that =this
         this.$copyText(txt).then(
           res => {
             console.log(res)
-            this.$toast("复制成功");
+            that.$toast({message: "复制成功", duration: '1500'})
           },
           err => {
-            this.$toast("复制失败");
+            that.$toast({message: "复制失败", duration: '1500'})
+
           }
         )
       },
@@ -175,24 +188,30 @@
         }
       },
       async publishInformationRequest() {
-        const {data, errorCode,message} = await pageServe.publishInformation({
+        const  that =this
+        const {data, errorCode,message} = await pageServe.changeInformation({
           bType: this.moneyTypeIndex,
           totalAmount: this.totalAmount,
           price: this.price,
+          tradeId:this.tradeId
         })
         console.log('发布信息后数据', data);
         if (errorCode == '0000') {
-          this.transactionCode = data
-          this.showOrder()
+          // this.transactionCode = data
+          // this.showOrder()
+          this.$toast({message: '发布成功', duration: '1500'})
+          setTimeout(function () {
+            that.$router.go(-1)
+          },1500)
         } else {
-          this.$toast({message: '发布失败', duration: '1500'})
+          this.$toast({message: message, duration: '1500'})
         }
       },
       showOrder() {
         const that = this
         this.temp = 2
         this.dialog = {
-          title: '发布成功',
+          title: '修改成功',
           showCancel: false,
           confirmText: '查看消息列表',
           dialogShow: true,
@@ -210,14 +229,18 @@
         }
       },
       change() {
-        const { pageName, itemData } = this.$route.query
-        if ( pageName != 'mySend' ) return
-        this.moneyType = itemData.bTypeText
-        this.moneyTypeIndex = itemData.bType
-        this.initIndex = this.columns.findIndex(value => value === itemData.bTypeText)
-        this.price = itemData.price
-        this.totalAmount = itemData.amount
-        this.transactionCode = itemData.tradeCode
+        const {  itemData } = this.$route.query
+        // console.log(itemData);
+        const  itemDataNew = JSON.parse(itemData)
+        // if ( pageName != 'mySend' ) return
+        // this.moneyType = itemData.bTypeText
+        this.moneyTypeIndex = itemDataNew.bType
+        // this.initIndex = this.columns.findIndex(value => value === itemData.bTypeText)
+        console.log(itemDataNew);
+        this.price = itemDataNew.price
+        this.tradeId = itemDataNew.tradeId
+        this.totalAmount = itemDataNew.amount
+        this.transactionCode = itemDataNew.tradeCode
 
 
       }
@@ -274,8 +297,8 @@
 
     .pi_btn {
       width: 3.64rem;
-      background: linear-gradient(62deg, rgba(118, 119, 123, 1) 0%, rgba(200, 200, 200, 1) 100%);
-      box-shadow: 0px 0.07rem 0.28rem 0px rgba(184, 184, 184, 1);
+      /*background: linear-gradient(62deg, rgba(118, 119, 123, 1) 0%, rgba(200, 200, 200, 1) 100%);*/
+      /*box-shadow: 0px 0.07rem 0.28rem 0px rgba(184, 184, 184, 1);*/
       margin: 0.93rem auto;
     }
 

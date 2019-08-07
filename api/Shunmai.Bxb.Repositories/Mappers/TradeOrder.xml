@@ -48,7 +48,32 @@
         `OrderId`=?orderId
       ;
     </Statement>
+    
+    <!-- 将订单状态改为确认收款 -->
+    <Statement Id="Confirm">
+      UPDATE
+        `TradeOrder`
+      SET
+        `State`=20,
+        `PayTime`=CURRENT_TIMESTAMP
+      WHERE
+        `OrderId`=?orderId
+        AND `State`=10
+      ;
+    </Statement>
 
+    <!-- 将订单状态修改为已完成 -->
+    <Statement Id="Complete">
+      UPDATE
+        `TradeOrder`
+      SET
+        `State`=30,
+        `CompleteTime`=CURRENT_TIMESTAMP
+      WHERE
+        `OrderId`=?orderId
+        AND `State`=20
+      ;
+    </Statement>
 
     <!-- APP 我卖出的  列表 -->
     <Statement Id="PageGetSellerTradeOrders">

@@ -81,8 +81,12 @@ namespace Shunmai.Bxb.Api.App.Controllers
         /// </summary>
         [HttpGet("message")]
         [SkipLoginVerification]
-        public JsonResult GetMessage([FromQuery]Pager query)
+        public JsonResult GetMessage([FromQuery]TradeHallQuery query)
         {
+            if (query.BType < 0 || query.BType > 4) return Failed("系统不存在该类型的币种");
+
+            if (query.BType == 0) query.BType = null;
+
             (int num, List<TradeHallAppResponse> data) = _tradeHallService.PagedGetAppTradeHalls(query);
 
             ListResponse<TradeHallAppResponse> result = new ListResponse<TradeHallAppResponse>
@@ -139,7 +143,7 @@ namespace Shunmai.Bxb.Api.App.Controllers
         {
             if (model.TradeId <= 0) return Failed();
 
-            TradeHall entity = _tradeHallService.GetSingleTradeHallEntity(model.TradeId);
+            TradeHall entity = _tradeHallService.GetById(model.TradeId);
 
             if (entity == null || entity.ReleaseUserId != CurrentUser.UserId)
                 return Failed();
