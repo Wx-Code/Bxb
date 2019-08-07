@@ -132,6 +132,29 @@ export const constantRouterMap = [
     ]
   },
 
+   // 订单管理
+   {
+    path: '/order',
+    name: 'OrderConfig',
+    redirect: '/order/ordermanage',
+    meta: { title: '订单管理', icon: 'cash' },
+    component: Layout,
+    children: [
+      {
+        path: 'ordermanage',
+        name: 'ordermanage',
+        meta: { title: '交易订单', icon: 'order' },
+        component: () => import('@/views/order/ordermanage')
+      },
+      // {
+      //   path: 'interestsmanage',
+      //   name: 'interestsmanage',
+      //   meta: { title: '维权订单', icon: 'order' },
+      //   component: () => import('@/views/order/ordermanage')
+      // }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 
