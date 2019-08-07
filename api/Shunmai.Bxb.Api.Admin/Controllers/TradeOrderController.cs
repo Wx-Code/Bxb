@@ -9,9 +9,12 @@ using Microsoft.Extensions.Logging;
 using Shunmai.Bxb.Api.Admin.Constants;
 using Shunmai.Bxb.Api.Admin.Models;
 using Shunmai.Bxb.Api.App.Utils;
+using Shunmai.Bxb.Common.Extensions;
+using Shunmai.Bxb.Common.Models.Config;
 using Shunmai.Bxb.Entities;
 using Shunmai.Bxb.Services;
 using Shunmai.Bxb.Services.Models;
+using Shunmai.Bxb.Services.Models.IET;
 using Shunmai.Bxb.Utilities.Extenssions;
 using Util.Helpers;
 
@@ -210,35 +213,3 @@ namespace Shunmai.Bxb.Api.Admin.Controllers
 
     }
 }
-=======
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Shunmai.Bxb.Common.Extensions;
-using Shunmai.Bxb.Common.Models.Config;
-using Shunmai.Bxb.Entities;
-using Shunmai.Bxb.Services;
-using Shunmai.Bxb.Services.Models.IET;
-using Shunmai.Bxb.Utilities.Extenssions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Shunmai.Bxb.Api.Admin.Controllers
-{
-    [Route("orders")]
-    public class TradeOrderController : AdminBaseController
-    {
-        private readonly ILogger _logger;
-        private readonly TradeOrderService _orderService;
-
-        public TradeOrderController(ILogger<TradeOrderController> logger, TradeOrderService orderService)
-        {
-            _logger = logger;
-            _orderService = orderService;
-        }
-
-      
-    }
-}
->>>>>>> 5905971a741b7205364de6432abd24dc7a379e6b
