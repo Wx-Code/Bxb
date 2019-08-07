@@ -149,7 +149,10 @@
       confirmReceipts(orderId, index) {
         const that = this
         this.$dialog({
-          title: '确认取消该订单？'
+          title: '确认收款',
+          content_txt:'请您确保收款金额与您沟通的金额一致，确认收款后平台将向买方转币。',
+          cancelText: '再想想',
+          confirmText: '提交订单',
         }).then(res => {
             that.confirmReceiptsRequest(orderId, index)
           },

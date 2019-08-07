@@ -26,7 +26,7 @@
                   </div>
                   <div class="tH_item_btnBox row_r ">
                     <div class="tH_btn_sty btn_type3" @click="goBuy(item,index)">购买</div>
-                    <div class="tH_btn_sty btn_type4" @click="goLink(item.wxCodePhoto)">去沟通</div>
+                    <div class="tH_btn_sty btn_type4" @click="goLink(item)">去沟通</div>
                   </div>
                 </div>
 
@@ -101,7 +101,7 @@
       return {
         host: process.env.FRONT_HOST,
         appId: process.env.WECHAT_APP_ID,
-        isHasAddress: false,
+        // isHasAddress: false,
         canClick: true,
         tipTxt: '',
         address: '',
@@ -119,6 +119,7 @@
         loading: false,
         finished: false,
         temp: '',
+        canNext:true,
         wxCodePhoto: '',//联系人的二维码图片
         dialog: {
           dialogShow: false,
@@ -131,7 +132,7 @@
       await this.getTradeHallLsit()
       if(! await this.isLogin()) return
       await this.getUserInfo()
-      await this.judgeIsHasAddress()
+      // await this.judgeIsHasAddress()
     },
     methods: {
       async getTradeHallLsit() {
@@ -158,19 +159,26 @@
         this.isLoading = false
         if(! await this.isLogin()) return
         await this.getUserInfo()
-        await this.judgeIsHasAddress()
+        // await this.judgeIsHasAddress()
       },
       //跳转到发送消息界面
       async goSend() {
         const  that =this
-        if(! await  this.isGoLogin()) return
+        if(! await this.isLogin()){
+          this.canNext = false
+          this.goLogin()
+          return
+        }
+        // if(! await  this.isGoLogin()) return
         this.$router.push({name: 'publishInformation',query:{bType:that.query.bType}})
       },
       //展示去沟通弹窗
-      async goLink(src) {
-        if(! await  this.isGoLogin()) return
+      async goLink(itemData) {
+        await this.isCanNext(itemData)
+        if(!this.canNext) return
+        // if(! await  this.isGoLogin()) return
         this.temp = 1
-        this.wxCodePhoto = src
+        this.wxCodePhoto = itemData.wxCodePhoto
         this.dialog = {
           showBtn: false,
           dialogShow: true,
@@ -180,11 +188,8 @@
       },
       //点击购买按钮
       async goBuy(itemData,index) {
-        if(! await  this.isGoLogin()) return
-        if (!this.isHasAddress) {
-          this.showAddAress(itemData)
-          return
-        }
+        await this.isCanNext(itemData)
+        if(!this.canNext) return
         this.showOrderCommit(itemData,index)
       },
       // 展示提交订单弹窗
@@ -221,7 +226,6 @@
             that.addAddressRequest()
           },
         }
-
       },
       // 添加地址请求
       async addAddressRequest() {
@@ -232,7 +236,7 @@
         console.log('钱包地址更新后数据', data);
         // if (!data) return
         if (errorCode == '0000') {
-          this.isHasAddress = true
+          this.getUserInfo()
           this.$toast({message: '钱包地址更新成功', duration: '1500'})
         }else{
           this.$toast({message: message, duration: '1500'})
@@ -271,7 +275,6 @@
       // 验证提交订单的内容
       validateRequestData() {
         const  that =this
-
         if (!this.buyNum || this.buyNum < 0) {
           this.tipTxt = `交易数量格式不正确`
           setTimeout(function () {
@@ -303,13 +306,6 @@
           store.setUser(this.userInfo)
         }
       },
-      // 判断是否有地址
-      judgeIsHasAddress() {
-        if (this.userInfo.walletAddress && this.userInfo.walletAddress.length > 0) {
-          this.isHasAddress = true
-        }
-      },
-
       //清空弹框数据
       clearData() {
         this.temp = ''
@@ -329,22 +325,33 @@
           return false
         }
       },
-      // 判断是否跳转登录界面
-      isGoLogin(){
-        const  that =this
-        console.log(111);
-        if(! this.isLogin()){
-          this.$router.push({name: 'userLogin',query: {redirect: that.$route.fullPath, action: 'login'}})
-          return false
-        }else{
+      // 判断是否有地址
+      isHasAddress() {
+        if (this.userInfo.walletAddress && this.userInfo.walletAddress.length > 0) {
           return true
+        }else{
+          return false
         }
-
       },
+      //跳转登录界面
+      goLogin(){
+        const  that =this
+        this.$router.push({name: 'userLogin',query: {redirect: that.$route.fullPath, action: 'login'}})
+      },
+      async isCanNext(itemData){
+        if(! await this.isLogin()){
+          this.canNext = false
+          this.goLogin()
+        }
+        if(! await this.isHasAddress()){
+          this.canNext = false
+          this.showAddAress(itemData)
+        }
+      },
+      //获取是那种币的交易大厅
       getWitchMoney(){
         if(!this.$route.query.bType) return
         this.query.bType = this.$route.query.bType
-
       }
     }
   }

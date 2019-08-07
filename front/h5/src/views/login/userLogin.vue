@@ -100,12 +100,12 @@ export default {
       // if (!data) return
       if (errorCode == '0000') {
         store.setToken(data.token)
+        store.setUser(data.user)
         this.$toast({message: '登录成功', duration: '1500'})
         const  that = this
         setTimeout(function () {
           that.redirect()
         },1500)
-
       } else if (errorCode == '0001') {
         this.$toast({message: '短信验证码有误', duration: '1500'})
       } else {

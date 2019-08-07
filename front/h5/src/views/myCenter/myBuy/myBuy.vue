@@ -149,7 +149,9 @@
       cancelOrder(orderId, index) {
         const that = this
         this.$dialog({
-          title: '确认取消该订单？'
+          title: '确认取消该订单？',
+          cancelText: '再想想',
+          confirmText: '确认取消',
         }).then(res => {
             that.cancelOrderRequest(orderId, index)
           },

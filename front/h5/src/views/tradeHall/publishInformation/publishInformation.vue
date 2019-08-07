@@ -136,11 +136,9 @@
         this.$copyText(txt).then(
           res => {
             that.$toast({message: '复制成功', duration: '1500'})
-
           },
           err => {
             that.$toast({message: '复制失败', duration: '1500'})
-
           }
         )
       },
@@ -220,7 +218,6 @@
       judgeIsHasAddress() {
         if (this.userInfo.walletAddress && this.userInfo.walletAddress.length > 0) {
           this.isHasAddress = true
-
         }
       },
       change() {
