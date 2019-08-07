@@ -73,8 +73,10 @@
       async init() {
         this.query.page = 1
         this.list = []
-        await this.getMySendLsitRequest()
         this.isLoading = false
+        this.finished = false
+        await this.getMySendLsitRequest()
+
       },
       copyCode(txt) {
         const that = this

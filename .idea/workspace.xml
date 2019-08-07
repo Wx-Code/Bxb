@@ -4,6 +4,7 @@
     <list default="true" id="1e1403e6-e677-4979-a056-13059435eb7d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/h5/src/views/myCenter/mySend/mySend.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/myCenter/mySend/mySend.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,16 +30,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="168" column="24" selection-start-line="168" selection-start-column="24" selection-end-line="168" selection-end-column="24" />
+            <state relative-caret-position="200">
+              <caret line="114" column="17" lean-forward="true" selection-start-line="114" selection-start-column="17" selection-end-line="114" selection-end-column="17" />
               <folding>
-                <element signature="e#4870#4938#0" />
-                <element signature="e#5131#5171#0" />
                 <element signature="e#5421#5881#0" />
-                <element signature="e#5921#6170#0" />
                 <element signature="e#6420#6672#0" />
                 <element signature="e#6723#6921#0" />
                 <element signature="e#6979#7364#0" />
@@ -57,8 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/publishInformation/publishInformation.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="158" column="8" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="8" />
+            <state relative-caret-position="180">
+              <caret line="110" column="6" lean-forward="true" selection-start-line="110" selection-start-column="6" selection-end-line="110" selection-end-column="6" />
               <folding>
                 <element signature="e#4382#4420#0" />
                 <element signature="e#4442#4724#0" />
@@ -123,11 +121,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/mySend/mySend.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="99" column="10" selection-start-line="99" selection-start-column="10" selection-end-line="99" selection-end-column="10" />
+            <state relative-caret-position="249">
+              <caret line="77" column="34" selection-start-line="77" selection-start-column="34" selection-end-line="77" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -144,12 +142,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>integral</find>
-      <find>发布</find>
-      <find>btn_type6</find>
-      <find>surplusTime</find>
       <find>orderCommitRequest</find>
-      <find>onRefresh</find>
       <find>showOrderCommit</find>
       <find>goBuy</find>
       <find>amount</find>
@@ -174,6 +167,11 @@
       <find>取消</find>
       <find>statusText</find>
       <find>确认</find>
+      <find>onRefresh</find>
+      <find>isLoading</find>
+      <find>init</find>
+      <find>finished</find>
+      <find>query</find>
     </findStrings>
     <replaceStrings>
       <replace>mySell</replace>
@@ -219,11 +217,11 @@
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/changeMySend/changeMySend.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/orderDetail/orderDetail.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/views/login/userLogin.vue" />
-        <option value="$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/views/tradeHall/publishInformation/publishInformation.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/components/dialog/dialog.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/mySell/mySell.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/myBuy/myBuy.vue" />
+        <option value="$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue" />
         <option value="$PROJECT_DIR$/front/h5/src/views/myCenter/mySend/mySend.vue" />
       </list>
     </option>
@@ -280,7 +278,7 @@
               <item name="h5" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="myCenter" type="462c0819:PsiDirectoryNode" />
+              <item name="tradeHall" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="shunmai.bxb" type="b2602c69:ProjectViewProjectNode" />
@@ -289,8 +287,8 @@
               <item name="h5" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="myCenter" type="462c0819:PsiDirectoryNode" />
-              <item name="mySend" type="462c0819:PsiDirectoryNode" />
+              <item name="tradeHall" type="462c0819:PsiDirectoryNode" />
+              <item name="index" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -346,18 +344,18 @@
       <workItem from="1564105213005" duration="22404000" />
       <workItem from="1564363661163" duration="33427000" />
       <workItem from="1564473248092" duration="39523000" />
-      <workItem from="1565056793365" duration="25004000" />
+      <workItem from="1565056793365" duration="25938000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="294992000" />
+    <option name="totallyTimeSpent" value="295926000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28863937" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.28863937" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -369,7 +367,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.26256984" />
+      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.26256984" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -775,52 +773,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="168" column="24" selection-start-line="168" selection-start-column="24" selection-end-line="168" selection-end-column="24" />
-          <folding>
-            <element signature="e#4870#4938#0" />
-            <element signature="e#5131#5171#0" />
-            <element signature="e#5421#5881#0" />
-            <element signature="e#5921#6170#0" />
-            <element signature="e#6420#6672#0" />
-            <element signature="e#6723#6921#0" />
-            <element signature="e#6979#7364#0" />
-            <element signature="e#7840#8300#0" />
-            <element signature="e#8366#9339#0" />
-            <element signature="e#9388#10074#0" />
-            <element signature="e#10118#10338#0" />
-            <element signature="e#10249#10330#0" />
-            <element signature="e#10558#10750#0" />
-            <element signature="e#10706#10870#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/publishInformation/publishInformation.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="158" column="8" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="8" />
-          <folding>
-            <element signature="e#4382#4420#0" />
-            <element signature="e#4442#4724#0" />
-            <element signature="e#4756#4870#0" />
-            <element signature="e#4889#4928#0" />
-            <element signature="e#4950#5217#0" />
-            <element signature="e#5247#5727#0" />
-            <element signature="e#5748#6056#0" />
-            <element signature="e#6090#6550#0" />
-            <element signature="e#6592#7044#0" />
-            <element signature="e#6663#6782#0" />
-            <element signature="e#6884#6960#0" />
-            <element signature="e#7064#7420#0" />
-            <element signature="e#7448#7588#0" />
-            <element signature="e#7605#7752#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/front/h5/src/utils/local-store.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="358">
@@ -859,8 +811,51 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/front/h5/src/views/myCenter/mySend/mySend.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="99" column="10" selection-start-line="99" selection-start-column="10" selection-end-line="99" selection-end-column="10" />
+        <state relative-caret-position="249">
+          <caret line="77" column="34" selection-start-line="77" selection-start-column="34" selection-end-line="77" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/publishInformation/publishInformation.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="110" column="6" lean-forward="true" selection-start-line="110" selection-start-column="6" selection-end-line="110" selection-end-column="6" />
+          <folding>
+            <element signature="e#4382#4420#0" />
+            <element signature="e#4442#4724#0" />
+            <element signature="e#4756#4870#0" />
+            <element signature="e#4889#4928#0" />
+            <element signature="e#4950#5217#0" />
+            <element signature="e#5247#5727#0" />
+            <element signature="e#5748#6056#0" />
+            <element signature="e#6090#6550#0" />
+            <element signature="e#6592#7044#0" />
+            <element signature="e#6663#6782#0" />
+            <element signature="e#6884#6960#0" />
+            <element signature="e#7064#7420#0" />
+            <element signature="e#7448#7588#0" />
+            <element signature="e#7605#7752#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/front/h5/src/views/tradeHall/index/index.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="114" column="17" lean-forward="true" selection-start-line="114" selection-start-column="17" selection-end-line="114" selection-end-column="17" />
+          <folding>
+            <element signature="e#5421#5881#0" />
+            <element signature="e#6420#6672#0" />
+            <element signature="e#6723#6921#0" />
+            <element signature="e#6979#7364#0" />
+            <element signature="e#7840#8300#0" />
+            <element signature="e#8366#9339#0" />
+            <element signature="e#9388#10074#0" />
+            <element signature="e#10118#10338#0" />
+            <element signature="e#10249#10330#0" />
+            <element signature="e#10558#10750#0" />
+            <element signature="e#10706#10870#0" />
+          </folding>
         </state>
       </provider>
     </entry>

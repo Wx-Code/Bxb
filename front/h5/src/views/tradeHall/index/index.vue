@@ -157,6 +157,8 @@
         this.list = []
         await this.getTradeHallLsit()
         this.isLoading = false
+        this.finished = false
+
         if(! await this.isLogin()) return
         await this.getUserInfo()
         // await this.judgeIsHasAddress()
